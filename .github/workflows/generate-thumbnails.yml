@@ -1,15 +1,19 @@
-name: Generate VidMoly thumbnails
+name: Generate and verify VidMoly thumbnails
 
 on:
   push:
     paths:
       - "data/videos.json"
       - "scripts/generate_thumbnails.py"
+      - ".github/workflows/generate-thumbnails.yml"
+
+  schedule:
+    - cron: "17 3 * * *"
 
   workflow_dispatch:
     inputs:
       force:
-        description: "Refresh all existing VidMoly thumbnails"
+        description: "Refresh every existing VidMoly thumbnail"
         required: false
         default: true
         type: boolean
@@ -21,67 +25,596 @@ concurrency:
   group: vidmoly-thumbnail-generator
   cancel-in-progress: false
 
+env:
+  PYTHON_VERSION: "3.12"
+
 jobs:
-  generate:
-    if: >
-      github.event_name == 'workflow_dispatch' ||
+  generate-and-verify:
+    # Prevent the automatic commit made by this workflow
+    # from continuously triggering itself.
+    if: >-
+      github.event_name != 'push' ||
       github.event.head_commit.message != 'ci: update VidMoly thumbnails'
 
     runs-on: ubuntu-latest
 
     steps:
+      # --------------------------------------------------
+      # Checkout
+      # --------------------------------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # --------------------------------------------------
+      # Python
+      # --------------------------------------------------
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
 
+      # --------------------------------------------------
+      # Dependencies
+      # --------------------------------------------------
       - name: Install dependencies
         run: |
+          set -euo pipefail
+
           python -m pip install --upgrade pip
-          python -m pip install requests playwright
+          python -m pip install requests playwright pyyaml
+
           python -m playwright install --with-deps chromium
 
+      # --------------------------------------------------
+      # Validate the existing extractor first
+      # --------------------------------------------------
+      - name: Validate thumbnail extractor
+        run: |
+          set -euo pipefail
+
+          python -m py_compile scripts/generate_thumbnails.py
+
+          echo "generate_thumbnails.py compiled successfully."
+
+      # --------------------------------------------------
+      # Generate thumbnails from VidMoly
+      # --------------------------------------------------
       - name: Generate VidMoly thumbnails
         env:
-          FORCE_REFRESH: ${{ github.event_name == 'workflow_dispatch' && inputs.force || 'false' }}
+          EVENT_NAME: ${{ github.event_name }}
+          FORCE_INPUT: ${{ inputs.force }}
         run: |
+          set -euo pipefail
+
+          FORCE_REFRESH=false
+
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            FORCE_REFRESH=true
+
+          elif [ "$EVENT_NAME" = "workflow_dispatch" ] \
+            && [ "$FORCE_INPUT" = "true" ]; then
+            FORCE_REFRESH=true
+          fi
+
           if [ "$FORCE_REFRESH" = "true" ]; then
             echo "Force refresh enabled."
+
             python scripts/generate_thumbnails.py \
               --catalogue data/videos.json \
               --force
           else
-            echo "Force refresh disabled."
+            echo "Generating only missing thumbnails."
+
             python scripts/generate_thumbnails.py \
               --catalogue data/videos.json
           fi
 
-      - name: Validate videos.json
+      # --------------------------------------------------
+      # Add deterministic cache-busting to every thumbnail
+      #
+      # Example:
+      #
+      # image.jpg
+      #
+      # becomes:
+      #
+      # image.jpg?gha_thumb=abcdef1234567890
+      #
+      # The value is deterministic, so the URL does not
+      # change on every Action run.
+      # --------------------------------------------------
+      - name: Prepare cache-safe thumbnail URLs
         run: |
-          python -m json.tool data/videos.json > /dev/null
+          set -euo pipefail
+
+          cat > /tmp/prepare_thumbnails.py <<'PY'
+          from __future__ import annotations
+
+          import hashlib
+          import json
+          from pathlib import Path
+          from urllib.parse import (
+              parse_qsl,
+              urlencode,
+              urlsplit,
+              urlunsplit,
+          )
+
+          CATALOGUE = Path("data/videos.json")
+
+          data = json.loads(
+              CATALOGUE.read_text(
+                  encoding="utf-8"
+              )
+          )
+
+          if not isinstance(data, list):
+              raise SystemExit(
+                  "data/videos.json must contain "
+                  "a top-level JSON array."
+              )
+
+          changed = 0
+
+          for index, video in enumerate(
+              data,
+              start=1,
+          ):
+              if not isinstance(video, dict):
+                  continue
+
+              thumbnail = str(
+                  video.get("thumbnail") or ""
+              ).strip()
+
+              if not thumbnail:
+                  continue
+
+              parts = urlsplit(thumbnail)
+
+              if parts.scheme not in {
+                  "http",
+                  "https",
+              } or not parts.netloc:
+                  raise SystemExit(
+                      f"Entry {index} "
+                      f"({video.get('id', index)}) "
+                      "has an invalid thumbnail URL."
+                  )
+
+              # Preserve any legitimate existing query
+              # parameters, but remove an old generated
+              # cache-busting parameter.
+              query = [
+                  (key, value)
+                  for key, value in parse_qsl(
+                      parts.query,
+                      keep_blank_values=True,
+                  )
+                  if key.lower() not in {
+                      "gha_thumb",
+                      "cachebust",
+                      "cache_bust",
+                  }
+              ]
+
+              canonical = urlunsplit(
+                  (
+                      parts.scheme.lower(),
+                      parts.netloc.lower(),
+                      parts.path,
+                      urlencode(query),
+                      "",
+                  )
+              )
+
+              video_id = str(
+                  video.get("id") or index
+              )
+
+              # Stable token:
+              # same video + same image URL = same token.
+              token = hashlib.sha256(
+                  (
+                      f"{video_id}|{canonical}"
+                  ).encode("utf-8")
+              ).hexdigest()[:16]
+
+              cache_query = (
+                  query
+                  + [
+                      (
+                          "gha_thumb",
+                          token,
+                      )
+                  ]
+              )
+
+              cache_safe_url = urlunsplit(
+                  (
+                      parts.scheme,
+                      parts.netloc,
+                      parts.path,
+                      urlencode(cache_query),
+                      "",
+                  )
+              )
+
+              if cache_safe_url != thumbnail:
+                  video["thumbnail"] = cache_safe_url
+                  changed += 1
+
+          CATALOGUE.write_text(
+              json.dumps(
+                  data,
+                  ensure_ascii=False,
+                  indent=2,
+              )
+              + "\n",
+              encoding="utf-8",
+          )
+
+          print(
+              f"Updated {changed} thumbnail URL(s) "
+              "with deterministic cache-busting."
+          )
+          PY
+
+          python /tmp/prepare_thumbnails.py
+
+          python -m json.tool \
+            data/videos.json \
+            > /dev/null
+
           echo "videos.json is valid JSON."
 
+      # --------------------------------------------------
+      # Browser-level verification
+      #
+      # This is intentionally done with Chromium rather
+      # than only requests/head because the real website
+      # ultimately uses an HTML <img>.
+      # --------------------------------------------------
+      - name: Verify every thumbnail in Chromium
+        run: |
+          set -euo pipefail
+
+          cat > /tmp/verify_thumbnails.py <<'PY'
+          from __future__ import annotations
+
+          import json
+          import sys
+          from pathlib import Path
+
+          from playwright.sync_api import sync_playwright
+
+          CATALOGUE = Path(
+              "data/videos.json"
+          )
+
+          TIMEOUT_MS = 20000
+
+          USER_AGENT = (
+              "Mozilla/5.0 (X11; Linux x86_64) "
+              "AppleWebKit/537.36 "
+              "(KHTML, like Gecko) "
+              "Chrome/140.0.0.0 Safari/537.36"
+          )
+
+          def load_as_image(
+              page,
+              url: str,
+              referrer_policy: str,
+          ) -> tuple[bool, str]:
+              result = page.evaluate(
+                  """
+                  async ({
+                      url,
+                      referrerPolicy,
+                      timeout
+                  }) => {
+                      const image = new Image();
+
+                      image.decoding = "async";
+                      image.referrerPolicy =
+                          referrerPolicy;
+
+                      return await new Promise(
+                          resolve => {
+                              let settled = false;
+
+                              const timer =
+                                  setTimeout(
+                                      () => finish(
+                                          false,
+                                          "timeout"
+                                      ),
+                                      timeout
+                                  );
+
+                              function finish(
+                                  ok,
+                                  reason
+                              ) {
+                                  if (settled) {
+                                      return;
+                                  }
+
+                                  settled = true;
+
+                                  clearTimeout(
+                                      timer
+                                  );
+
+                                  image.onload =
+                                      null;
+
+                                  image.onerror =
+                                      null;
+
+                                  resolve({
+                                      ok,
+                                      reason
+                                  });
+                              }
+
+                              image.onload = () => {
+                                  if (
+                                      image.naturalWidth >
+                                          0 &&
+                                      image.naturalHeight >
+                                          0
+                                  ) {
+                                      finish(
+                                          true,
+                                          `${
+                                              image.naturalWidth
+                                          }x${
+                                              image.naturalHeight
+                                          }`
+                                      );
+                                  } else {
+                                      finish(
+                                          false,
+                                          "zero natural dimensions"
+                                      );
+                                  }
+                              };
+
+                              image.onerror = () => {
+                                  finish(
+                                      false,
+                                      "image.onerror"
+                                  );
+                              };
+
+                              image.src = url;
+                          }
+                      );
+                  }
+                  """,
+                  {
+                      "url": url,
+                      "referrerPolicy":
+                          referrer_policy,
+                      "timeout":
+                          TIMEOUT_MS,
+                  },
+              )
+
+              return (
+                  bool(
+                      result.get("ok")
+                  ),
+                  str(
+                      result.get(
+                          "reason",
+                          "unknown",
+                      )
+                  ),
+              )
+
+          data = json.loads(
+              CATALOGUE.read_text(
+                  encoding="utf-8"
+              )
+          )
+
+          if not isinstance(data, list):
+              raise SystemExit(
+                  "videos.json must contain "
+                  "a top-level JSON array."
+              )
+
+          failures: list[
+              tuple[str, str, str]
+          ] = []
+
+          with sync_playwright() as playwright:
+              browser = playwright.chromium.launch(
+                  headless=True
+              )
+
+              context = browser.new_context(
+                  user_agent=USER_AGENT,
+                  viewport={
+                      "width": 1280,
+                      "height": 720,
+                  },
+                  locale="en-US",
+              )
+
+              page = context.new_page()
+
+              try:
+                  for index, video in enumerate(
+                      data,
+                      start=1,
+                  ):
+                      if not isinstance(
+                          video,
+                          dict,
+                      ):
+                          failures.append(
+                              (
+                                  str(index),
+                                  "invalid catalogue object",
+                                  "",
+                              )
+                          )
+                          continue
+
+                      video_id = str(
+                          video.get("id")
+                          or index
+                      )
+
+                      thumbnail = str(
+                          video.get(
+                              "thumbnail"
+                          )
+                          or ""
+                      ).strip()
+
+                      if not thumbnail:
+                          failures.append(
+                              (
+                                  video_id,
+                                  "missing thumbnail",
+                                  "",
+                              )
+                          )
+                          continue
+
+                      # Test the exact URL that the website
+                      # will place in <img src="...">.
+                      ok, reason = (
+                          load_as_image(
+                              page,
+                              thumbnail,
+                              "strict-origin-when-cross-origin",
+                          )
+                      )
+
+                      if ok:
+                          print(
+                              f"PASS {video_id}: "
+                              f"{reason}"
+                          )
+                          continue
+
+                      # Diagnostic retry using no-referrer.
+                      # This helps identify hotlink/referrer
+                      # protection without modifying the
+                      # catalogue.
+                      no_ref_ok, no_ref_reason = (
+                          load_as_image(
+                              page,
+                              thumbnail,
+                              "no-referrer",
+                          )
+                      )
+
+                      if no_ref_ok:
+                          failures.append(
+                              (
+                                  video_id,
+                                  (
+                                      "thumbnail loads only "
+                                      "without a referrer"
+                                  ),
+                                  (
+                                      f"normal={reason}; "
+                                      f"no-referrer="
+                                      f"{no_ref_reason}"
+                                  ),
+                              )
+                          )
+                      else:
+                          failures.append(
+                              (
+                                  video_id,
+                                  (
+                                      "thumbnail failed "
+                                      "in Chromium"
+                                  ),
+                                  (
+                                      f"normal={reason}; "
+                                      f"no-referrer="
+                                      f"{no_ref_reason}"
+                                  ),
+                              )
+                          )
+
+              finally:
+                  context.close()
+                  browser.close()
+
+          if failures:
+              print(
+                  "\nThumbnail verification failures:"
+              )
+
+              for (
+                  video_id,
+                  reason,
+                  details,
+              ) in failures:
+                  print(
+                      f"- {video_id}: "
+                      f"{reason} "
+                      f"({details})"
+                  )
+
+              sys.exit(1)
+
+          print(
+              f"Successfully browser-verified "
+              f"{len(data)} catalogue entries."
+          )
+          PY
+
+          python /tmp/verify_thumbnails.py
+
+      # --------------------------------------------------
+      # Show exactly what changed
+      # --------------------------------------------------
       - name: Show catalogue changes
         run: |
+          set -euo pipefail
+
           git status --short
-          git diff -- data/videos.json
 
-      - name: Commit thumbnail changes
+          git diff -- \
+            data/videos.json
+
+      # --------------------------------------------------
+      # Commit only when something changed
+      # --------------------------------------------------
+      - name: Commit automatic thumbnail updates
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
 
-          git add data/videos.json
+          git config \
+            user.name \
+            "github-actions[bot]"
+
+          git config \
+            user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            data/videos.json
 
           if git diff --cached --quiet; then
-            echo "No changes detected."
+            echo "No thumbnail changes detected."
             exit 0
           fi
 
-          git commit -m "ci: update VidMoly thumbnails"
+          git commit \
+            -m "ci: update VidMoly thumbnails"
+
           git push
