@@ -23,8 +23,6 @@ concurrency:
 
 jobs:
   generate:
-    # Prevent the workflow from reacting to the commit
-    # created by this workflow itself.
     if: >
       github.event_name == 'workflow_dispatch' ||
       github.event.head_commit.message != 'ci: update VidMoly thumbnails'
@@ -41,7 +39,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: "pip"
 
       - name: Install dependencies
         run: |
@@ -50,10 +47,19 @@ jobs:
           python -m playwright install --with-deps chromium
 
       - name: Generate VidMoly thumbnails
+        env:
+          FORCE_REFRESH: ${{ github.event_name == 'workflow_dispatch' && inputs.force || 'false' }}
         run: |
-          python scripts/generate_thumbnails.py \
-            --catalogue data/videos.json \
-            --force
+          if [ "$FORCE_REFRESH" = "true" ]; then
+            echo "Force refresh enabled."
+            python scripts/generate_thumbnails.py \
+              --catalogue data/videos.json \
+              --force
+          else
+            echo "Force refresh disabled."
+            python scripts/generate_thumbnails.py \
+              --catalogue data/videos.json
+          fi
 
       - name: Validate videos.json
         run: |
