@@ -2,229 +2,180 @@
 
 const CONFIG = Object.freeze({
   catalogueUrl: "./data/videos.json",
+  seriesUrl: "./data/series.json",
 
   storageKeys: {
-    favorites: "unhappy:favorites:v2",
-    history: "unhappy:history:v2"
+    favorites: "unhappy:favorites:v3",
+    history: "unhappy:history:v3"
   },
 
-  maxHistory: 50,
-  maxContinue: 6
+  maxHistory: 50
 });
+
 
 const state = {
   videos: [],
-  filteredVideos: [],
+  seriesMeta: new Map(),
+  series: [],
+  filteredSeries: [],
+
   favorites: new Set(),
   history: [],
-  featuredVideo: null,
+
+  currentSeries: null,
   currentVideo: null,
+
   currentView: "home",
-  lastModal: null,
   toastTimer: null
 };
 
-const elements = {};
 
-function cacheElements() {
-  const ids = [
-    "brandButton",
-    "homeButton",
-    "browseButton",
-    "favoritesButton",
-    "favoriteCount",
-    "historyButton",
+const $ = id =>
+  document.getElementById(id);
 
-    "mobileSearchButton",
-    "mobileMenuButton",
-    "mobileNav",
-    "mobileFavoriteCount",
 
-    "searchInput",
-    "mobileSearchInput",
+const els = {};
 
-    "hero",
-    "heroBackground",
-    "heroBadge",
-    "heroTitle",
-    "heroMeta",
-    "heroDescription",
-    "heroPoster",
-    "heroWatchButton",
-    "heroFavoriteButton",
-    "heroFavoriteLabel",
-    "heroInfoButton",
+const ids = [
+  "brandButton",
+  "historyButton",
+  "mobileHistoryButton",
+  "mobileMenuButton",
+  "mobileNav",
 
-    "continueSection",
-    "continueRow",
-    "openHistoryFromSection",
+  "searchInput",
+  "mobileSearchInput",
 
-    "discoverySection",
-    "discoveryTitle",
-    "discoverySubtitle",
-    "resultCount",
-    "browseToolbar",
+  "hero",
+  "heroBackground",
+  "heroBadge",
+  "heroTitle",
+  "heroMeta",
+  "heroDescription",
+  "heroPoster",
+  "heroWatchButton",
+  "heroSeriesButton",
+  "heroFavoriteButton",
+  "heroFavoriteLabel",
 
-    "seriesFilter",
-    "genreFilter",
-    "qualityFilter",
-    "sortFilter",
-    "resetButton",
-    "activeFilters",
+  "continueSection",
+  "continueRow",
+  "openHistoryButton",
 
-    "loadingState",
-    "errorState",
-    "errorMessage",
-    "retryButton",
-    "emptyState",
-    "emptyResetButton",
-    "videoGrid",
+  "seriesSection",
+  "seriesTitle",
+  "seriesSubtitle",
+  "seriesCount",
 
-    "seriesSection",
-    "seriesGrid",
+  "genreFilter",
+  "seriesSort",
+  "resetButton",
 
-    "playerModal",
-    "playerBackdrop",
-    "playerBackButton",
-    "playerTitle",
-    "playerPrevButton",
-    "playerNextButton",
-    "playerLoading",
-    "playerFrame",
-    "playerSeries",
-    "playerTitleBelow",
-    "playerFavoriteButton",
-    "playerInfoButton",
+  "loadingState",
+  "errorState",
+  "errorMessage",
+  "retryButton",
+  "emptyState",
+  "seriesGrid",
 
-    "detailsModal",
-    "detailsBackdrop",
-    "detailsContent",
-    "closeDetailsButton",
+  "episodeLibrary",
+  "episodeTitle",
+  "episodeSubtitle",
+  "resultCount",
+  "seriesFilter",
+  "episodeSort",
+  "videoGrid",
 
-    "historyModal",
-    "historyBackdrop",
-    "historyContent",
-    "closeHistoryButton",
-    "clearHistoryButton",
+  "seriesModal",
+  "closeSeriesButton",
+  "seriesModalImage",
+  "seriesModalTitle",
+  "seriesModalMeta",
+  "seriesModalDescription",
+  "seriesModalGenres",
+  "seriesModalStats",
+  "seriesPlayButton",
+  "seriesContinueButton",
+  "seriesFavoriteButton",
+  "seriesEpisodeSearch",
+  "seriesEpisodeList",
 
-    "toast",
-    "notification"
-  ];
+  "playerModal",
+  "playerBackButton",
+  "playerSeries",
+  "playerTitle",
+  "playerPrevButton",
+  "playerNextButton",
+  "playerLoading",
+  "playerFrame",
+  "playerTitleBelow",
+  "playerMeta",
+  "playerFavoriteButton",
+  "playerInfoButton",
 
-  for (const id of ids) {
-    elements[id] = document.getElementById(id);
-  }
-}
+  "historyModal",
+  "closeHistoryButton",
+  "historyContent",
+  "clearHistoryButton",
 
-function loadStorage() {
-  try {
-    const readJson = (primaryKey, legacyKey, fallback) => {
-      const primaryRaw = localStorage.getItem(primaryKey);
+  "toast",
 
-      if (primaryRaw !== null) {
-        return JSON.parse(primaryRaw);
-      }
+  "favoriteCount",
+  "mobileFavoriteCount",
+  "footerStats"
+];
 
-      const legacyRaw = localStorage.getItem(legacyKey);
 
-      return legacyRaw !== null
-        ? JSON.parse(legacyRaw)
-        : fallback;
-    };
+ids.forEach(id => {
+  els[id] = $(id);
+});
 
-    const favorites = readJson(
-      CONFIG.storageKeys.favorites,
-      "streamverse:favorites:v1",
-      []
-    );
 
-    if (Array.isArray(favorites)) {
-      state.favorites = new Set(
-        favorites.filter(value => typeof value === "string")
-      );
-    }
-
-    const history = readJson(
-      CONFIG.storageKeys.history,
-      "streamverse:history:v1",
-      []
-    );
-
-    if (Array.isArray(history)) {
-      state.history = history
-        .filter(
-          item =>
-            item &&
-            typeof item.id === "string" &&
-            Number.isFinite(Number(item.timestamp))
-        )
-        .map(item => ({
-          id: item.id,
-          timestamp: Number(item.timestamp)
-        }))
-        .slice(0, CONFIG.maxHistory);
-    }
-  } catch (error) {
-    console.warn("Storage could not be loaded:", error);
-
-    state.favorites = new Set();
-    state.history = [];
-  }
-}
-
-function saveFavorites() {
-  try {
-    localStorage.setItem(
-      CONFIG.storageKeys.favorites,
-      JSON.stringify([...state.favorites])
-    );
-  } catch (error) {
-    console.warn("Favorites could not be saved:", error);
-  }
-}
-
-function saveHistory() {
-  try {
-    localStorage.setItem(
-      CONFIG.storageKeys.history,
-      JSON.stringify(state.history)
-    );
-  } catch (error) {
-    console.warn("History could not be saved:", error);
-  }
-}
+/* --------------------------------------------------
+   BASIC HELPERS
+-------------------------------------------------- */
 
 function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+  return String(value ?? "").replace(
+    /[&<>"']/g,
+    character => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[character]
+  );
 }
 
-function normalise(value) {
-  return String(value ?? "")
-    .trim()
-    .toLowerCase();
+
+function text(value) {
+  return String(value ?? "").trim();
 }
+
+
+function normalise(value) {
+  return text(value).toLocaleLowerCase();
+}
+
 
 function toArray(value) {
   if (Array.isArray(value)) {
     return value
-      .map(item => String(item).trim())
+      .map(text)
       .filter(Boolean);
   }
 
   if (typeof value === "string") {
     return value
       .split(",")
-      .map(item => item.trim())
+      .map(text)
       .filter(Boolean);
   }
 
   return [];
 }
+
 
 function numberOrNull(value) {
   const number = Number(value);
@@ -234,2363 +185,2816 @@ function numberOrNull(value) {
     : null;
 }
 
-function getEpisodeNumber(video) {
-  for (
-    const value of [
-      video.episode,
-      video.episodeNumber,
-      video.episode_number
-    ]
-  ) {
-    const number = numberOrNull(value);
 
-    if (number !== null) {
-      return number;
+function compareText(a, b) {
+  return text(a).localeCompare(
+    text(b),
+    undefined,
+    {
+      numeric: true,
+      sensitivity: "base"
     }
-  }
-
-  return Number.POSITIVE_INFINITY;
+  );
 }
 
-function getYear(video) {
-  return numberOrNull(video.year) ?? 0;
-}
 
-function getGenres(video) {
-  return toArray(video.genres ?? video.genre);
-}
+/* --------------------------------------------------
+   VIDEO DATA ACCESSORS
+-------------------------------------------------- */
 
-function getSeries(video) {
-  return String(
-    video.series ??
-    video.show ??
-    video.anime ??
-    ""
-  ).trim();
-}
-
-function getQuality(video) {
-  return String(
-    video.quality ??
-    video.resolution ??
-    ""
-  ).trim();
-}
-
-function getTitle(video) {
-  return String(
-    video.title ??
-    video.name ??
+function titleOf(video) {
+  return (
+    text(
+      video.title ??
+      video.name
+    ) ||
     "Untitled"
-  ).trim() || "Untitled";
+  );
 }
 
-function getDescription(video) {
-  return String(
+
+function seriesOf(video) {
+  return (
+    text(
+      video.series ??
+      video.show ??
+      video.anime
+    ) ||
+    "Other"
+  );
+}
+
+
+function episodeOf(video) {
+  return numberOrNull(
+    video.episode ??
+    video.episodeNumber ??
+    video.episode_number
+  );
+}
+
+
+function yearOf(video) {
+  return numberOrNull(
+    video.year
+  );
+}
+
+
+function genresOf(video) {
+  return toArray(
+    video.genres ??
+    video.genre
+  );
+}
+
+
+function qualityOf(video) {
+  return text(
+    video.quality ??
+    video.resolution
+  );
+}
+
+
+function descriptionOf(video) {
+  return text(
     video.description ??
-    video.summary ??
-    ""
-  ).trim();
+    video.summary
+  );
 }
 
-function getEmbed(video) {
-  return String(
+
+function imageOf(video) {
+  return text(
+    video.thumbnail ??
+    video.poster ??
+    video.image
+  );
+}
+
+
+function embedOf(video) {
+  return text(
     video.embed ??
     video.url ??
-    video.videoUrl ??
-    ""
-  ).trim();
-}
-
-function getImage(video) {
-  return String(
-    video.image ??
-    video.poster ??
-    video.thumbnail ??
-    ""
-  ).trim();
-}
-
-function isValidVideo(video) {
-  if (!video || typeof video !== "object") {
-    return false;
-  }
-
-  return Boolean(
-    String(video.id ?? "").trim() &&
-    getTitle(video) &&
-    getEmbed(video)
+    video.videoUrl
   );
 }
 
-function videoById(id) {
-  return (
-    state.videos.find(video => video.id === id) ||
-    null
-  );
+
+function episodeLabel(video) {
+  const number = episodeOf(video);
+
+  if (number === null) {
+    return "Special";
+  }
+
+  return Number.isInteger(number)
+    ? String(number).padStart(3, "0")
+    : String(number);
 }
 
-function uniqueSorted(values) {
-  return [
-    ...new Set(
-      values
-        .map(value => String(value).trim())
-        .filter(Boolean)
-    )
-  ].sort(
-    (a, b) =>
-      a.localeCompare(
-        b,
-        undefined,
-        {
-          numeric: true,
-          sensitivity: "base"
-        }
-      )
-  );
-}
 
-function formatEpisode(video) {
-  const episode = getEpisodeNumber(video);
-
-  if (!Number.isFinite(episode)) {
-    return "";
-  }
-
-  return Number.isInteger(episode)
-    ? String(episode).padStart(3, "0")
-    : String(episode);
-}
-
-function formatEpisodeLabel(video) {
-  const episode = getEpisodeNumber(video);
-
-  if (!Number.isFinite(episode)) {
-    return "";
-  }
-
-  return `Episode ${
-    Number.isInteger(episode)
-      ? String(episode).padStart(3, "0")
-      : episode
-  }`;
-}
-
-function getDisplayMeta(video) {
-  const parts = [];
-
-  const year = getYear(video);
-
-  if (year) {
-    parts.push(String(year));
-  }
-
-  const episode = formatEpisodeLabel(video);
-
-  if (episode) {
-    parts.push(episode);
-  }
-
-  const quality = getQuality(video);
-
-  if (
-    quality &&
-    normalise(quality) !== "unknown"
-  ) {
-    parts.push(quality);
-  }
-
-  return parts;
-}
-
-function safeUrl(url) {
-  const value = String(url || "").trim();
-
-  if (!value) {
-    return "";
-  }
-
+function safeUrl(value) {
   try {
-    const parsed = new URL(
-      value,
-      window.location.href
+    const url = new URL(
+      text(value),
+      location.href
     );
 
     if (
       [
         "http:",
         "https:",
-        "data:",
         "blob:",
-        "file:"
-      ].includes(parsed.protocol)
+        "data:"
+      ].includes(url.protocol)
     ) {
-      return parsed.href;
+      return url.href;
     }
   } catch (_) {}
 
   return "";
 }
 
-async function loadCatalogue() {
-  setLoading(true);
-  hideError();
 
+/* --------------------------------------------------
+   STORAGE
+-------------------------------------------------- */
+
+function loadStorage() {
   try {
-    const response = await fetch(
-      CONFIG.catalogueUrl,
+    const favorites =
+      JSON.parse(
+        localStorage.getItem(
+          CONFIG.storageKeys.favorites
+        ) || "[]"
+      );
+
+    const history =
+      JSON.parse(
+        localStorage.getItem(
+          CONFIG.storageKeys.history
+        ) || "[]"
+      );
+
+
+    if (Array.isArray(favorites)) {
+      state.favorites =
+        new Set(
+          favorites.filter(
+            value =>
+              typeof value === "string"
+          )
+        );
+    }
+
+
+    if (Array.isArray(history)) {
+      state.history =
+        history
+          .filter(
+            item =>
+              item &&
+              typeof item.id === "string"
+          )
+          .map(item => ({
+            id: item.id,
+            timestamp:
+              numberOrNull(
+                item.timestamp
+              ) ||
+              Date.now()
+          }))
+          .slice(
+            0,
+            CONFIG.maxHistory
+          );
+    }
+
+  } catch (_) {
+    state.favorites = new Set();
+    state.history = [];
+  }
+}
+
+
+function saveStorage() {
+  try {
+    localStorage.setItem(
+      CONFIG.storageKeys.favorites,
+      JSON.stringify(
+        [...state.favorites]
+      )
+    );
+
+    localStorage.setItem(
+      CONFIG.storageKeys.history,
+      JSON.stringify(
+        state.history
+      )
+    );
+  } catch (_) {}
+}
+
+
+/* --------------------------------------------------
+   MODALS / TOAST
+-------------------------------------------------- */
+
+function setModal(modal, open) {
+  modal.classList.toggle(
+    "hidden",
+    !open
+  );
+
+  document.body.classList.toggle(
+    "modal-open",
+    open
+  );
+
+  if (open) {
+    modal
+      .querySelector(
+        "button,input"
+      )
+      ?.focus();
+  }
+}
+
+
+function toast(message) {
+  els.toast.textContent =
+    message;
+
+  els.toast.classList.add(
+    "show"
+  );
+
+  clearTimeout(
+    state.toastTimer
+  );
+
+  state.toastTimer =
+    setTimeout(
+      () =>
+        els.toast.classList.remove(
+          "show"
+        ),
+      2200
+    );
+}
+
+
+/* --------------------------------------------------
+   FETCHING
+-------------------------------------------------- */
+
+async function fetchJson(url) {
+  const response =
+    await fetch(
+      url,
       {
-        method: "GET",
         cache: "no-store",
+
         headers: {
-          Accept: "application/json"
+          Accept:
+            "application/json"
         }
       }
     );
 
-    if (!response.ok) {
-      throw new Error(
-        `Catalogue request failed with HTTP ${response.status}.`
-      );
-    }
+  if (!response.ok) {
+    throw new Error(
+      `Request failed (${response.status})`
+    );
+  }
 
-    const data = await response.json();
+  return response.json();
+}
+
+
+async function load() {
+  els.loadingState.classList.remove(
+    "hidden"
+  );
+
+  els.errorState.classList.add(
+    "hidden"
+  );
+
+
+  try {
+
+    const [
+      videoData,
+      seriesData
+    ] =
+      await Promise.all([
+        fetchJson(
+          CONFIG.catalogueUrl
+        ),
+
+        fetchJson(
+          CONFIG.seriesUrl
+        ).catch(
+          () => ({
+            series: []
+          })
+        )
+      ]);
+
 
     const rawVideos =
-      Array.isArray(data)
-        ? data
-        : Array.isArray(data.videos)
-          ? data.videos
-          : Array.isArray(data.items)
-            ? data.items
-            : [];
+      Array.isArray(videoData)
+        ? videoData
+        : (
+            videoData.videos ||
+            videoData.items ||
+            []
+          );
 
-    state.videos = rawVideos
-      .filter(isValidVideo)
-      .map(video => ({
-        ...video,
-        id: String(video.id).trim(),
-        title: getTitle(video)
-      }));
+
+    state.videos =
+      rawVideos
+        .filter(
+          video =>
+            video &&
+            text(video.id) &&
+            embedOf(video)
+        )
+        .map(video => ({
+          ...video,
+          id: text(video.id)
+        }));
+
 
     if (!state.videos.length) {
       throw new Error(
-        "The catalogue loaded, but no valid video entries were found."
+        "No valid video entries were found in data/videos.json."
       );
     }
 
-    pruneStorageToCatalogue();
+
+    const rawSeries =
+      Array.isArray(seriesData)
+        ? seriesData
+        : (
+            seriesData.series ||
+            []
+          );
+
+
+    state.seriesMeta =
+      new Map(
+        rawSeries
+          .filter(
+            series =>
+              series &&
+              text(series.name)
+          )
+          .map(
+            series => [
+              normalise(
+                series.name
+              ),
+              series
+            ]
+          )
+      );
+
+
+    state.series =
+      buildSeries();
+
+
+    const validIds =
+      new Set(
+        state.videos.map(
+          video =>
+            video.id
+        )
+      );
+
+
+    state.favorites =
+      new Set(
+        [...state.favorites]
+          .filter(
+            id =>
+              validIds.has(id)
+          )
+      );
+
+
+    state.history =
+      state.history.filter(
+        item =>
+          validIds.has(
+            item.id
+          )
+      );
+
+
+    saveStorage();
+
     buildFilters();
 
-    state.featuredVideo =
-      chooseFeaturedVideo();
-
     renderHero();
-    updateFavoriteCount();
-    renderContinueWatching();
-    renderSeriesGrid();
-    applyFilters();
-    setLoading(false);
+
+    renderContinue();
+
+    applySeriesFilters();
+
+    renderEpisodes();
+
+    updateCounts();
+
+
+    els.footerStats.textContent =
+      `${state.videos.length} ${
+        state.videos.length === 1
+          ? "title"
+          : "titles"
+      } · ${
+        state.series.length
+      } ${
+        state.series.length === 1
+          ? "series"
+          : "series"
+      }`;
+
+
+    els.loadingState.classList.add(
+      "hidden"
+    );
+
   } catch (error) {
+
     console.error(
-      "Catalogue loading error:",
+      "Library loading error:",
       error
     );
 
-    setLoading(false);
-
-    showError(
-      error instanceof Error
-        ? error.message
-        : "Unknown catalogue error."
+    els.loadingState.classList.add(
+      "hidden"
     );
+
+    els.errorState.classList.remove(
+      "hidden"
+    );
+
+    els.errorMessage.textContent =
+      error.message ||
+      "Unknown catalogue error.";
   }
 }
 
-function pruneStorageToCatalogue() {
-  const validIds = new Set(
-    state.videos.map(video => video.id)
-  );
 
-  state.favorites = new Set(
-    [...state.favorites].filter(id =>
-      validIds.has(id)
-    )
-  );
+/* --------------------------------------------------
+   SERIES BUILDING
+-------------------------------------------------- */
 
-  state.history = state.history.filter(
-    item => validIds.has(item.id)
-  );
+function buildSeries() {
 
-  saveFavorites();
-  saveHistory();
-}
+  const groups =
+    new Map();
 
-function buildFilters() {
-  populateSelect(
-    elements.seriesFilter,
-    uniqueSorted(
-      state.videos.map(getSeries)
-    ),
-    "All series"
-  );
 
-  populateSelect(
-    elements.genreFilter,
-    uniqueSorted(
-      state.videos.flatMap(getGenres)
-    ),
-    "All genres"
-  );
+  /*
+   * IMPORTANT:
+   *
+   * Episodes are grouped using a
+   * normalized series name.
+   *
+   * This means:
+   *
+   * "Kiteretsu Daihyakka"
+   *
+   * and
+   *
+   * "  Kiteretsu Daihyakka  "
+   *
+   * become the same series.
+   */
 
-  populateSelect(
-    elements.qualityFilter,
-    uniqueSorted(
-      state.videos.map(getQuality)
-    ),
-    "All qualities"
-  );
-}
-
-function populateSelect(
-  select,
-  values,
-  allLabel
-) {
-  if (!select) {
-    return;
-  }
-
-  const current = select.value;
-
-  select.innerHTML = "";
-
-  const all = document.createElement("option");
-
-  all.value = "ALL";
-  all.textContent = allLabel;
-
-  select.appendChild(all);
-
-  values.forEach(value => {
-    const option =
-      document.createElement("option");
-
-    option.value = value;
-    option.textContent = value;
-
-    select.appendChild(option);
-  });
-
-  if (
-    ["ALL", ...values].includes(current)
-  ) {
-    select.value = current;
-  }
-}
-
-function getFilterState() {
-  return {
-    query: normalise(
-      elements.searchInput?.value ||
-      elements.mobileSearchInput?.value
-    ),
-
-    series:
-      elements.seriesFilter?.value ??
-      "ALL",
-
-    genre:
-      elements.genreFilter?.value ??
-      "ALL",
-
-    quality:
-      elements.qualityFilter?.value ??
-      "ALL",
-
-    sort:
-      elements.sortFilter?.value ??
-      "catalogue"
-  };
-}
-
-function applyFilters() {
-  const filters = getFilterState();
-
-  let videos = state.videos.filter(
+  state.videos.forEach(
     video => {
-      const haystack = [
-        getTitle(video),
-        getSeries(video),
-        getDescription(video),
-        ...getGenres(video),
-        getQuality(video),
-        String(getEpisodeNumber(video))
-      ]
-        .join(" ")
-        .toLowerCase();
 
-      return (
-        (!filters.query ||
-          haystack.includes(filters.query)) &&
+      const name =
+        seriesOf(video);
 
-        (
-          filters.series === "ALL" ||
-          getSeries(video) === filters.series
-        ) &&
+      const key =
+        normalise(name);
 
-        (
-          filters.genre === "ALL" ||
-          getGenres(video).includes(
-            filters.genre
-          )
-        ) &&
 
-        (
-          filters.quality === "ALL" ||
-          getQuality(video) === filters.quality
-        )
-      );
+      if (!groups.has(key)) {
+        groups.set(
+          key,
+          []
+        );
+      }
+
+
+      groups
+        .get(key)
+        .push(video);
     }
   );
 
-  videos = sortVideos(
-    videos,
-    filters.sort
+
+  return [
+    ...groups.entries()
+  ].map(
+    ([key, episodes]) => {
+
+      /*
+       * NUMERIC EPISODE SORT
+       *
+       * 1
+       * 2
+       * 3
+       * 10
+       *
+       * rather than:
+       *
+       * 1
+       * 10
+       * 2
+       * 3
+       */
+
+      episodes.sort(
+        (a, b) => {
+
+          const aEpisode =
+            episodeOf(a);
+
+          const bEpisode =
+            episodeOf(b);
+
+
+          if (
+            aEpisode !== null &&
+            bEpisode !== null
+          ) {
+            return (
+              aEpisode -
+              bEpisode
+            );
+          }
+
+
+          if (
+            aEpisode !== null
+          ) {
+            return -1;
+          }
+
+
+          if (
+            bEpisode !== null
+          ) {
+            return 1;
+          }
+
+
+          return compareText(
+            titleOf(a),
+            titleOf(b)
+          );
+        }
+      );
+
+
+      const metadata =
+        state.seriesMeta.get(
+          key
+        ) || {};
+
+
+      const firstEpisode =
+        episodes[0];
+
+
+      const numberedEpisodes =
+        episodes.filter(
+          episode =>
+            episodeOf(
+              episode
+            ) !== null
+        );
+
+
+      const latestEpisode =
+        numberedEpisodes.length
+          ? numberedEpisodes[
+              numberedEpisodes.length - 1
+            ]
+          : firstEpisode;
+
+
+      /*
+       * Manual series artwork wins.
+       *
+       * If no manual series thumbnail
+       * exists, the first episode
+       * thumbnail becomes a fallback.
+       */
+
+      const thumbnail =
+        safeUrl(
+          metadata.thumbnail
+        ) ||
+        imageOf(
+          firstEpisode
+        );
+
+
+      const backdrop =
+        safeUrl(
+          metadata.backdrop
+        ) ||
+        safeUrl(
+          metadata.thumbnail
+        ) ||
+        imageOf(
+          firstEpisode
+        );
+
+
+      const metadataGenres =
+        toArray(
+          metadata.genres
+        );
+
+
+      const derivedGenres =
+        [
+          ...new Set(
+            episodes.flatMap(
+              genresOf
+            )
+          )
+        ];
+
+
+      return {
+
+        key,
+
+        name:
+          text(
+            metadata.name
+          ) ||
+          seriesOf(
+            firstEpisode
+          ),
+
+        episodes,
+
+        thumbnail,
+
+        backdrop,
+
+        description:
+          text(
+            metadata.description
+          ) ||
+          descriptionOf(
+            firstEpisode
+          ) ||
+          `A collection of ${episodes.length} episode${
+            episodes.length === 1
+              ? ""
+              : "s"
+          }.`,
+
+
+        year:
+          numberOrNull(
+            metadata.year
+          ) ??
+          yearOf(
+            firstEpisode
+          ),
+
+
+        genres:
+          metadataGenres.length
+            ? metadataGenres
+            : derivedGenres,
+
+
+        status:
+          text(
+            metadata.status
+          ) ||
+          "Library",
+
+
+        latest:
+          latestEpisode
+      };
+    }
   );
-
-  state.filteredVideos = videos;
-
-  updateLibraryCopy(filters);
-  renderGrid();
-  renderActiveFilters(filters);
 }
 
-function sortVideos(
-  videos,
-  sort
-) {
-  const result = [...videos];
 
-  if (sort === "title") {
-    result.sort(
-      (a, b) =>
-        getTitle(a).localeCompare(
-          getTitle(b),
-          undefined,
-          {
-            numeric: true,
-            sensitivity: "base"
-          }
+/* --------------------------------------------------
+   SERIES PROGRESS
+-------------------------------------------------- */
+
+function seriesProgress(series) {
+
+  const ids =
+    new Set(
+      series.episodes.map(
+        episode =>
+          episode.id
+      )
+    );
+
+
+  const watched =
+    state.history.filter(
+      history =>
+        ids.has(
+          history.id
         )
     );
-  } else if (
-    sort === "episode-asc"
-  ) {
-    result.sort(
-      (a, b) =>
-        getEpisodeNumber(a) -
-        getEpisodeNumber(b)
-    );
-  } else if (
-    sort === "episode-desc"
-  ) {
-    result.sort(
-      (a, b) =>
-        getEpisodeNumber(b) -
-        getEpisodeNumber(a)
-    );
-  } else if (
-    sort === "year-desc"
-  ) {
-    result.sort(
-      (a, b) =>
-        getYear(b) -
-        getYear(a)
-    );
-  } else if (
-    sort === "year-asc"
-  ) {
-    result.sort(
-      (a, b) =>
-        getYear(a) -
-        getYear(b)
-    );
+
+
+  if (!watched.length) {
+    return 0;
   }
 
-  return result;
-}
 
-function updateLibraryCopy(filters) {
-  const filtered =
-    state.filteredVideos.length;
-
-  const isSearch =
-    Boolean(filters.query);
-
-  const isFiltered =
-    isSearch ||
-    filters.series !== "ALL" ||
-    filters.genre !== "ALL" ||
-    filters.quality !== "ALL";
-
-  elements.discoveryTitle.textContent =
-    state.currentView === "favorites"
-      ? "Your saved titles"
-      : isFiltered
-        ? "Search results"
-        : "Fresh from the library";
-
-  elements.discoverySubtitle.textContent =
-    state.currentView === "favorites"
-      ? (
-        filtered
-          ? "Everything you've saved for later."
-          : "Save titles with the heart button to build your list."
-      )
-      : isFiltered
-        ? `Showing ${filtered} matching ${
-            filtered === 1
-              ? "title"
-              : "titles"
-          }.`
-        : "Browse the latest titles and episodes in your collection.";
-}
-
-function renderActiveFilters(filters) {
-  if (!elements.activeFilters) {
-    return;
-  }
-
-  const tags = [];
-
-  if (filters.query) {
-    tags.push({
-      label: `Search: ${filters.query}`,
-      action: "search"
-    });
-  }
-
-  if (filters.series !== "ALL") {
-    tags.push({
-      label: `Series: ${filters.series}`,
-      action: "series"
-    });
-  }
-
-  if (filters.genre !== "ALL") {
-    tags.push({
-      label: `Genre: ${filters.genre}`,
-      action: "genre"
-    });
-  }
-
-  if (filters.quality !== "ALL") {
-    tags.push({
-      label: `Quality: ${filters.quality}`,
-      action: "quality"
-    });
-  }
-
-  elements.activeFilters.innerHTML =
-    tags
-      .map(
-        tag =>
-          `<span class="filter-tag">
-            ${escapeHtml(tag.label)}
-            <button
-              type="button"
-              data-clear-filter="${escapeHtml(tag.action)}"
-              aria-label="Remove ${escapeHtml(tag.label)}"
-            >×</button>
-          </span>`
-      )
-      .join("");
-
-  elements.activeFilters.classList.toggle(
-    "hidden",
-    tags.length === 0
+  return Math.min(
+    100,
+    Math.round(
+      (
+        watched.length /
+        series.episodes.length
+      ) * 100
+    )
   );
 }
 
-function chooseFeaturedVideo() {
-  const favourite =
-    state.videos.find(video =>
-      state.favorites.has(video.id)
+
+function continueVideoForSeries(
+  series
+) {
+
+  const ids =
+    new Set(
+      series.episodes.map(
+        episode =>
+          episode.id
+      )
     );
 
-  if (favourite) {
-    return favourite;
+
+  const history =
+    state.history
+      .filter(
+        item =>
+          ids.has(item.id)
+      )
+      .sort(
+        (a,b) =>
+          b.timestamp -
+          a.timestamp
+      );
+
+
+  if (!history.length) {
+    return null;
   }
 
-  const historyVideo =
-    state.history
-      .map(item => videoById(item.id))
-      .find(Boolean);
 
   return (
-    historyVideo ||
-    state.videos[0] ||
+    state.videos.find(
+      video =>
+        video.id ===
+        history[0].id
+    ) ||
     null
   );
 }
 
-function heroMetaHtml(video) {
-  return getDisplayMeta(video)
-    .map(
-      item =>
-        `<span class="meta-chip">${escapeHtml(item)}</span>`
-    )
-    .join("");
-}
 
-function setBackground(
-  element,
-  image
-) {
-  const url = safeUrl(image);
-
-  if (!url) {
-    element.style.backgroundImage = "";
-    return;
-  }
-
-  element.style.backgroundImage =
-    `url("${url.replaceAll('"', "%22")}")`;
-}
+/* --------------------------------------------------
+   HERO
+-------------------------------------------------- */
 
 function renderHero() {
-  const video =
-    state.featuredVideo;
-
-  if (!video) {
-    return;
-  }
-
-  const image =
-    getImage(video);
-
-  setBackground(
-    elements.heroBackground,
-    image
-  );
-
-  elements.heroPoster.src =
-    safeUrl(image);
-
-  elements.heroPoster.alt =
-    getTitle(video);
-
-  elements.heroTitle.textContent =
-    getTitle(video).replace(
-      /\s+[-–—]\s+Episode\s+\d+$/i,
-      ""
-    );
-
-  elements.heroBadge.textContent =
-    state.favorites.has(video.id)
-      ? "IN YOUR LIST"
-      : "FEATURED";
-
-  elements.heroMeta.innerHTML =
-    heroMetaHtml(video);
-
-  elements.heroDescription.textContent =
-    getDescription(video) ||
-    `Watch ${getTitle(video)} from the library.`;
-
-  updateHeroFavoriteButton();
-}
-
-function updateHeroFavoriteButton() {
-  const video =
-    state.featuredVideo;
-
-  if (!video) {
-    return;
-  }
-
-  const active =
-    state.favorites.has(video.id);
-
-  elements.heroFavoriteButton?.setAttribute(
-    "aria-pressed",
-    String(active)
-  );
-
-  elements.heroFavoriteLabel.textContent =
-    active
-      ? "Saved"
-      : "My list";
-
-  const icon =
-    elements.heroFavoriteButton?.querySelector(
-      ".button-icon"
-    );
-
-  if (icon) {
-    icon.textContent =
-      active
-        ? "♥"
-        : "♡";
-  }
-}
-
-function renderContinueWatching() {
-  const entries =
-    state.history
-      .map(item => ({
-        ...item,
-        video: videoById(item.id)
-      }))
-      .filter(entry => entry.video)
-      .slice(
-        0,
-        CONFIG.maxContinue
-      );
-
-  elements.continueSection.classList.toggle(
-    "hidden",
-    entries.length === 0
-  );
-
-  elements.continueRow.innerHTML =
-    entries
-      .map(entry =>
-        createCardHtml(
-          entry.video,
-          { continueItem: true }
-        )
-      )
-      .join("");
-}
-
-function createCardHtml(
-  video,
-  options = {}
-) {
-  const image =
-    safeUrl(getImage(video));
-
-  const active =
-    state.favorites.has(video.id);
 
   const series =
-    getSeries(video);
+    state.series[0];
 
-  const episode =
-    formatEpisodeLabel(video);
 
-  const quality =
-    getQuality(video);
-
-  const year =
-    getYear(video);
-
-  const badges = [];
-
-  if (
-    quality &&
-    normalise(quality) !== "unknown"
-  ) {
-    badges.push(quality);
+  if (!series) {
+    return;
   }
 
-  if (episode) {
-    badges.push(
-      `EP ${formatEpisode(video)}`
+
+  els.heroBadge.textContent =
+    series.status === "Complete"
+      ? "FEATURED SERIES"
+      : "FEATURED";
+
+
+  els.heroTitle.textContent =
+    series.name;
+
+
+  els.heroMeta.innerHTML =
+    [
+      series.year,
+
+      `${series.episodes.length} ${
+        series.episodes.length === 1
+          ? "Episode"
+          : "Episodes"
+      }`,
+
+      ...series.genres.slice(
+        0,
+        3
+      )
+    ]
+      .filter(Boolean)
+      .map(
+        value =>
+          `<span>${escapeHtml(
+            value
+          )}</span>`
+      )
+      .join("");
+
+
+  els.heroDescription.textContent =
+    series.description;
+
+
+  els.heroPoster.src =
+    series.thumbnail ||
+    "";
+
+
+  els.heroPoster.alt =
+    `${series.name} poster`;
+
+
+  els.heroBackground.style.backgroundImage =
+    series.backdrop
+      ? `url("${series.backdrop}")`
+      : "";
+
+
+  els.heroWatchButton.onclick =
+    () =>
+      openPlayer(
+        series.episodes[0]
+      );
+
+
+  els.heroSeriesButton.onclick =
+    () =>
+      openSeries(
+        series
+      );
+
+
+  els.heroFavoriteButton.onclick =
+    () =>
+      toggleSeriesFavorite(
+        series
+      );
+
+
+  updateHeroFavorite(
+    series
+  );
+}
+
+
+function updateHeroFavorite(
+  series
+) {
+
+  const saved =
+    series.episodes.every(
+      episode =>
+        state.favorites.has(
+          episode.id
+        )
     );
-  }
 
-  const meta = [];
 
-  if (year) {
-    meta.push(String(year));
-  }
+  els.heroFavoriteLabel.textContent =
+    saved
+      ? "In My List"
+      : "My List";
 
-  if (episode) {
-    meta.push(episode);
-  }
+
+  els.heroFavoriteButton.classList.toggle(
+    "saved",
+    saved
+  );
+}
+
+
+/* --------------------------------------------------
+   FILTERS
+-------------------------------------------------- */
+
+function fillSelect(
+  select,
+  values,
+  firstLabel
+) {
+
+  const current =
+    select.value;
+
+
+  select.innerHTML =
+    `<option value="ALL">${
+      escapeHtml(
+        firstLabel
+      )
+    }</option>`;
+
+
+  values.forEach(
+    value => {
+
+      select.insertAdjacentHTML(
+        "beforeend",
+
+        `<option value="${
+          escapeHtml(value)
+        }">${
+          escapeHtml(value)
+        }</option>`
+      );
+    }
+  );
+
 
   if (
-    quality &&
-    normalise(quality) !== "unknown"
+    [...select.options]
+      .some(
+        option =>
+          option.value ===
+          current
+      )
   ) {
-    meta.push(quality);
+    select.value =
+      current;
+  }
+}
+
+
+function buildFilters() {
+
+  const genres =
+    [
+      ...new Set(
+        state.series.flatMap(
+          series =>
+            series.genres
+        )
+      )
+    ].sort(
+      compareText
+    );
+
+
+  fillSelect(
+    els.genreFilter,
+    genres,
+    "All genres"
+  );
+
+
+  fillSelect(
+    els.seriesFilter,
+
+    state.series
+      .map(
+        series =>
+          series.name
+      )
+      .sort(
+        compareText
+      ),
+
+    "All series"
+  );
+}
+
+
+/* --------------------------------------------------
+   SEARCH
+-------------------------------------------------- */
+
+function searchQuery() {
+
+  return normalise(
+    els.searchInput.value ||
+    els.mobileSearchInput.value
+  );
+}
+
+
+function seriesMatches(
+  series
+) {
+
+  const query =
+    searchQuery();
+
+
+  const genre =
+    els.genreFilter.value;
+
+
+  const searchable =
+    [
+      series.name,
+      series.description,
+      series.status,
+
+      ...series.genres,
+
+      ...series.episodes.flatMap(
+        episode => [
+          titleOf(
+            episode
+          ),
+
+          String(
+            episodeOf(
+              episode
+            ) ??
+            ""
+          )
+        ]
+      )
+    ].join(" ");
+
+
+  return (
+    (
+      !query ||
+      normalise(
+        searchable
+      ).includes(
+        query
+      )
+    ) &&
+
+    (
+      genre === "ALL" ||
+      series.genres.includes(
+        genre
+      )
+    )
+  );
+}
+
+
+/* --------------------------------------------------
+   SERIES FILTERING
+-------------------------------------------------- */
+
+function applySeriesFilters() {
+
+  let list =
+    state.series.filter(
+      series =>
+        seriesMatches(
+          series
+        )
+    );
+
+
+  const sort =
+    els.seriesSort.value;
+
+
+  if (sort === "az") {
+
+    list.sort(
+      (a,b) =>
+        compareText(
+          a.name,
+          b.name
+        )
+    );
+
   }
 
-  const placeholder =
-    `<div class="card-placeholder" aria-hidden="true"></div>`;
+
+  if (sort === "za") {
+
+    list.sort(
+      (a,b) =>
+        compareText(
+          b.name,
+          a.name
+        )
+    );
+
+  }
+
+
+  if (sort === "episodes") {
+
+    list.sort(
+      (a,b) =>
+        b.episodes.length -
+        a.episodes.length
+    );
+
+  }
+
+
+  if (sort === "year") {
+
+    list.sort(
+      (a,b) =>
+        (b.year || 0) -
+        (a.year || 0)
+    );
+
+  }
+
+
+  state.filteredSeries =
+    list;
+
+
+  els.seriesCount.textContent =
+    `${list.length} ${
+      list.length === 1
+        ? "series"
+        : "series"
+    }`;
+
+
+  els.seriesGrid.classList.toggle(
+    "hidden",
+    !list.length
+  );
+
+
+  els.emptyState.classList.toggle(
+    "hidden",
+    !!list.length
+  );
+
+
+  els.seriesGrid.innerHTML =
+    list
+      .map(
+        seriesCard
+      )
+      .join("");
+
+
+  bindSeriesCards();
+}
+
+
+function bindSeriesCards() {
+
+  els.seriesGrid
+    .querySelectorAll(
+      "[data-series]"
+    )
+    .forEach(
+      button => {
+
+        button.onclick =
+          () => {
+
+            const series =
+              state.series.find(
+                item =>
+                  item.key ===
+                  button.dataset.series
+              );
+
+
+            openSeries(
+              series
+            );
+          };
+      }
+    );
+
+
+  els.seriesGrid
+    .querySelectorAll(
+      "[data-series-fav]"
+    )
+    .forEach(
+      button => {
+
+        button.onclick =
+          event => {
+
+            event.stopPropagation();
+
+
+            const series =
+              state.series.find(
+                item =>
+                  item.key ===
+                  button.dataset.seriesFav
+              );
+
+
+            toggleSeriesFavorite(
+              series
+            );
+          };
+      }
+    );
+}
+
+
+/* --------------------------------------------------
+   SERIES CARD
+-------------------------------------------------- */
+
+function seriesCard(
+  series
+) {
+
+  const progress =
+    seriesProgress(
+      series
+    );
+
+
+  const saved =
+    series.episodes.every(
+      episode =>
+        state.favorites.has(
+          episode.id
+        )
+    );
+
 
   return `
     <article
-      class="video-card"
-      data-video-id="${escapeHtml(video.id)}"
+      class="series-card"
     >
-      <div class="card-media">
-        ${
-          image
-            ? `
-              <img
-                src="${escapeHtml(image)}"
-                alt="${escapeHtml(getTitle(video))}"
-                loading="lazy"
-                decoding="async"
-              >
-            `
-            : placeholder
-        }
 
-        <div class="card-top">
-          <div class="badge-row">
+      <button
+        class="series-card-main"
+        data-series="${escapeHtml(
+          series.key
+        )}"
+        type="button"
+      >
+
+        <div class="poster-wrap">
+
+          <img
+            src="${escapeHtml(
+              series.thumbnail
+            )}"
+            alt=""
+            loading="lazy"
+            onerror="this.closest('.poster-wrap').classList.add('image-failed')"
+          >
+
+          <span class="episode-count">
             ${
-              badges
-                .map(
-                  badge =>
-                    `<span class="card-badge">${escapeHtml(badge)}</span>`
-                )
-                .join("")
+              series.episodes.length
             }
+            ${
+              series.episodes.length === 1
+                ? "EP"
+                : "EPS"
+            }
+          </span>
+
+        </div>
+
+
+        <div class="series-card-body">
+
+          <div class="series-card-title">
+            ${escapeHtml(
+              series.name
+            )}
           </div>
 
-          <button
-            class="favorite-button ${active ? "active" : ""}"
-            type="button"
-            data-action="favorite"
-            aria-pressed="${active}"
-            aria-label="${
-              active
-                ? "Remove from favorites"
-                : "Add to favorites"
-            }"
-          >
-            ${active ? "♥" : "♡"}
-          </button>
-        </div>
 
-        <div class="card-hover">
-          <button
-            class="card-play"
-            type="button"
-            data-action="watch"
-            aria-label="Watch ${escapeHtml(getTitle(video))}"
-          >
-            <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true">
-              <path d="M8 5.4v13.2c0 .8.9 1.3 1.6.9l10-6.6a1.1 1.1 0 0 0 0-1.8l-10-6.6C8.9 4.1 8 4.6 8 5.4Z"></path>
-            </svg>
-          </button>
-        </div>
+          <div class="series-card-meta">
 
-        ${
-          options.continueItem
-            ? `
-              <div class="card-progress">
-                <span></span>
-              </div>
-            `
-            : ""
-        }
-      </div>
+            ${
+              series.year
+                ? `${escapeHtml(
+                    series.year
+                  )} · `
+                : ""
+            }
 
-      <div class="card-body">
-        <div class="card-series">
-          ${escapeHtml(series || "Library")}
-        </div>
+            ${escapeHtml(
+              series.status
+            )}
 
-        <h3
-          class="card-title"
-          title="${escapeHtml(getTitle(video))}"
-        >
-          ${escapeHtml(getTitle(video))}
-        </h3>
+          </div>
 
-        <div class="card-meta">
-          ${
-            meta
+
+          <p>
+            ${escapeHtml(
+              series.description
+            )}
+          </p>
+
+
+          <div class="tag-list">
+
+            ${series.genres
+              .slice(0,3)
               .map(
-                item =>
-                  `<span>${escapeHtml(item)}</span>`
+                genre =>
+                  `<span>${escapeHtml(
+                    genre
+                  )}</span>`
               )
-              .join("")
+              .join("")}
+
+          </div>
+
+
+          ${
+            progress
+              ? `
+                <div class="progress">
+                  <i
+                    style="width:${progress}%"
+                  ></i>
+                </div>
+
+                <small>
+                  ${progress}% watched
+                </small>
+              `
+              : ""
           }
+
         </div>
 
-        <div class="card-actions">
-          <button
-            class="card-action watch"
-            type="button"
-            data-action="watch"
-          >
-            Watch
-          </button>
+      </button>
 
-          <button
-            class="card-action"
-            type="button"
-            data-action="info"
-          >
-            Details
-          </button>
-        </div>
-      </div>
+
+      <button
+        class="series-fav ${
+          saved
+            ? "saved"
+            : ""
+        }"
+        data-series-fav="${escapeHtml(
+          series.key
+        )}"
+        type="button"
+        aria-label="${
+          saved
+            ? "Remove from"
+            : "Add to"
+        } My List"
+      >
+        ${
+          saved
+            ? "♥"
+            : "♡"
+        }
+      </button>
+
     </article>
   `;
 }
 
-function renderGrid() {
+
+/* --------------------------------------------------
+   CONTINUE WATCHING
+-------------------------------------------------- */
+
+function renderContinue() {
+
   const videos =
-    state.filteredVideos;
+    state.history
+      .slice()
+      .sort(
+        (a,b) =>
+          b.timestamp -
+          a.timestamp
+      )
+      .map(
+        history =>
+          state.videos.find(
+            video =>
+              video.id ===
+              history.id
+          )
+      )
+      .filter(Boolean)
+      .slice(0,6);
 
-  elements.resultCount.textContent =
-    `${videos.length} ${
-      videos.length === 1
-        ? "item"
-        : "items"
-    }`;
 
-  elements.videoGrid.innerHTML =
+  els.continueSection.classList.toggle(
+    "hidden",
+    !videos.length
+  );
+
+
+  els.continueRow.innerHTML =
     videos
-      .map(video =>
-        createCardHtml(video)
-      )
-      .join("");
-
-  const empty =
-    videos.length === 0;
-
-  elements.videoGrid.classList.toggle(
-    "hidden",
-    empty
-  );
-
-  elements.emptyState.classList.toggle(
-    "hidden",
-    !empty
-  );
-}
-
-function renderSeriesGrid() {
-  const groups = new Map();
-
-  for (const video of state.videos) {
-    const series =
-      getSeries(video) ||
-      "Other";
-
-    if (!groups.has(series)) {
-      groups.set(series, 0);
-    }
-
-    groups.set(
-      series,
-      groups.get(series) + 1
-    );
-  }
-
-  const entries =
-    [...groups.entries()].sort(
-      (a, b) =>
-        a[0].localeCompare(
-          b[0],
-          undefined,
-          { sensitivity: "base" }
-        )
-    );
-
-  elements.seriesSection.classList.toggle(
-    "hidden",
-    entries.length < 2
-  );
-
-  elements.seriesGrid.innerHTML =
-    entries
       .map(
-        ([series, count]) =>
-          `
-            <button
-              class="series-card"
-              type="button"
-              data-series="${escapeHtml(series)}"
-            >
-              <strong>${escapeHtml(series)}</strong>
-              <span>
-                ${count} ${
-                  count === 1
-                    ? "title"
-                    : "titles"
-                }
-              </span>
-            </button>
-          `
+        episodeCard
       )
       .join("");
-}
 
-function setLoading(isLoading) {
-  elements.loadingState.classList.toggle(
-    "hidden",
-    !isLoading
-  );
 
-  if (isLoading) {
-    elements.videoGrid.classList.add(
-      "hidden"
-    );
-
-    elements.emptyState.classList.add(
-      "hidden"
-    );
-  }
-}
-
-function hideError() {
-  elements.errorState.classList.add(
-    "hidden"
+  bindEpisodeButtons(
+    els.continueRow
   );
 }
 
-function showError(message) {
-  elements.errorMessage.textContent =
-    message;
 
-  elements.errorState.classList.remove(
-    "hidden"
-  );
+/* --------------------------------------------------
+   EPISODE CARD
+-------------------------------------------------- */
 
-  elements.videoGrid.classList.add(
-    "hidden"
-  );
-}
-
-function toggleFavorite(id) {
-  const video =
-    videoById(id);
-
-  if (!video) {
-    return;
-  }
-
-  if (state.favorites.has(id)) {
-    state.favorites.delete(id);
-
-    announce(
-      `${getTitle(video)} removed from favorites.`
-    );
-
-    showToast(
-      "Removed from your list"
-    );
-  } else {
-    state.favorites.add(id);
-
-    announce(
-      `${getTitle(video)} added to favorites.`
-    );
-
-    showToast(
-      "Saved to your list"
-    );
-  }
-
-  saveFavorites();
-
-  updateFavoriteCount();
-
-  state.featuredVideo =
-    chooseFeaturedVideo();
-
-  renderHero();
-  renderContinueWatching();
-
-  if (
-    state.currentView === "favorites"
-  ) {
-    applyFilters();
-  } else {
-    renderGrid();
-  }
-
-  if (
-    !elements.detailsModal.classList.contains(
-      "hidden"
-    )
-  ) {
-    renderDetails(
-      state.currentVideo
-    );
-  }
-
-  if (
-    !elements.playerModal.classList.contains(
-      "hidden"
-    )
-  ) {
-    updatePlayerFavoriteButton();
-  }
-}
-
-function updateFavoriteCount() {
-  const count =
-    state.favorites.size;
-
-  elements.favoriteCount.textContent =
-    String(count);
-
-  elements.mobileFavoriteCount.textContent =
-    String(count);
-}
-
-function setHistory(id) {
-  state.history = [
-    {
-      id,
-      timestamp: Date.now()
-    },
-    ...state.history.filter(
-      item => item.id !== id
-    )
-  ].slice(
-    0,
-    CONFIG.maxHistory
-  );
-
-  saveHistory();
-  renderContinueWatching();
-}
-
-function getSeriesSiblings(video) {
-  if (!video) {
-    return [];
-  }
-
-  const series =
-    getSeries(video);
-
-  const sameSeries =
-    state.videos.filter(
-      item =>
-        getSeries(item) === series &&
-        Number.isFinite(
-          getEpisodeNumber(item)
-        )
-    );
-
-  return sortVideos(
-    sameSeries,
-    "episode-asc"
-  );
-}
-
-function openPlayer(video) {
-  if (!video) {
-    return;
-  }
-
-  state.currentVideo =
-    video;
-
-  setHistory(
-    video.id
-  );
-
-  elements.playerTitle.textContent =
-    getTitle(video);
-
-  elements.playerTitleBelow.textContent =
-    getTitle(video);
-
-  elements.playerSeries.textContent =
-    getSeries(video);
-
-  elements.playerFrame.src =
-    "about:blank";
-
-  elements.playerLoading.classList.remove(
-    "hidden"
-  );
-
-  elements.playerModal.classList.remove(
-    "hidden"
-  );
-
-  document.body.classList.add(
-    "modal-open"
-  );
-
-  updatePlayerNav();
-  updatePlayerFavoriteButton();
-
-  window.setTimeout(
-    () => {
-      if (
-        !state.currentVideo ||
-        state.currentVideo.id !==
-          video.id
-      ) {
-        return;
-      }
-
-      elements.playerFrame.src =
-        safeUrl(getEmbed(video));
-
-      elements.playerLoading.classList.remove(
-        "hidden"
-      );
-    },
-    30
-  );
-
-  window.setTimeout(
-    () => {
-      elements.playerLoading.classList.add(
-        "hidden"
-      );
-    },
-    1800
-  );
-}
-
-function closeModal(modal) {
-  modal.classList.add(
-    "hidden"
-  );
-
-  if (
-    [
-      elements.playerModal,
-      elements.detailsModal,
-      elements.historyModal
-    ].every(
-      item =>
-        item.classList.contains(
-          "hidden"
-        )
-    )
-  ) {
-    document.body.classList.remove(
-      "modal-open"
-    );
-  }
-}
-
-function closePlayer() {
-  elements.playerFrame.src =
-    "about:blank";
-
-  closeModal(
-    elements.playerModal
-  );
-}
-
-function updatePlayerNav() {
-  const siblings =
-    getSeriesSiblings(
-      state.currentVideo
-    );
-
-  const index =
-    siblings.findIndex(
-      video =>
-        video.id ===
-        state.currentVideo?.id
-    );
-
-  elements.playerPrevButton.disabled =
-    index <= 0;
-
-  elements.playerNextButton.disabled =
-    index < 0 ||
-    index >=
-      siblings.length - 1;
-}
-
-function openRelativeEpisode(
-  direction
+function episodeCard(
+  video
 ) {
-  const siblings =
-    getSeriesSiblings(
-      state.currentVideo
-    );
 
-  const index =
-    siblings.findIndex(
-      video =>
-        video.id ===
-        state.currentVideo?.id
-    );
+  return `
+    <button
+      class="episode-card"
+      data-episode="${escapeHtml(
+        video.id
+      )}"
+      type="button"
+    >
 
-  const next =
-    siblings[index + direction];
+      <div class="episode-thumb">
 
-  if (next) {
-    openPlayer(next);
-  }
-}
+        <img
+          src="${escapeHtml(
+            imageOf(video)
+          )}"
+          alt=""
+          loading="lazy"
+        >
 
-function updatePlayerFavoriteButton() {
-  const video =
-    state.currentVideo;
+        <span>
+          ${escapeHtml(
+            episodeLabel(
+              video
+            )
+          )}
+        </span>
 
-  if (!video) {
-    return;
-  }
-
-  const active =
-    state.favorites.has(
-      video.id
-    );
-
-  elements.playerFavoriteButton.textContent =
-    active
-      ? "♥ Saved"
-      : "♡ My list";
-}
-
-function renderDetails(video) {
-  if (!video) {
-    return;
-  }
-
-  state.currentVideo =
-    video;
-
-  const image =
-    safeUrl(getImage(video));
-
-  const meta =
-    getDisplayMeta(video)
-      .map(
-        item =>
-          `<span>${escapeHtml(item)}</span>`
-      )
-      .join("");
-
-  const series =
-    getSeries(video);
-
-  const siblings =
-    getSeriesSiblings(video)
-      .filter(
-        item => item.id !== video.id
-      )
-      .slice(0, 4);
-
-  elements.detailsContent.innerHTML = `
-    <div class="details-hero">
-      <div
-        class="details-backdrop-image"
-        ${
-          image
-            ? `style="background-image:url('${escapeHtml(image)}')"`
-            : ""
-        }
-      ></div>
-
-      <div class="details-inner">
-        ${
-          image
-            ? `
-              <img
-                class="details-poster"
-                src="${escapeHtml(image)}"
-                alt="${escapeHtml(getTitle(video))}"
-                loading="eager"
-              >
-            `
-            : `
-              <div class="details-poster"></div>
-            `
-        }
-
-        <div class="details-copy">
-          <div class="modal-kicker">
-            ${escapeHtml(series || "MEDIA")}
-          </div>
-
-          <h2 id="detailsTitle">
-            ${escapeHtml(getTitle(video))}
-          </h2>
-
-          <div class="details-meta">
-            ${meta}
-          </div>
-
-          <p>
-            ${escapeHtml(
-              getDescription(video) ||
-              `Watch ${getTitle(video)} from the library.`
-            )}
-          </p>
-
-          <div class="details-actions">
-            <button
-              class="button primary-button"
-              type="button"
-              data-details-watch
-            >
-              ▶ Watch now
-            </button>
-
-            <button
-              class="button glass-button"
-              type="button"
-              data-details-favorite
-            >
-              ${
-                state.favorites.has(video.id)
-                  ? "♥ Saved"
-                  : "♡ My list"
-              }
-            </button>
-          </div>
-        </div>
       </div>
-    </div>
 
-    ${
-      siblings.length
-        ? `
-          <div class="details-more">
-            <h3>
-              More from ${escapeHtml(
-                series ||
-                "this collection"
-              )}
-            </h3>
 
-            <div class="details-more-grid">
-              ${siblings
-                .map(item =>
-                  createCardHtml(item)
-                )
-                .join("")}
-            </div>
-          </div>
-        `
-        : ""
-    }
+      <div class="episode-card-body">
+
+        <strong>
+          ${escapeHtml(
+            titleOf(video)
+          )}
+        </strong>
+
+        <small>
+          ${escapeHtml(
+            seriesOf(video)
+          )}
+        </small>
+
+      </div>
+
+    </button>
   `;
 }
 
-function openDetails(video) {
+
+function bindEpisodeButtons(
+  root
+) {
+
+  root
+    .querySelectorAll(
+      "[data-episode]"
+    )
+    .forEach(
+      button => {
+
+        button.onclick =
+          () => {
+
+            const video =
+              state.videos.find(
+                item =>
+                  item.id ===
+                  button.dataset.episode
+              );
+
+
+            openPlayer(
+              video
+            );
+          };
+      }
+    );
+}
+
+
+/* --------------------------------------------------
+   EPISODE LIBRARY
+-------------------------------------------------- */
+
+function renderEpisodes() {
+
+  const query =
+    searchQuery();
+
+
+  const selectedSeries =
+    els.seriesFilter.value;
+
+
+  let list =
+    state.videos.filter(
+      video => {
+
+        const searchable =
+          [
+            titleOf(video),
+            seriesOf(video),
+            descriptionOf(video),
+
+            ...genresOf(
+              video
+            ),
+
+            String(
+              episodeOf(video) ??
+              ""
+            )
+          ].join(" ");
+
+
+        return (
+          (
+            !query ||
+            normalise(
+              searchable
+            ).includes(
+              query
+            )
+          ) &&
+
+          (
+            selectedSeries ===
+              "ALL" ||
+            seriesOf(video) ===
+              selectedSeries
+          )
+        );
+      }
+    );
+
+
+  const sort =
+    els.episodeSort.value;
+
+
+  if (sort === "episode") {
+
+    list.sort(
+      (a,b) =>
+        (
+          episodeOf(a) ??
+          Infinity
+        ) -
+        (
+          episodeOf(b) ??
+          Infinity
+        )
+    );
+
+  }
+
+
+  else if (
+    sort === "episode-desc"
+  ) {
+
+    list.sort(
+      (a,b) =>
+        (
+          episodeOf(b) ??
+          -Infinity
+        ) -
+        (
+          episodeOf(a) ??
+          -Infinity
+        )
+    );
+
+  }
+
+
+  else if (
+    sort === "title"
+  ) {
+
+    list.sort(
+      (a,b) =>
+        compareText(
+          titleOf(a),
+          titleOf(b)
+        )
+    );
+
+  }
+
+
+  else if (
+    sort === "newest"
+  ) {
+
+    list.sort(
+      (a,b) =>
+        (
+          yearOf(b) ||
+          0
+        ) -
+        (
+          yearOf(a) ||
+          0
+        )
+    );
+
+  }
+
+
+  else {
+
+    /*
+     * Default:
+     *
+     * SERIES A
+     *   001
+     *   002
+     *   003
+     *
+     * SERIES B
+     *   001
+     *   002
+     */
+
+    list.sort(
+      (a,b) =>
+        compareText(
+          seriesOf(a),
+          seriesOf(b)
+        ) ||
+
+        (
+          episodeOf(a) ??
+          Infinity
+        ) -
+        (
+          episodeOf(b) ??
+          Infinity
+        )
+    );
+  }
+
+
+  els.resultCount.textContent =
+    `${list.length} ${
+      list.length === 1
+        ? "episode"
+        : "episodes"
+    }`;
+
+
+  els.videoGrid.innerHTML =
+    list
+      .map(
+        episodeCard
+      )
+      .join("");
+
+
+  bindEpisodeButtons(
+    els.videoGrid
+  );
+
+
+  if (
+    query ||
+    selectedSeries !== "ALL"
+  ) {
+
+    els.episodeTitle.textContent =
+      "Matching episodes";
+
+  } else {
+
+    els.episodeTitle.textContent =
+      "All episodes";
+  }
+
+
+  els.episodeSubtitle.textContent =
+    query
+      ? `Results for “${query}”`
+      : "Every available episode, numbered and sorted correctly.";
+}
+
+
+/* --------------------------------------------------
+   FAVORITES
+-------------------------------------------------- */
+
+function updateCounts() {
+
+  const count =
+    [
+      ...state.favorites
+    ].filter(
+      id =>
+        state.videos.some(
+          video =>
+            video.id ===
+            id
+        )
+    ).length;
+
+
+  els.favoriteCount.textContent =
+    count;
+
+
+  els.mobileFavoriteCount.textContent =
+    count;
+}
+
+
+function toggleSeriesFavorite(
+  series
+) {
+
+  if (!series) {
+    return;
+  }
+
+
+  const allSaved =
+    series.episodes.every(
+      episode =>
+        state.favorites.has(
+          episode.id
+        )
+    );
+
+
+  series.episodes.forEach(
+    episode => {
+
+      if (allSaved) {
+
+        state.favorites.delete(
+          episode.id
+        );
+
+      } else {
+
+        state.favorites.add(
+          episode.id
+        );
+
+      }
+
+    }
+  );
+
+
+  saveStorage();
+
+  updateCounts();
+
+  renderContinue();
+
+  applySeriesFilters();
+
+  updateHeroFavorite(
+    series
+  );
+
+
+  if (
+    state.currentSeries &&
+    state.currentSeries.key ===
+      series.key
+  ) {
+    renderSeriesModal(
+      series
+    );
+  }
+
+
+  toast(
+    allSaved
+      ? `${series.name} removed from My List`
+      : `${series.name} added to My List`
+  );
+}
+
+
+/* --------------------------------------------------
+   SERIES MODAL
+-------------------------------------------------- */
+
+function openSeries(
+  series
+) {
+
+  if (!series) {
+    return;
+  }
+
+
+  state.currentSeries =
+    series;
+
+
+  renderSeriesModal(
+    series
+  );
+
+
+  setModal(
+    els.seriesModal,
+    true
+  );
+}
+
+
+function renderSeriesModal(
+  series
+) {
+
+  const progress =
+    seriesProgress(
+      series
+    );
+
+
+  const nextEpisode =
+    continueVideoForSeries(
+      series
+    );
+
+
+  els.seriesModalImage.src =
+    series.thumbnail ||
+    "";
+
+
+  els.seriesModalImage.alt =
+    series.name;
+
+
+  els.seriesModalTitle.textContent =
+    series.name;
+
+
+  els.seriesModalMeta.innerHTML =
+    [
+      series.year,
+
+      `${series.episodes.length} episodes`,
+
+      series.status
+    ]
+      .filter(Boolean)
+      .map(
+        value =>
+          `<span>${escapeHtml(
+            value
+          )}</span>`
+      )
+      .join("");
+
+
+  els.seriesModalDescription.textContent =
+    series.description;
+
+
+  els.seriesModalGenres.innerHTML =
+    series.genres
+      .map(
+        genre =>
+          `<span>${escapeHtml(
+            genre
+          )}</span>`
+      )
+      .join("");
+
+
+  els.seriesModalStats.innerHTML = `
+    <div>
+      <b>${series.episodes.length}</b>
+      <span>Episodes</span>
+    </div>
+
+    <div>
+      <b>${series.year || "—"}</b>
+      <span>Year</span>
+    </div>
+
+    <div>
+      <b>${progress}%</b>
+      <span>Watched</span>
+    </div>
+  `;
+
+
+  els.seriesPlayButton.onclick =
+    () =>
+      openPlayer(
+        series.episodes[0]
+      );
+
+
+  els.seriesContinueButton.onclick =
+    () =>
+      openPlayer(
+        nextEpisode ||
+        series.episodes[0]
+      );
+
+
+  els.seriesContinueButton.disabled =
+    !nextEpisode;
+
+
+  const saved =
+    series.episodes.every(
+      episode =>
+        state.favorites.has(
+          episode.id
+        )
+    );
+
+
+  els.seriesFavoriteButton.textContent =
+    saved
+      ? "♥ In My List"
+      : "♡ Add to My List";
+
+
+  els.seriesFavoriteButton.onclick =
+    () =>
+      toggleSeriesFavorite(
+        series
+      );
+
+
+  renderSeriesEpisodes(
+    series
+  );
+}
+
+
+function renderSeriesEpisodes(
+  series
+) {
+
+  const query =
+    normalise(
+      els.seriesEpisodeSearch.value
+    );
+
+
+  const list =
+    series.episodes.filter(
+      video =>
+        !query ||
+        normalise(
+          [
+            titleOf(video),
+            String(
+              episodeOf(video) ??
+              ""
+            )
+          ].join(" ")
+        ).includes(
+          query
+        )
+    );
+
+
+  els.seriesEpisodeList.innerHTML =
+    list
+      .map(
+        episodeCard
+      )
+      .join("");
+
+
+  bindEpisodeButtons(
+    els.seriesEpisodeList
+  );
+}
+
+
+/* --------------------------------------------------
+   WATCH HISTORY
+-------------------------------------------------- */
+
+function markWatched(
+  video
+) {
+
+  state.history =
+    state.history.filter(
+      item =>
+        item.id !==
+        video.id
+    );
+
+
+  state.history.unshift({
+    id: video.id,
+    timestamp: Date.now()
+  });
+
+
+  state.history =
+    state.history.slice(
+      0,
+      CONFIG.maxHistory
+    );
+
+
+  saveStorage();
+
+  renderContinue();
+}
+
+
+/* --------------------------------------------------
+   PLAYER
+-------------------------------------------------- */
+
+function openPlayer(
+  video
+) {
+
   if (!video) {
     return;
   }
 
+
   state.currentVideo =
     video;
 
-  renderDetails(video);
 
-  elements.detailsModal.classList.remove(
+  markWatched(
+    video
+  );
+
+
+  const series =
+    state.series.find(
+      item =>
+        item.episodes.some(
+          episode =>
+            episode.id ===
+            video.id
+        )
+    );
+
+
+  els.playerSeries.textContent =
+    series?.name ||
+    seriesOf(video);
+
+
+  els.playerTitle.textContent =
+    titleOf(video);
+
+
+  els.playerTitleBelow.textContent =
+    `${
+      series?.name ||
+      seriesOf(video)
+    } · Episode ${
+      episodeLabel(video)
+    }`;
+
+
+  els.playerMeta.textContent =
+    [
+      yearOf(video),
+      qualityOf(video),
+      ...genresOf(video)
+    ]
+      .filter(Boolean)
+      .join(" · ");
+
+
+  const index =
+    series
+      ? series.episodes.findIndex(
+          episode =>
+            episode.id ===
+            video.id
+        )
+      : -1;
+
+
+  els.playerPrevButton.disabled =
+    !series ||
+    index <= 0;
+
+
+  els.playerNextButton.disabled =
+    !series ||
+    index < 0 ||
+    index >=
+      series.episodes.length - 1;
+
+
+  els.playerPrevButton.onclick =
+    () =>
+      openPlayer(
+        series.episodes[
+          index - 1
+        ]
+      );
+
+
+  els.playerNextButton.onclick =
+    () =>
+      openPlayer(
+        series.episodes[
+          index + 1
+        ]
+      );
+
+
+  els.playerFavoriteButton.textContent =
+    state.favorites.has(
+      video.id
+    )
+      ? "♥ In My List"
+      : "♡ My List";
+
+
+  els.playerFavoriteButton.onclick =
+    () => {
+
+      if (
+        state.favorites.has(
+          video.id
+        )
+      ) {
+
+        state.favorites.delete(
+          video.id
+        );
+
+      } else {
+
+        state.favorites.add(
+          video.id
+        );
+      }
+
+
+      saveStorage();
+
+      updateCounts();
+
+      els.playerFavoriteButton.textContent =
+        state.favorites.has(
+          video.id
+        )
+          ? "♥ In My List"
+          : "♡ My List";
+    };
+
+
+  els.playerInfoButton.onclick =
+    () => {
+
+      closePlayer();
+
+      if (series) {
+        openSeries(
+          series
+        );
+      }
+    };
+
+
+  const embed =
+    safeUrl(
+      embedOf(video)
+    );
+
+
+  els.playerLoading.textContent =
+    "Loading player…";
+
+
+  els.playerLoading.classList.remove(
     "hidden"
   );
 
-  document.body.classList.add(
-    "modal-open"
+
+  els.playerFrame.removeAttribute(
+    "src"
+  );
+
+
+  setModal(
+    els.playerModal,
+    true
+  );
+
+
+  requestAnimationFrame(
+    () => {
+
+      if (!embed) {
+
+        els.playerLoading.textContent =
+          "No playable source.";
+
+        return;
+      }
+
+
+      els.playerFrame.src =
+        embed;
+
+
+      els.playerFrame.onload =
+        () =>
+          els.playerLoading.classList.add(
+            "hidden"
+          );
+    }
   );
 }
 
-function renderHistory() {
-  const entries =
-    state.history
-      .map(item => ({
-        ...item,
-        video: videoById(item.id)
-      }))
-      .filter(
-        entry => entry.video
-      );
 
-  if (!entries.length) {
-    elements.historyContent.innerHTML = `
-      <div class="empty-history">
-        <div>
-          <strong>No watch history yet.</strong>
-          <div>
-            Start watching something and it will appear here.
-          </div>
-        </div>
+function closePlayer() {
+
+  els.playerFrame.src =
+    "about:blank";
+
+
+  setModal(
+    els.playerModal,
+    false
+  );
+}
+
+
+/* --------------------------------------------------
+   HISTORY MODAL
+-------------------------------------------------- */
+
+function showHistory() {
+
+  const items =
+    state.history
+      .map(
+        history =>
+          state.videos.find(
+            video =>
+              video.id ===
+              history.id
+          )
+      )
+      .filter(Boolean);
+
+
+  if (!items.length) {
+
+    els.historyContent.innerHTML = `
+      <div class="state">
+        <strong>
+          No watch history yet.
+        </strong>
+
+        <p>
+          Episodes you open will appear here.
+        </p>
       </div>
     `;
 
-    elements.clearHistoryButton.disabled =
-      true;
+  } else {
 
-    elements.clearHistoryButton.style.opacity =
-      ".45";
+    els.historyContent.innerHTML = `
+      <div class="history-list">
 
-    return;
-  }
+        ${items
+          .map(
+            video => {
 
-  elements.clearHistoryButton.disabled =
-    false;
+              const history =
+                state.history.find(
+                  item =>
+                    item.id ===
+                    video.id
+                );
 
-  elements.clearHistoryButton.style.opacity =
-    "";
 
-  elements.historyContent.innerHTML =
-    entries
-      .map(entry => {
-        const image =
-          safeUrl(
-            getImage(
-              entry.video
-            )
-          );
+              return `
+                <div class="history-item">
 
-        const date =
-          new Date(
-            entry.timestamp
-          ).toLocaleString(
-            undefined,
-            {
-              dateStyle: "medium",
-              timeStyle: "short"
+                  ${episodeCard(
+                    video
+                  )}
+
+                  <time>
+                    ${
+                      new Date(
+                        history?.timestamp ||
+                        Date.now()
+                      ).toLocaleString()
+                    }
+                  </time>
+
+                </div>
+              `;
             }
-          );
+          )
+          .join("")}
 
-        return `
-          <article
-            class="history-item"
-            data-video-id="${escapeHtml(entry.video.id)}"
-          >
-            <div class="history-thumb">
-              ${
-                image
-                  ? `
-                    <img
-                      src="${escapeHtml(image)}"
-                      alt=""
-                      loading="lazy"
-                    >
-                  `
-                  : ""
-              }
-            </div>
+      </div>
+    `;
 
-            <div class="history-details">
-              <strong>
-                ${escapeHtml(
-                  getTitle(entry.video)
-                )}
-              </strong>
 
-              <span>
-                ${escapeHtml(
-                  getSeries(entry.video)
-                )}
-                ${
-                  date
-                    ? ` · ${escapeHtml(date)}`
-                    : ""
-                }
-              </span>
-            </div>
+    bindEpisodeButtons(
+      els.historyContent
+    );
+  }
 
-            <div class="history-actions">
-              <button
-                class="button primary-button"
-                type="button"
-                data-history-watch
-              >
-                Resume
-              </button>
 
-              <button
-                class="button subtle-button"
-                type="button"
-                data-history-remove
-              >
-                Remove
-              </button>
-            </div>
-          </article>
-        `;
-      })
-      .join("");
-}
-
-function openHistory() {
-  renderHistory();
-
-  elements.historyModal.classList.remove(
-    "hidden"
-  );
-
-  document.body.classList.add(
-    "modal-open"
+  setModal(
+    els.historyModal,
+    true
   );
 }
 
-function clearHistory() {
-  if (!state.history.length) {
-    return;
-  }
 
-  state.history = [];
+function closeHistory() {
 
-  saveHistory();
-
-  renderContinueWatching();
-  renderHistory();
-
-  showToast(
-    "Watch history cleared"
+  setModal(
+    els.historyModal,
+    false
   );
 }
 
-function clearFilter(kind) {
-  if (kind === "search") {
-    elements.searchInput.value =
-      "";
 
-    elements.mobileSearchInput.value =
-      "";
-  }
+/* --------------------------------------------------
+   NAVIGATION
+-------------------------------------------------- */
 
-  if (kind === "series") {
-    elements.seriesFilter.value =
-      "ALL";
-  }
+function setView(
+  view
+) {
 
-  if (kind === "genre") {
-    elements.genreFilter.value =
-      "ALL";
-  }
-
-  if (kind === "quality") {
-    elements.qualityFilter.value =
-      "ALL";
-  }
-
-  applyFilters();
-}
-
-function resetFilters() {
-  elements.searchInput.value =
-    "";
-
-  elements.mobileSearchInput.value =
-    "";
-
-  elements.seriesFilter.value =
-    "ALL";
-
-  elements.genreFilter.value =
-    "ALL";
-
-  elements.qualityFilter.value =
-    "ALL";
-
-  elements.sortFilter.value =
-    "catalogue";
-
-  applyFilters();
-}
-
-function syncSearch(source) {
-  const value =
-    source.value;
-
-  if (
-    source !==
-    elements.searchInput
-  ) {
-    elements.searchInput.value =
-      value;
-  }
-
-  if (
-    source !==
-    elements.mobileSearchInput
-  ) {
-    elements.mobileSearchInput.value =
-      value;
-  }
-
-  applyFilters();
-}
-
-function setView(view) {
   state.currentView =
     view;
 
-  const navButtons =
-    document.querySelectorAll(
-      "[data-nav-view], #homeButton, #browseButton, #favoritesButton"
+
+  document
+    .querySelectorAll(
+      "[data-view]"
+    )
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.view ===
+            view
+        );
+      }
     );
 
-  navButtons.forEach(button => {
-    const buttonView =
-      button.dataset.navView ||
-      (
-        button.id === "homeButton"
-          ? "home"
-          : button.id === "favoritesButton"
-            ? "favorites"
-            : button.id === "browseButton"
-              ? "browse"
-              : ""
-      );
-
-    button.classList.toggle(
-      "active",
-      buttonView === view
-    );
-  });
 
   if (view === "favorites") {
-    elements.discoverySection.scrollIntoView({
+
+    const favoriteSeries =
+      state.series.filter(
+        series =>
+          series.episodes.some(
+            episode =>
+              state.favorites.has(
+                episode.id
+              )
+          )
+      );
+
+
+    els.seriesTitle.textContent =
+      "My List";
+
+
+    els.seriesSubtitle.textContent =
+      "Series and episodes you saved.";
+
+
+    els.seriesGrid.innerHTML =
+      favoriteSeries
+        .map(
+          seriesCard
+        )
+        .join("");
+
+
+    state.filteredSeries =
+      favoriteSeries;
+
+
+    els.seriesCount.textContent =
+      `${favoriteSeries.length} series`;
+
+
+    els.emptyState.classList.toggle(
+      "hidden",
+      !!favoriteSeries.length
+    );
+
+
+    els.seriesGrid.classList.toggle(
+      "hidden",
+      !favoriteSeries.length
+    );
+
+
+    bindSeriesCards();
+
+  } else {
+
+    els.seriesTitle.textContent =
+      "Series";
+
+
+    els.seriesSubtitle.textContent =
+      "Everything grouped neatly by series.";
+
+
+    applySeriesFilters();
+  }
+
+
+  if (view === "browse") {
+
+    els.episodeLibrary.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
 
-    elements.seriesSection.classList.add(
-      "hidden"
-    );
+  } else if (view === "home") {
 
-    elements.continueSection.classList.add(
-      "hidden"
-    );
-
-    const filters =
-      getFilterState();
-
-    let videos =
-      state.videos.filter(video =>
-        state.favorites.has(
-          video.id
-        )
-      );
-
-    if (
-      filters.query ||
-      filters.series !== "ALL" ||
-      filters.genre !== "ALL" ||
-      filters.quality !== "ALL"
-    ) {
-      videos =
-        videos.filter(
-          video => {
-            const haystack = [
-              getTitle(video),
-              getSeries(video),
-              getDescription(video),
-              ...getGenres(video),
-              getQuality(video),
-              String(
-                getEpisodeNumber(
-                  video
-                )
-              )
-            ]
-              .join(" ")
-              .toLowerCase();
-
-            return (
-              (!filters.query ||
-                haystack.includes(
-                  filters.query
-                )) &&
-              (
-                filters.series ===
-                  "ALL" ||
-                getSeries(video) ===
-                  filters.series
-              ) &&
-              (
-                filters.genre ===
-                  "ALL" ||
-                getGenres(video).includes(
-                  filters.genre
-                )
-              ) &&
-              (
-                filters.quality ===
-                  "ALL" ||
-                getQuality(video) ===
-                  filters.quality
-              )
-            );
-          }
-        );
-    }
-
-    state.filteredVideos =
-      sortVideos(
-        videos,
-        filters.sort
-      );
-
-    updateLibraryCopy(
-      filters
-    );
-
-    renderGrid();
-    renderActiveFilters(
-      filters
-    );
-  } else {
-    elements.continueSection.classList.toggle(
-      "hidden",
-      state.history.length === 0
-    );
-
-    elements.seriesSection.classList.toggle(
-      "hidden",
-      false
-    );
-
-    if (view === "home") {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-    } else {
-      elements.discoverySection.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    }
-
-    applyFilters();
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   }
 
-  closeMobileMenu();
-}
 
-function openBrowse() {
-  setView("browse");
-}
-
-function openHome() {
-  setView("home");
-}
-
-function showToast(message) {
-  window.clearTimeout(
-    state.toastTimer
-  );
-
-  elements.toast.textContent =
-    message;
-
-  elements.toast.classList.add(
-    "visible"
-  );
-
-  state.toastTimer =
-    window.setTimeout(
-      () =>
-        elements.toast.classList.remove(
-          "visible"
-        ),
-      2300
-    );
-}
-
-function announce(message) {
-  elements.notification.textContent =
-    message;
-}
-
-function closeMobileMenu() {
-  elements.mobileNav.hidden =
+  els.mobileNav.hidden =
     true;
 
-  elements.mobileMenuButton?.setAttribute(
+
+  els.mobileMenuButton.setAttribute(
     "aria-expanded",
     "false"
   );
 }
 
-function toggleMobileMenu() {
-  const next =
-    elements.mobileNav.hidden;
 
-  elements.mobileNav.hidden =
-    !next;
+/* --------------------------------------------------
+   RESET
+-------------------------------------------------- */
 
-  elements.mobileMenuButton.setAttribute(
-    "aria-expanded",
-    String(next)
+function reset() {
+
+  els.searchInput.value =
+    "";
+
+  els.mobileSearchInput.value =
+    "";
+
+  els.genreFilter.value =
+    "ALL";
+
+  els.seriesFilter.value =
+    "ALL";
+
+  els.seriesSort.value =
+    "recommended";
+
+  els.episodeSort.value =
+    "series-episode";
+
+
+  setView(
+    "home"
   );
+
+
+  applySeriesFilters();
+
+  renderEpisodes();
 }
 
-function handleCardClick(event) {
-  const card =
-    event.target.closest(
-      ".video-card"
-    );
 
-  if (!card) {
-    return;
-  }
+/* --------------------------------------------------
+   MODAL CLOSE
+-------------------------------------------------- */
 
-  const video =
-    videoById(
-      card.dataset.videoId
-    );
+function closeAll() {
 
-  if (!video) {
-    return;
-  }
+  [
+    els.seriesModal,
+    els.playerModal,
+    els.historyModal
+  ].forEach(
+    modal =>
+      setModal(
+        modal,
+        false
+      )
+  );
 
-  const action =
-    event.target.closest(
-      "[data-action]"
-    )?.dataset.action;
 
-  if (action === "favorite") {
-    toggleFavorite(video.id);
-  } else if (action === "watch") {
-    openPlayer(video);
-  } else if (action === "info") {
-    openDetails(video);
-  }
+  els.playerFrame.src =
+    "about:blank";
 }
 
-function bindEvents() {
-  elements.brandButton.addEventListener(
-    "click",
-    openHome
-  );
 
-  elements.homeButton.addEventListener(
-    "click",
-    openHome
-  );
+/* --------------------------------------------------
+   EVENTS
+-------------------------------------------------- */
 
-  elements.browseButton.addEventListener(
-    "click",
-    openBrowse
-  );
+function events() {
 
-  elements.favoritesButton.addEventListener(
-    "click",
-    () => setView("favorites")
-  );
+  document
+    .querySelectorAll(
+      "[data-view]"
+    )
+    .forEach(
+      button => {
 
-  elements.historyButton.addEventListener(
-    "click",
-    openHistory
-  );
+        button.onclick =
+          () =>
+            setView(
+              button.dataset.view
+            );
+      }
+    );
 
-  elements.openHistoryFromSection.addEventListener(
-    "click",
-    openHistory
-  );
 
-  elements.mobileSearchButton.addEventListener(
-    "click",
+  els.brandButton.onclick =
+    () =>
+      setView(
+        "home"
+      );
+
+
+  els.historyButton.onclick =
+    showHistory;
+
+
+  els.mobileHistoryButton.onclick =
+    showHistory;
+
+
+  els.openHistoryButton.onclick =
+    showHistory;
+
+
+  els.mobileMenuButton.onclick =
     () => {
-      openBrowse();
 
-      window.setTimeout(
-        () =>
-          elements.mobileSearchInput.focus(),
-        50
+      els.mobileNav.hidden =
+        !els.mobileNav.hidden;
+
+
+      els.mobileMenuButton.setAttribute(
+        "aria-expanded",
+        String(
+          !els.mobileNav.hidden
+        )
+      );
+    };
+
+
+  [
+    els.searchInput,
+    els.mobileSearchInput
+  ].forEach(
+    input => {
+
+      input.addEventListener(
+        "input",
+        () => {
+
+          els.searchInput.value =
+            input.value;
+
+          els.mobileSearchInput.value =
+            input.value;
+
+
+          applySeriesFilters();
+
+          renderEpisodes();
+        }
       );
     }
   );
 
-  elements.mobileMenuButton.addEventListener(
-    "click",
-    toggleMobileMenu
+
+  [
+    els.genreFilter,
+    els.seriesSort,
+    els.seriesFilter,
+    els.episodeSort
+  ].forEach(
+    input => {
+
+      input.addEventListener(
+        "change",
+        () => {
+
+          applySeriesFilters();
+
+          renderEpisodes();
+        }
+      );
+    }
   );
 
-  elements.searchInput.addEventListener(
+
+  els.resetButton.onclick =
+    reset;
+
+
+  els.retryButton.onclick =
+    load;
+
+
+  els.closeSeriesButton.onclick =
+    () =>
+      setModal(
+        els.seriesModal,
+        false
+      );
+
+
+  els.closeHistoryButton.onclick =
+    closeHistory;
+
+
+  els.playerBackButton.onclick =
+    closePlayer;
+
+
+  els.clearHistoryButton.onclick =
+    () => {
+
+      state.history = [];
+
+      saveStorage();
+
+      renderContinue();
+
+      showHistory();
+
+      toast(
+        "Watch history cleared"
+      );
+    };
+
+
+  els.seriesEpisodeSearch.addEventListener(
     "input",
-    () =>
-      syncSearch(
-        elements.searchInput
-      )
-  );
-
-  elements.mobileSearchInput.addEventListener(
-    "input",
-    () =>
-      syncSearch(
-        elements.mobileSearchInput
-      )
-  );
-
-  elements.seriesFilter.addEventListener(
-    "change",
-    applyFilters
-  );
-
-  elements.genreFilter.addEventListener(
-    "change",
-    applyFilters
-  );
-
-  elements.qualityFilter.addEventListener(
-    "change",
-    applyFilters
-  );
-
-  elements.sortFilter.addEventListener(
-    "change",
-    applyFilters
-  );
-
-  elements.resetButton.addEventListener(
-    "click",
-    resetFilters
-  );
-
-  elements.emptyResetButton.addEventListener(
-    "click",
-    resetFilters
-  );
-
-  elements.retryButton.addEventListener(
-    "click",
-    loadCatalogue
-  );
-
-  elements.videoGrid.addEventListener(
-    "click",
-    handleCardClick
-  );
-
-  elements.continueRow.addEventListener(
-    "click",
-    handleCardClick
-  );
-
-  elements.seriesGrid.addEventListener(
-    "click",
-    event => {
-      const button =
-        event.target.closest(
-          "[data-series]"
-        );
-
-      if (!button) {
-        return;
-      }
-
-      elements.seriesFilter.value =
-        button.dataset.series;
-
-      openBrowse();
-      applyFilters();
-    }
-  );
-
-  elements.activeFilters.addEventListener(
-    "click",
-    event => {
-      const button =
-        event.target.closest(
-          "[data-clear-filter]"
-        );
-
-      if (button) {
-        clearFilter(
-          button.dataset.clearFilter
-        );
-      }
-    }
-  );
-
-  elements.heroWatchButton.addEventListener(
-    "click",
-    () =>
-      openPlayer(
-        state.featuredVideo
-      )
-  );
-
-  elements.heroFavoriteButton.addEventListener(
-    "click",
     () => {
-      if (state.featuredVideo) {
-        toggleFavorite(
-          state.featuredVideo.id
-        );
-      }
-    }
-  );
-
-  elements.heroInfoButton.addEventListener(
-    "click",
-    () =>
-      openDetails(
-        state.featuredVideo
-      )
-  );
-
-  elements.playerBackButton.addEventListener(
-    "click",
-    closePlayer
-  );
-
-  elements.playerBackdrop.addEventListener(
-    "click",
-    closePlayer
-  );
-
-  elements.playerPrevButton.addEventListener(
-    "click",
-    () =>
-      openRelativeEpisode(-1)
-  );
-
-  elements.playerNextButton.addEventListener(
-    "click",
-    () =>
-      openRelativeEpisode(1)
-  );
-
-  elements.playerFavoriteButton.addEventListener(
-    "click",
-    () => {
-      if (state.currentVideo) {
-        toggleFavorite(
-          state.currentVideo.id
-        );
-      }
-    }
-  );
-
-  elements.playerInfoButton.addEventListener(
-    "click",
-    () => {
-      const video =
-        state.currentVideo;
-
-      closePlayer();
-      openDetails(video);
-    }
-  );
-
-  elements.playerFrame.addEventListener(
-    "load",
-    () =>
-      elements.playerLoading.classList.add(
-        "hidden"
-      )
-  );
-
-  elements.closeDetailsButton.addEventListener(
-    "click",
-    () =>
-      closeModal(
-        elements.detailsModal
-      )
-  );
-
-  elements.detailsBackdrop.addEventListener(
-    "click",
-    () =>
-      closeModal(
-        elements.detailsModal
-      )
-  );
-
-  elements.detailsContent.addEventListener(
-    "click",
-    event => {
-      if (!state.currentVideo) {
-        return;
-      }
 
       if (
-        event.target.closest(
-          "[data-details-watch]"
-        )
+        state.currentSeries
       ) {
-        const video =
-          state.currentVideo;
-
-        closeModal(
-          elements.detailsModal
+        renderSeriesEpisodes(
+          state.currentSeries
         );
-
-        openPlayer(video);
-      } else if (
-        event.target.closest(
-          "[data-details-favorite]"
-        )
-      ) {
-        toggleFavorite(
-          state.currentVideo.id
-        );
-      } else if (
-        event.target.closest(
-          ".video-card"
-        )
-      ) {
-        closeModal(
-          elements.detailsModal
-        );
-
-        handleCardClick(event);
       }
     }
   );
 
-  elements.closeHistoryButton.addEventListener(
-    "click",
-    () =>
-      closeModal(
-        elements.historyModal
-      )
-  );
-
-  elements.historyBackdrop.addEventListener(
-    "click",
-    () =>
-      closeModal(
-        elements.historyModal
-      )
-  );
-
-  elements.clearHistoryButton.addEventListener(
-    "click",
-    clearHistory
-  );
-
-  elements.historyContent.addEventListener(
-    "click",
-    event => {
-      const item =
-        event.target.closest(
-          ".history-item"
-        );
-
-      if (!item) {
-        return;
-      }
-
-      const video =
-        videoById(
-          item.dataset.videoId
-        );
-
-      if (!video) {
-        return;
-      }
-
-      if (
-        event.target.closest(
-          "[data-history-watch]"
-        )
-      ) {
-        openPlayer(video);
-      }
-
-      if (
-        event.target.closest(
-          "[data-history-remove]"
-        )
-      ) {
-        state.history =
-          state.history.filter(
-            historyItem =>
-              historyItem.id !==
-              video.id
-          );
-
-        saveHistory();
-        renderHistory();
-        renderContinueWatching();
-
-        showToast(
-          "Removed from history"
-        );
-      }
-    }
-  );
 
   document
     .querySelectorAll(
-      "[data-nav-view]"
+      "[data-close]"
     )
-    .forEach(button =>
-      button.addEventListener(
-        "click",
-        () =>
-          setView(
-            button.dataset.navView
-          )
-      )
+    .forEach(
+      button => {
+
+        button.onclick =
+          closeAll;
+      }
     );
 
-  document
-    .querySelectorAll(
-      "[data-nav-history]"
-    )
-    .forEach(button =>
-      button.addEventListener(
-        "click",
-        openHistory
-      )
-    );
 
   document.addEventListener(
     "keydown",
     event => {
+
       if (
         event.key === "/" &&
-        document.activeElement?.tagName !==
-          "INPUT" &&
-        document.activeElement?.tagName !==
-          "TEXTAREA"
+        ![
+          "INPUT",
+          "TEXTAREA",
+          "SELECT"
+        ].includes(
+          document.activeElement.tagName
+        )
       ) {
+
         event.preventDefault();
 
-        openBrowse();
-
-        elements.searchInput.focus();
+        els.searchInput.focus();
       }
+
 
       if (
         event.key === "Escape"
       ) {
-        if (
-          !elements.playerModal.classList.contains(
-            "hidden"
-          )
-        ) {
-          closePlayer();
-        } else if (
-          !elements.detailsModal.classList.contains(
-            "hidden"
-          )
-        ) {
-          closeModal(
-            elements.detailsModal
-          );
-        } else if (
-          !elements.historyModal.classList.contains(
-            "hidden"
-          )
-        ) {
-          closeModal(
-            elements.historyModal
-          );
-        } else {
-          closeMobileMenu();
-        }
+        closeAll();
       }
+
+
+      if (
+        event.key === "ArrowLeft" &&
+        !els.playerModal.classList.contains(
+          "hidden"
+        ) &&
+        !els.playerPrevButton.disabled
+      ) {
+        els.playerPrevButton.click();
+      }
+
+
+      if (
+        event.key === "ArrowRight" &&
+        !els.playerModal.classList.contains(
+          "hidden"
+        ) &&
+        !els.playerNextButton.disabled
+      ) {
+        els.playerNextButton.click();
+      }
+
     }
   );
 }
 
-function init() {
-  cacheElements();
-  loadStorage();
-  bindEvents();
-  loadCatalogue();
-}
 
-document.addEventListener(
-  "DOMContentLoaded",
-  init,
-  { once: true }
-);
+/* --------------------------------------------------
+   START
+-------------------------------------------------- */
+
+loadStorage();
+
+events();
+
+load();
