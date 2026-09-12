@@ -3,330 +3,699 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="UNHAPPY — a fast anime and media library.">
   <meta name="theme-color" content="#07080d">
   <meta name="color-scheme" content="dark">
+  <meta name="description" content="UNHAPPY — a polished anime and media library.">
   <title>UNHAPPY — Anime & Media</title>
   <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
-  <a class="skip-link" href="#mainContent">Skip to content</a>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <div class="app-shell">
-    <header class="site-header" id="siteHeader">
-      <div class="header-inner">
-        <button class="brand" id="brandButton" type="button" aria-label="Go to home">
-          <span class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H17a3 3 0 0 1 3 3v9.5A3.5 3.5 0 0 1 16.5 18H9l-4 4v-5.5A3.5 3.5 0 0 1 2 13V7.5A3.5 3.5 0 0 1 4 5.5Z" opacity=".95"/>
-              <path d="m10 8 5 3-5 3V8Z" fill="currentColor" stroke="none"/>
-            </svg>
-          </span>
-          <span class="brand-copy">
-            <strong>UNHAPPY</strong>
-            <small>ANIME &amp; MEDIA</small>
-          </span>
-        </button>
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
 
-        <nav class="desktop-nav" aria-label="Primary navigation">
-          <button class="nav-link active" id="homeButton" type="button">Home</button>
-          <button class="nav-link" id="browseButton" type="button">Browse</button>
-          <button class="nav-link nav-link-with-count" id="favoritesButton" type="button">
-            <span>Favorites</span>
-            <span id="favoriteCount" class="nav-count">0</span>
-          </button>
-        </nav>
+      <button
+        class="brand"
+        id="brandButton"
+        type="button"
+        aria-label="Go to home"
+      >
+        <span class="brand-mark">U</span>
 
-        <div class="header-actions">
-          <label class="desktop-search" for="searchInput">
-            <span class="search-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <circle cx="11" cy="11" r="6.8"></circle>
-                <path d="m16.2 16.2 4.2 4.2"></path>
-              </svg>
-            </span>
-            <input id="searchInput" type="search" autocomplete="off" spellcheck="false" placeholder="Search titles, series, genres…" aria-label="Search library">
-            <kbd>/</kbd>
-          </label>
-
-          <button class="icon-button" id="mobileSearchButton" type="button" aria-label="Focus search">
-            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <circle cx="11" cy="11" r="6.8"></circle>
-              <path d="m16.2 16.2 4.2 4.2"></path>
-            </svg>
-          </button>
-
-          <button class="icon-button" id="historyButton" type="button" aria-label="Open watch history">
-            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3.5 12a8.5 8.5 0 1 0 2.4-5.9"></path>
-              <path d="M3.5 4.5v5h5"></path>
-              <path d="M12 7.7V12l3 1.9"></path>
-            </svg>
-          </button>
-
-          <button class="icon-button" id="mobileMenuButton" type="button" aria-label="Open menu" aria-expanded="false">
-            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <path d="M4 7h16M4 12h16M4 17h16"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="mobile-nav" id="mobileNav" hidden>
-        <button class="mobile-nav-link active" data-nav-view="home" type="button">Home</button>
-        <button class="mobile-nav-link" data-nav-view="browse" type="button">Browse</button>
-        <button class="mobile-nav-link" data-nav-view="favorites" type="button">Favorites <span id="mobileFavoriteCount">0</span></button>
-        <button class="mobile-nav-link" data-nav-history type="button">Watch History</button>
-      </div>
-    </header>
-
-    <main id="mainContent">
-      <section id="hero" class="hero" aria-label="Featured title">
-        <div id="heroBackground" class="hero-background"></div>
-        <div class="hero-noise" aria-hidden="true"></div>
-        <div class="hero-gradient"></div>
-        <div class="hero-glow" aria-hidden="true"></div>
-
-        <div class="hero-inner">
-          <div class="hero-copy">
-            <div class="hero-kicker-row">
-              <span id="heroBadge" class="eyebrow-pill">FEATURED</span>
-              <span class="hero-kicker-line"></span>
-              <span class="hero-kicker-text">CURATED FOR YOU</span>
-            </div>
-
-            <h1 id="heroTitle" class="hero-title">Loading your library…</h1>
-
-            <div id="heroMeta" class="hero-meta"></div>
-
-            <p id="heroDescription" class="hero-description"></p>
-
-            <div class="hero-actions">
-              <button id="heroWatchButton" class="button primary-button" type="button">
-                <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
-                  <path d="M8 5.4v13.2c0 .8.9 1.3 1.6.9l10-6.6a1.1 1.1 0 0 0 0-1.8l-10-6.6C8.9 4.1 8 4.6 8 5.4Z"></path>
-                </svg>
-                Watch now
-              </button>
-
-              <button id="heroFavoriteButton" class="button glass-button" type="button" aria-pressed="false">
-                <span class="button-icon" aria-hidden="true">♡</span>
-                <span id="heroFavoriteLabel">My list</span>
-              </button>
-
-              <button id="heroInfoButton" class="button subtle-button" type="button">
-                More info
-              </button>
-            </div>
-          </div>
-
-          <div class="hero-art-wrap" aria-hidden="true">
-            <div class="hero-art-shadow"></div>
-            <div class="hero-art-frame">
-              <img id="heroPoster" alt="" loading="eager">
-            </div>
-          </div>
-        </div>
-
-        <div class="hero-bottom-fade" aria-hidden="true"></div>
-      </section>
-
-      <section id="continueSection" class="content-section compact-section hidden">
-        <div class="section-heading">
-          <div>
-            <div class="section-kicker">PICK UP WHERE YOU LEFT OFF</div>
-            <h2>Continue watching</h2>
-          </div>
-
-          <button class="section-link" id="openHistoryFromSection" type="button">
-            View history <span aria-hidden="true">→</span>
-          </button>
-        </div>
-
-        <div id="continueRow" class="media-row"></div>
-      </section>
-
-      <section class="content-section" id="discoverySection">
-        <div class="section-heading">
-          <div>
-            <div class="section-kicker">DISCOVER</div>
-            <h2 id="discoveryTitle">Fresh from the library</h2>
-            <p id="discoverySubtitle">Browse the latest titles and episodes in your collection.</p>
-          </div>
-
-          <span id="resultCount" class="result-count">0 items</span>
-        </div>
-
-        <div class="browse-toolbar" id="browseToolbar">
-          <div class="search-mobile-wrap">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="6.8"></circle>
-              <path d="m16.2 16.2 4.2 4.2"></path>
-            </svg>
-
-            <input id="mobileSearchInput" type="search" autocomplete="off" spellcheck="false" placeholder="Search the library…" aria-label="Search library">
-          </div>
-
-          <div class="filter-chips" role="group" aria-label="Library filters">
-            <label class="filter-control">
-              <span>Series</span>
-              <select id="seriesFilter">
-                <option value="ALL">All series</option>
-              </select>
-            </label>
-
-            <label class="filter-control">
-              <span>Genre</span>
-              <select id="genreFilter">
-                <option value="ALL">All genres</option>
-              </select>
-            </label>
-
-            <label class="filter-control">
-              <span>Quality</span>
-              <select id="qualityFilter">
-                <option value="ALL">All qualities</option>
-              </select>
-            </label>
-
-            <label class="filter-control">
-              <span>Sort</span>
-              <select id="sortFilter">
-                <option value="catalogue">Recommended</option>
-                <option value="title">Title A–Z</option>
-                <option value="episode-asc">Episode ↑</option>
-                <option value="episode-desc">Episode ↓</option>
-                <option value="year-desc">Newest</option>
-                <option value="year-asc">Oldest</option>
-              </select>
-            </label>
-
-            <button id="resetButton" class="reset-button" type="button">Clear</button>
-          </div>
-        </div>
-
-        <div id="activeFilters" class="active-filters hidden" aria-live="polite"></div>
-
-        <div id="loadingState" class="state-panel">
-          <div class="skeleton-grid" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-
-          <p>Loading your library…</p>
-        </div>
-
-        <div id="errorState" class="state-panel hidden" role="alert">
-          <div class="state-icon warning-icon">!</div>
-          <h3>We couldn't load the library</h3>
-          <p id="errorMessage">Please check the catalogue and try again.</p>
-          <button id="retryButton" class="button primary-button" type="button">Try again</button>
-        </div>
-
-        <div id="emptyState" class="state-panel hidden">
-          <div class="state-icon">⌕</div>
-          <h3>Nothing matches that search</h3>
-          <p>Try another title or clear one of the active filters.</p>
-          <button id="emptyResetButton" class="button subtle-button" type="button">Clear filters</button>
-        </div>
-
-        <div id="videoGrid" class="video-grid hidden"></div>
-      </section>
-
-      <section id="seriesSection" class="content-section hidden">
-        <div class="section-heading">
-          <div>
-            <div class="section-kicker">BY SERIES</div>
-            <h2>Explore your collection</h2>
-          </div>
-        </div>
-
-        <div id="seriesGrid" class="series-grid"></div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="footer-brand">
-        <span class="footer-mark">◉</span>
-        <div>
+        <span class="brand-copy">
           <strong>UNHAPPY</strong>
           <small>ANIME &amp; MEDIA</small>
+        </span>
+      </button>
+
+      <nav class="desktop-nav" aria-label="Primary">
+        <button
+          class="nav-link active"
+          data-view="home"
+          type="button"
+        >
+          Home
+        </button>
+
+        <button
+          class="nav-link"
+          data-view="browse"
+          type="button"
+        >
+          Browse
+        </button>
+
+        <button
+          class="nav-link"
+          data-view="favorites"
+          type="button"
+        >
+          My List
+          <b id="favoriteCount">0</b>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+
+        <label class="search-box" for="searchInput">
+          <span aria-hidden="true">⌕</span>
+
+          <input
+            id="searchInput"
+            type="search"
+            autocomplete="off"
+            placeholder="Search series, episodes, genres…"
+          >
+
+          <kbd>/</kbd>
+        </label>
+
+        <button
+          class="icon-button"
+          id="historyButton"
+          type="button"
+          aria-label="Watch history"
+        >
+          ◷
+        </button>
+
+        <button
+          class="icon-button mobile-only"
+          id="mobileMenuButton"
+          type="button"
+          aria-label="Menu"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+
+      </div>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav" hidden>
+      <button data-view="home" type="button">
+        Home
+      </button>
+
+      <button data-view="browse" type="button">
+        Browse
+      </button>
+
+      <button data-view="favorites" type="button">
+        My List
+        <span id="mobileFavoriteCount">0</span>
+      </button>
+
+      <button id="mobileHistoryButton" type="button">
+        History
+      </button>
+    </div>
+  </header>
+
+
+  <main id="main">
+
+    <!-- HERO -->
+
+    <section class="hero" id="hero">
+
+      <div
+        class="hero-bg"
+        id="heroBackground"
+      ></div>
+
+      <div class="hero-overlay"></div>
+
+      <div class="hero-inner">
+
+        <div class="hero-copy">
+
+          <span
+            class="eyebrow"
+            id="heroBadge"
+          >
+            FEATURED SERIES
+          </span>
+
+          <h1 id="heroTitle">
+            Loading…
+          </h1>
+
+          <div
+            class="hero-meta"
+            id="heroMeta"
+          ></div>
+
+          <p id="heroDescription"></p>
+
+          <div class="hero-actions">
+
+            <button
+              class="button primary"
+              id="heroWatchButton"
+              type="button"
+            >
+              ▶ Watch
+            </button>
+
+            <button
+              class="button glass"
+              id="heroSeriesButton"
+              type="button"
+            >
+              View series
+            </button>
+
+            <button
+              class="button glass"
+              id="heroFavoriteButton"
+              type="button"
+            >
+              ♡
+              <span id="heroFavoriteLabel">
+                My List
+              </span>
+            </button>
+
+          </div>
         </div>
+
+        <div class="hero-poster">
+          <img
+            id="heroPoster"
+            alt=""
+            loading="eager"
+          >
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- CONTINUE WATCHING -->
+
+    <section
+      class="section continue-section hidden"
+      id="continueSection"
+    >
+
+      <div class="section-head">
+
+        <div>
+          <span class="section-kicker">
+            PICK UP WHERE YOU LEFT OFF
+          </span>
+
+          <h2>
+            Continue watching
+          </h2>
+        </div>
+
+        <button
+          class="text-button"
+          id="openHistoryButton"
+          type="button"
+        >
+          Full history →
+        </button>
+
       </div>
 
-      <div class="footer-copy">
-        <span>Fast static library</span>
-        <span class="dot">•</span>
-        <span>Built for the web</span>
+      <div
+        class="episode-row"
+        id="continueRow"
+      ></div>
+
+    </section>
+
+
+    <!-- SERIES -->
+
+    <section
+      class="section"
+      id="seriesSection"
+    >
+
+      <div class="section-head">
+
+        <div>
+          <span class="section-kicker">
+            YOUR COLLECTION
+          </span>
+
+          <h2 id="seriesTitle">
+            Series
+          </h2>
+
+          <p id="seriesSubtitle">
+            Everything grouped neatly by series.
+          </p>
+        </div>
+
+        <span
+          class="count-pill"
+          id="seriesCount"
+        >
+          0 series
+        </span>
+
       </div>
-    </footer>
+
+
+      <div class="toolbar">
+
+        <label class="mobile-search">
+          <span>⌕</span>
+
+          <input
+            id="mobileSearchInput"
+            type="search"
+            autocomplete="off"
+            placeholder="Search your library…"
+          >
+        </label>
+
+        <label>
+          <span>Genre</span>
+
+          <select id="genreFilter">
+            <option value="ALL">
+              All genres
+            </option>
+          </select>
+        </label>
+
+        <label>
+          <span>Sort</span>
+
+          <select id="seriesSort">
+            <option value="recommended">
+              Recommended
+            </option>
+
+            <option value="az">
+              A–Z
+            </option>
+
+            <option value="za">
+              Z–A
+            </option>
+
+            <option value="episodes">
+              Most episodes
+            </option>
+
+            <option value="year">
+              Newest
+            </option>
+          </select>
+        </label>
+
+        <button
+          class="clear-button"
+          id="resetButton"
+          type="button"
+        >
+          Clear
+        </button>
+
+      </div>
+
+
+      <div
+        id="loadingState"
+        class="state"
+      >
+        <div class="spinner"></div>
+        <p>
+          Building your library…
+        </p>
+      </div>
+
+
+      <div
+        id="errorState"
+        class="state hidden"
+      >
+        <strong>
+          Couldn't load the library.
+        </strong>
+
+        <p id="errorMessage"></p>
+
+        <button
+          class="button primary"
+          id="retryButton"
+          type="button"
+        >
+          Try again
+        </button>
+      </div>
+
+
+      <div
+        id="emptyState"
+        class="state hidden"
+      >
+        <strong>
+          No matching series
+        </strong>
+
+        <p>
+          Try another search or clear your filters.
+        </p>
+      </div>
+
+
+      <div
+        class="series-grid hidden"
+        id="seriesGrid"
+      ></div>
+
+    </section>
+
+
+    <!-- EPISODE LIBRARY -->
+
+    <section
+      class="section episode-library"
+      id="episodeLibrary"
+    >
+
+      <div class="section-head">
+
+        <div>
+          <span class="section-kicker">
+            EPISODE LIBRARY
+          </span>
+
+          <h2 id="episodeTitle">
+            All episodes
+          </h2>
+
+          <p id="episodeSubtitle">
+            Search results and direct episode access.
+          </p>
+        </div>
+
+        <span
+          class="count-pill"
+          id="resultCount"
+        >
+          0 episodes
+        </span>
+
+      </div>
+
+
+      <div class="episode-toolbar">
+
+        <label>
+          <span>Series</span>
+
+          <select id="seriesFilter">
+            <option value="ALL">
+              All series
+            </option>
+          </select>
+        </label>
+
+        <label>
+          <span>Sort</span>
+
+          <select id="episodeSort">
+
+            <option value="series-episode">
+              Series / Episode
+            </option>
+
+            <option value="episode">
+              Episode ↑
+            </option>
+
+            <option value="episode-desc">
+              Episode ↓
+            </option>
+
+            <option value="title">
+              Title A–Z
+            </option>
+
+            <option value="newest">
+              Newest
+            </option>
+
+          </select>
+        </label>
+
+      </div>
+
+
+      <div
+        class="episode-grid"
+        id="videoGrid"
+      ></div>
+
+    </section>
+
+  </main>
+
+
+  <footer class="footer">
+
+    <strong>
+      UNHAPPY
+    </strong>
+
+    <span>
+      Anime &amp; Media
+    </span>
+
+    <span>
+      •
+    </span>
+
+    <span id="footerStats">
+      0 titles
+    </span>
+
+  </footer>
+
+
+  <!-- SERIES DETAIL MODAL -->
+
+  <div
+    class="modal hidden"
+    id="seriesModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="seriesModalTitle"
+  >
+
+    <div
+      class="modal-backdrop"
+      data-close="series"
+    ></div>
+
+    <div class="series-modal">
+
+      <button
+        class="modal-close"
+        id="closeSeriesButton"
+        type="button"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+
+      <div class="series-hero">
+
+        <img
+          id="seriesModalImage"
+          alt=""
+        >
+
+        <div class="series-hero-shade"></div>
+
+        <div class="series-hero-copy">
+
+          <span class="eyebrow">
+            SERIES
+          </span>
+
+          <h2 id="seriesModalTitle"></h2>
+
+          <div
+            id="seriesModalMeta"
+            class="hero-meta"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <div class="series-content">
+
+        <div class="series-main">
+
+          <div
+            class="series-description"
+            id="seriesModalDescription"
+          ></div>
+
+          <div
+            class="tag-list"
+            id="seriesModalGenres"
+          ></div>
+
+        </div>
+
+
+        <aside
+          class="series-stats"
+          id="seriesModalStats"
+        ></aside>
+
+      </div>
+
+
+      <div class="series-actions">
+
+        <button
+          class="button primary"
+          id="seriesPlayButton"
+          type="button"
+        >
+          ▶ Play first episode
+        </button>
+
+        <button
+          class="button glass"
+          id="seriesContinueButton"
+          type="button"
+        >
+          Continue
+        </button>
+
+        <button
+          class="button glass"
+          id="seriesFavoriteButton"
+          type="button"
+        >
+          ♡ My List
+        </button>
+
+      </div>
+
+
+      <div class="episodes-header">
+
+        <div>
+
+          <span class="section-kicker">
+            EPISODES
+          </span>
+
+          <h3>
+            All episodes
+          </h3>
+
+        </div>
+
+        <label class="episode-search">
+
+          <span>⌕</span>
+
+          <input
+            id="seriesEpisodeSearch"
+            type="search"
+            placeholder="Episode number or title…"
+          >
+
+        </label>
+
+      </div>
+
+
+      <div
+        class="episode-strip"
+        id="seriesEpisodeList"
+      ></div>
+
+    </div>
+
   </div>
 
-  <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
-    <button class="bottom-nav-button active" data-nav-view="home" type="button">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m4 10 8-6 8 6v9a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1v-9Z"></path>
-      </svg>
-      <span>Home</span>
-    </button>
 
-    <button class="bottom-nav-button" data-nav-view="browse" type="button">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m4 17 5-5 3 3 5-7 3 3"></path>
-      </svg>
-      <span>Browse</span>
-    </button>
+  <!-- PLAYER -->
 
-    <button class="bottom-nav-button" data-nav-view="favorites" type="button">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m12 20-1.4-1.3C5.1 13.7 2 10.9 2 7.4A4.4 4.4 0 0 1 6.4 3c2 0 3.5 1 4.4 2.4C11.7 4 13.2 3 15.2 3A4.4 4.4 0 0 1 20 7.4c0 3.5-3.1 6.3-8.6 11.3L12 20Z"></path>
-      </svg>
-      <span>Saved</span>
-    </button>
+  <div
+    class="modal hidden"
+    id="playerModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="playerTitle"
+  >
 
-    <button class="bottom-nav-button" data-nav-history type="button">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3.5 12a8.5 8.5 0 1 0 2.4-5.9"></path>
-        <path d="M3.5 4.5v5h5"></path>
-        <path d="M12 7.7V12l3 1.9"></path>
-      </svg>
-      <span>History</span>
-    </button>
-  </nav>
+    <div
+      class="modal-backdrop"
+      data-close="player"
+    ></div>
 
-  <div id="playerModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="playerTitle">
-    <div id="playerBackdrop" class="modal-backdrop"></div>
+    <div class="player-modal">
 
-    <div class="player-shell">
       <div class="player-topbar">
-        <button id="playerBackButton" class="player-back" type="button" aria-label="Close player">
-          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="m15 5-7 7 7 7"></path>
-          </svg>
-          <span>Back</span>
+
+        <button
+          class="modal-close inline"
+          id="playerBackButton"
+          type="button"
+        >
+          ← Back
         </button>
 
         <div class="player-heading">
-          <span>NOW PLAYING</span>
-          <strong id="playerTitle">Video</strong>
+
+          <span id="playerSeries"></span>
+
+          <strong id="playerTitle"></strong>
+
         </div>
 
-        <div class="player-top-actions">
-          <button id="playerPrevButton" class="player-mini-button" type="button" aria-label="Previous episode">‹ Prev</button>
-          <button id="playerNextButton" class="player-mini-button" type="button" aria-label="Next episode">Next ›</button>
+        <div class="player-nav">
+
+          <button
+            id="playerPrevButton"
+            type="button"
+            aria-label="Previous episode"
+          >
+            ‹
+          </button>
+
+          <button
+            id="playerNextButton"
+            type="button"
+            aria-label="Next episode"
+          >
+            ›
+          </button>
+
         </div>
+
       </div>
 
+
       <div class="player-stage">
-        <div id="playerLoading" class="player-loading">
-          <div class="player-spinner"></div>
-          <span>Opening player…</span>
+
+        <div
+          class="player-loading"
+          id="playerLoading"
+        >
+          Loading player…
         </div>
 
         <iframe
@@ -334,57 +703,113 @@
           title="Video player"
           allow="autoplay; fullscreen; picture-in-picture"
           allowfullscreen
-          referrerpolicy="no-referrer-when-downgrade"
+          referrerpolicy="no-referrer"
         ></iframe>
+
       </div>
 
-      <div class="player-below">
+
+      <div class="player-info">
+
         <div>
-          <div id="playerSeries" class="player-series"></div>
-          <h2 id="playerTitleBelow">Video</h2>
+
+          <span id="playerTitleBelow"></span>
+
+          <p id="playerMeta"></p>
+
         </div>
 
-        <div class="player-below-actions">
-          <button id="playerFavoriteButton" class="button glass-button" type="button">♡ My list</button>
-          <button id="playerInfoButton" class="button subtle-button" type="button">Details</button>
-        </div>
+        <button
+          class="button glass"
+          id="playerFavoriteButton"
+          type="button"
+        >
+          ♡ My List
+        </button>
+
+        <button
+          class="button glass"
+          id="playerInfoButton"
+          type="button"
+        >
+          Series info
+        </button>
+
       </div>
+
     </div>
+
   </div>
 
-  <div id="detailsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
-    <div id="detailsBackdrop" class="modal-backdrop"></div>
 
-    <div class="details-shell">
-      <button id="closeDetailsButton" class="modal-close" type="button" aria-label="Close details">×</button>
-      <div id="detailsContent" class="details-content"></div>
-    </div>
-  </div>
+  <!-- HISTORY -->
 
-  <div id="historyModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
-    <div id="historyBackdrop" class="modal-backdrop"></div>
+  <div
+    class="modal hidden"
+    id="historyModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="historyTitle"
+  >
 
-    <div class="history-shell">
-      <div class="modal-heading-row">
+    <div
+      class="modal-backdrop"
+      data-close="history"
+    ></div>
+
+    <div class="simple-modal">
+
+      <div class="modal-heading">
+
         <div>
-          <span class="modal-kicker">YOUR ACTIVITY</span>
-          <h2 id="historyTitle">Watch history</h2>
+
+          <span class="section-kicker">
+            YOUR ACTIVITY
+          </span>
+
+          <h2 id="historyTitle">
+            Watch history
+          </h2>
+
         </div>
 
-        <button id="closeHistoryButton" class="modal-close small-close" type="button" aria-label="Close history">×</button>
+        <button
+          class="modal-close inline"
+          id="closeHistoryButton"
+          type="button"
+        >
+          ×
+        </button>
+
       </div>
 
-      <div id="historyContent" class="history-content"></div>
+      <div id="historyContent"></div>
 
-      <div class="history-footer">
-        <button id="clearHistoryButton" class="button danger-button" type="button">Clear history</button>
-      </div>
+      <button
+        class="clear-history"
+        id="clearHistoryButton"
+        type="button"
+      >
+        Clear history
+      </button>
+
     </div>
+
   </div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <div id="notification" class="sr-only" role="status" aria-live="polite"></div>
 
-  <script src="./app.js" defer></script>
+  <div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+
+  <script
+    src="./app.js"
+    defer
+  ></script>
+
 </body>
             </html>
