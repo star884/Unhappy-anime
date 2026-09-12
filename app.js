@@ -2,26 +2,30 @@
 
 /*
  * StreamVerse
+ *
  * Static Vercel application.
  *
- * Thumbnail behavior:
- *   1. Use an explicit image/poster/thumbnail from videos.json when present.
- *   2. Otherwise, for VidMoly classic embed URLs, fetch the embed page directly.
- *   3. Read VidMoly's player `image: "..."` preview value (plus metadata fallbacks).
- *   4. Cache the resolved image in memory for the current page session.
+ * Architecture:
  *
- * No thumbnail API, backend, build step, or Node server is required.
+ * index.html
+ *      |
+ *      +---- style.css
+ *      |
+ *      +---- app.js
+ *              |
+ *              +---- data/videos.json
+ *
+ * No backend.
+ * No Node server.
+ * No build process.
  */
 
 const CONFIG = Object.freeze({
   catalogueUrl: "./data/videos.json",
-  thumbnailRequestTimeout: 10000,
-
   storageKeys: {
     favorites: "streamverse:favorites:v1",
     history: "streamverse:history:v1"
   },
-
   maxHistory: 50
 });
 
@@ -34,20 +38,7 @@ const state = {
   featuredVideo: null,
   currentVideo: null,
   currentView: "home",
-  notificationTimer: null,
-
-  /*
-   * thumbnailCache:
-   *   embed URL -> resolved image URL or empty string
-   *
-   * thumbnailRequests:
-   *   embed URL -> Promise
-   *
-   * The second map prevents several cards from making
-   * duplicate requests for the same VidMoly URL.
-   */
-  thumbnailCache: new Map(),
-  thumbnailRequests: new Map()
+  notificationTimer: null
 };
 
 
@@ -140,9 +131,8 @@ function loadStorage() {
 
       if (Array.isArray(parsed)) {
         state.favorites = new Set(
-          parsed.filter(
-            value => typeof value === "string"
-          )
+          parsed
+            .filter(value => typeof value === "string")
         );
       }
     }
@@ -152,16 +142,14 @@ function loadStorage() {
 
       if (Array.isArray(parsed)) {
         state.history = parsed
-          .filter(
-            item =>
-              item &&
-              typeof item.id === "string" &&
-              Number.isFinite(item.timestamp)
+          .filter(item =>
+            item &&
+            typeof item.id === "string" &&
+            typeof item.timestamp === "number"
           )
           .slice(0, CONFIG.maxHistory);
       }
     }
-
   } catch (error) {
     console.warn(
       "Local storage could not be loaded:",
@@ -178,9 +166,7 @@ function saveFavorites() {
   try {
     localStorage.setItem(
       CONFIG.storageKeys.favorites,
-      JSON.stringify([
-        ...state.favorites
-      ])
+      JSON.stringify([...state.favorites])
     );
   } catch (error) {
     console.warn(
@@ -283,9 +269,7 @@ function getYear(video) {
 
 
 function getGenres(video) {
-  return toArray(
-    video.genres ?? video.genre
-  );
+  return toArray(video.genres ?? video.genre);
 }
 
 
@@ -347,17 +331,11 @@ function getImage(video) {
 
 
 function isValidVideo(video) {
-  if (
-    !video ||
-    typeof video !== "object"
-  ) {
+  if (!video || typeof video !== "object") {
     return false;
   }
 
-  const id = String(
-    video.id ?? ""
-  ).trim();
-
+  const id = String(video.id ?? "").trim();
   const title = getTitle(video);
   const embed = getEmbed(video);
 
@@ -366,559 +344,6 @@ function isValidVideo(video) {
     title &&
     embed
   );
-}
-
-
-/* -------------------------------------------------------
- * VidMoly thumbnail resolution
- * ----------------------------------------------------- */
-
-function isVidMolyHost(hostname) {
-  const host = String(
-    hostname || ""
-  ).toLowerCase();
-
-  return [
-    "vidmoly.org",
-    "www.vidmoly.org",
-
-    "vidmoly.net",
-    "www.vidmoly.net",
-
-    "vidmoly.me",
-    "www.vidmoly.me",
-
-    "vidmoly.to",
-    "www.vidmoly.to",
-
-    "vidmoly.biz",
-    "www.vidmoly.biz",
-
-    "vidmoly.cam",
-    "www.vidmoly.cam"
-  ].includes(host);
-}
-
-
-function isVidMolyEmbedUrl(value) {
-  try {
-    const url = new URL(value);
-
-    if (
-      url.protocol !== "https:" ||
-      !isVidMolyHost(url.hostname)
-    ) {
-      return false;
-    }
-
-    return /^\/embed-[A-Za-z0-9_-]+\.html$/i.test(
-      url.pathname
-    );
-
-  } catch {
-    return false;
-  }
-}
-
-
-function decodeHtmlEntities(value) {
-  return String(value || "")
-    .replace(/&amp;/gi, "&")
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/gi, "'")
-    .replace(/&#x27;/gi, "'")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">");
-}
-
-
-function makeAbsoluteImageUrl(
-  rawValue,
-  embedUrl
-) {
-  if (!rawValue) {
-    return "";
-  }
-
-  const decoded = decodeHtmlEntities(
-    rawValue.trim()
-  );
-
-  if (!decoded) {
-    return "";
-  }
-
-  try {
-    const imageUrl = new URL(
-      decoded,
-      embedUrl
-    );
-
-    if (
-      imageUrl.protocol !== "http:" &&
-      imageUrl.protocol !== "https:"
-    ) {
-      return "";
-    }
-
-    /*
-     * Prevent mixed-content failures on an HTTPS site.
-     */
-    if (
-      location.protocol === "https:" &&
-      imageUrl.protocol === "http:"
-    ) {
-      imageUrl.protocol = "https:";
-    }
-
-    return imageUrl.toString();
-
-  } catch {
-    return "";
-  }
-}
-
-
-function getMetaContent(
-  html,
-  attribute,
-  value
-) {
-  const escaped = value.replace(
-    /[.*+?^${}()|[\]\\]/g,
-    "\\$&"
-  );
-
-  const patterns = [
-    new RegExp(
-      `<meta[^>]+${attribute}=["']${escaped}["'][^>]+content=["']([^"']+)["'][^>]*>`,
-      "i"
-    ),
-
-    new RegExp(
-      `<meta[^>]+content=["']([^"']+)["'][^>]+${attribute}=["']${escaped}["'][^>]*>`,
-      "i"
-    )
-  ];
-
-  for (const pattern of patterns) {
-    const match = html.match(pattern);
-
-    if (match?.[1]) {
-      return match[1];
-    }
-  }
-
-  return "";
-}
-
-
-function getScriptContent(html) {
-  const scripts =
-    html.match(
-      /<script\b[^>]*>[\s\S]*?<\/script>/gi
-    ) || [];
-
-  return scripts
-    .map(
-      script =>
-        script
-          .replace(
-            /^<script\b[^>]*>|<\/script>$/gi,
-            ""
-          )
-    )
-    .join("\n");
-}
-
-
-/*
- * Extract the VidMoly preview image.
- *
- * Primary pattern:
- *
- *   image: "https://..."
- *
- * This is the player configuration used by VidMoly.
- *
- * Additional fallbacks make the resolver more tolerant
- * of future embed-page variants.
- */
-function extractVidMolyThumbnail(
-  html,
-  embedUrl
-) {
-  if (!html) {
-    return "";
-  }
-
-  const scriptContent =
-    getScriptContent(html);
-
-  const imagePatterns = [
-    /*
-     * Standard VidMoly player image field.
-     */
-    /\bimage\s*:\s*["']([^"']+?\.(?:jpe?g|png|webp)(?:\?[^"']*)?)["']/i,
-
-    /*
-     * More permissive image field.
-     */
-    /\bimage\s*:\s*["']([^"']+)["']/i,
-
-    /*
-     * Potential player poster field.
-     */
-    /\bposter\s*:\s*["']([^"']+?\.(?:jpe?g|png|webp)(?:\?[^"']*)?)["']/i,
-
-    /*
-     * Potential thumbnail field.
-     */
-    /\bthumbnail(?:Url)?\s*:\s*["']([^"']+?\.(?:jpe?g|png|webp)(?:\?[^"']*)?)["']/i
-  ];
-
-  for (const pattern of imagePatterns) {
-    const match =
-      scriptContent.match(pattern) ||
-      html.match(pattern);
-
-    if (
-      match?.[1]
-    ) {
-      const imageUrl =
-        makeAbsoluteImageUrl(
-          match[1],
-          embedUrl
-        );
-
-      if (imageUrl) {
-        return imageUrl;
-      }
-    }
-  }
-
-
-  /*
-   * Metadata fallbacks.
-   */
-  const metadataCandidates = [
-    getMetaContent(
-      html,
-      "property",
-      "og:image"
-    ),
-
-    getMetaContent(
-      html,
-      "property",
-      "og:image:url"
-    ),
-
-    getMetaContent(
-      html,
-      "name",
-      "twitter:image"
-    ),
-
-    getMetaContent(
-      html,
-      "name",
-      "twitter:image:src"
-    )
-  ];
-
-
-  for (
-    const candidate
-    of metadataCandidates
-  ) {
-    const imageUrl =
-      makeAbsoluteImageUrl(
-        candidate,
-        embedUrl
-      );
-
-    if (imageUrl) {
-      return imageUrl;
-    }
-  }
-
-  return "";
-}
-
-
-/* -------------------------------------------------------
- * Network helpers
- * ----------------------------------------------------- */
-
-function fetchWithTimeout(url) {
-  const controller =
-    new AbortController();
-
-  const timer =
-    setTimeout(
-      () => controller.abort(),
-      CONFIG.thumbnailRequestTimeout
-    );
-
-  return fetch(
-    url,
-    {
-      method: "GET",
-
-      /*
-       * VidMoly classic embed pages are expected to
-       * expose the page to browser-side CORS requests.
-       */
-      mode: "cors",
-
-      credentials: "omit",
-
-      cache: "force-cache",
-
-      redirect: "follow",
-
-      signal: controller.signal,
-
-      headers: {
-        Accept:
-          "text/html,application/xhtml+xml"
-      }
-    }
-  ).finally(
-    () => clearTimeout(timer)
-  );
-}
-
-
-/* -------------------------------------------------------
- * Automatic thumbnail loader
- * ----------------------------------------------------- */
-
-async function resolveThumbnail(
-  video
-) {
-  /*
-   * Manual image always wins.
-   */
-  const explicit =
-    getImage(video);
-
-  if (explicit) {
-    return explicit;
-  }
-
-
-  const embedUrl =
-    getEmbed(video);
-
-  /*
-   * Only automatically inspect VidMoly URLs.
-   */
-  if (
-    !isVidMolyEmbedUrl(
-      embedUrl
-    )
-  ) {
-    return "";
-  }
-
-
-  const cacheKey =
-    embedUrl;
-
-
-  /*
-   * Reuse an already resolved value.
-   */
-  if (
-    state.thumbnailCache.has(
-      cacheKey
-    )
-  ) {
-    return (
-      state.thumbnailCache.get(
-        cacheKey
-      ) || ""
-    );
-  }
-
-
-  /*
-   * Reuse an in-flight request.
-   */
-  if (
-    state.thumbnailRequests.has(
-      cacheKey
-    )
-  ) {
-    return state.thumbnailRequests.get(
-      cacheKey
-    );
-  }
-
-
-  const request =
-    (async () => {
-      try {
-        const response =
-          await fetchWithTimeout(
-            embedUrl
-          );
-
-
-        if (!response.ok) {
-          throw new Error(
-            `VidMoly returned HTTP ${response.status}.`
-          );
-        }
-
-
-        const contentType =
-          response.headers.get(
-            "content-type"
-          ) || "";
-
-
-        if (
-          contentType &&
-          !contentType.includes(
-            "text/html"
-          ) &&
-          !contentType.includes(
-            "application/xhtml"
-          )
-        ) {
-          throw new Error(
-            "VidMoly embed response was not HTML."
-          );
-        }
-
-
-        const html =
-          await response.text();
-
-
-        const thumbnail =
-          extractVidMolyThumbnail(
-            html,
-            embedUrl
-          );
-
-
-        /*
-         * Cache both success and failure.
-         * This prevents repeated failed requests
-         * while browsing/filtering.
-         */
-        state.thumbnailCache.set(
-          cacheKey,
-          thumbnail
-        );
-
-
-        if (thumbnail) {
-          /*
-           * Store the resolved value directly
-           * on the runtime catalogue item too.
-           */
-          video.thumbnail =
-            thumbnail;
-        }
-
-
-        return thumbnail;
-
-      } catch (error) {
-        console.warn(
-          `Automatic VidMoly thumbnail failed for ${embedUrl}:`,
-          error
-        );
-
-        state.thumbnailCache.set(
-          cacheKey,
-          ""
-        );
-
-        return "";
-
-      } finally {
-        state.thumbnailRequests.delete(
-          cacheKey
-        );
-      }
-    })();
-
-
-  state.thumbnailRequests.set(
-    cacheKey,
-    request
-  );
-
-  return request;
-}
-
-
-/*
- * Attach a resolved thumbnail to an already-created card.
- */
-function setCardThumbnail(
-  video,
-  cardImage
-) {
-  if (!cardImage) {
-    return;
-  }
-
-  const image =
-    cardImage.querySelector(
-      ".auto-thumbnail"
-    );
-
-  const placeholder =
-    cardImage.querySelector(
-      ".card-placeholder"
-    );
-
-  if (!image) {
-    return;
-  }
-
-
-  resolveThumbnail(video)
-    .then(thumbnail => {
-      if (!thumbnail) {
-        return;
-      }
-
-
-      image.onload = () => {
-        image.classList.remove(
-          "hidden"
-        );
-
-        if (placeholder) {
-          placeholder.classList.add(
-            "hidden"
-          );
-        }
-      };
-
-
-      image.onerror = () => {
-        image.removeAttribute(
-          "src"
-        );
-
-        image.classList.add(
-          "hidden"
-        );
-      };
-
-
-      image.src =
-        thumbnail;
-    });
 }
 
 
@@ -932,19 +357,16 @@ async function loadCatalogue() {
   hideEmpty();
 
   try {
-    const response =
-      await fetch(
-        CONFIG.catalogueUrl,
-        {
-          method: "GET",
-          cache: "no-store",
-          headers: {
-            Accept:
-              "application/json"
-          }
+    const response = await fetch(
+      CONFIG.catalogueUrl,
+      {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          "Accept": "application/json"
         }
-      );
-
+      }
+    );
 
     if (!response.ok) {
       throw new Error(
@@ -952,61 +374,38 @@ async function loadCatalogue() {
       );
     }
 
+    const data = await response.json();
 
-    const data =
-      await response.json();
+    const rawVideos = Array.isArray(data)
+      ? data
+      : Array.isArray(data.videos)
+        ? data.videos
+        : Array.isArray(data.items)
+          ? data.items
+          : [];
 
+    state.videos = rawVideos
+      .filter(isValidVideo)
+      .map(video => ({
+        ...video,
+        id: String(video.id).trim(),
+        title: getTitle(video)
+      }));
 
-    const rawVideos =
-      Array.isArray(data)
-        ? data
-        : Array.isArray(data.videos)
-          ? data.videos
-          : Array.isArray(data.items)
-            ? data.items
-            : [];
-
-
-    state.videos =
-      rawVideos
-        .filter(isValidVideo)
-        .map(video => ({
-          ...video,
-
-          id: String(
-            video.id
-          ).trim(),
-
-          title: getTitle(
-            video
-          )
-        }));
-
-
-    if (
-      state.videos.length === 0
-    ) {
+    if (state.videos.length === 0) {
       throw new Error(
         "The catalogue loaded successfully, but contains no valid video entries."
       );
     }
 
-
     buildFilters();
 
-
-    state.featuredVideo =
-      chooseFeaturedVideo();
-
+    state.featuredVideo = chooseFeaturedVideo();
 
     renderHero();
-
-
     updateFavoriteCount();
 
-
     applyFilters();
-
 
     setLoading(false);
 
@@ -1017,7 +416,6 @@ async function loadCatalogue() {
     );
 
     setLoading(false);
-
     showError(
       error instanceof Error
         ? error.message
@@ -1032,16 +430,11 @@ async function loadCatalogue() {
  * ----------------------------------------------------- */
 
 function uniqueSorted(values) {
-  return [
-    ...new Set(
-      values
-        .map(
-          value =>
-            String(value).trim()
-        )
-        .filter(Boolean)
-    )
-  ].sort(
+  return [...new Set(
+    values
+      .map(value => String(value).trim())
+      .filter(Boolean)
+  )].sort(
     (a, b) =>
       a.localeCompare(
         b,
@@ -1056,27 +449,17 @@ function uniqueSorted(values) {
 
 
 function buildFilters() {
-  const series =
-    uniqueSorted(
-      state.videos.map(
-        getSeries
-      )
-    );
+  const series = uniqueSorted(
+    state.videos.map(getSeries)
+  );
 
-  const genres =
-    uniqueSorted(
-      state.videos.flatMap(
-        getGenres
-      )
-    );
+  const genres = uniqueSorted(
+    state.videos.flatMap(getGenres)
+  );
 
-  const qualities =
-    uniqueSorted(
-      state.videos.map(
-        getQuality
-      )
-    );
-
+  const qualities = uniqueSorted(
+    state.videos.map(getQuality)
+  );
 
   populateSelect(
     elements.seriesFilter,
@@ -1084,13 +467,11 @@ function buildFilters() {
     "All Series"
   );
 
-
   populateSelect(
     elements.genreFilter,
     genres,
     "All Genres"
   );
-
 
   populateSelect(
     elements.qualityFilter,
@@ -1109,146 +490,96 @@ function populateSelect(
     return;
   }
 
-
   select.innerHTML = "";
 
-
   const allOption =
-    document.createElement(
-      "option"
-    );
+    document.createElement("option");
 
-  allOption.value =
-    "ALL";
+  allOption.value = "ALL";
+  allOption.textContent = allLabel;
 
-  allOption.textContent =
-    allLabel;
+  select.appendChild(allOption);
 
-  select.appendChild(
-    allOption
-  );
-
-
-  for (
-    const value
-    of values
-  ) {
+  for (const value of values) {
     const option =
-      document.createElement(
-        "option"
-      );
+      document.createElement("option");
 
-    option.value =
-      value;
+    option.value = value;
+    option.textContent = value;
 
-    option.textContent =
-      value;
-
-    select.appendChild(
-      option
-    );
+    select.appendChild(option);
   }
 }
 
 
 function applyFilters() {
-  const query =
-    normalise(
-      elements.searchInput?.value
-    );
+  const query = normalise(
+    elements.searchInput?.value
+  );
 
   const series =
-    elements.seriesFilter?.value ??
-    "ALL";
+    elements.seriesFilter?.value ?? "ALL";
 
   const genre =
-    elements.genreFilter?.value ??
-    "ALL";
+    elements.genreFilter?.value ?? "ALL";
 
   const quality =
-    elements.qualityFilter?.value ??
-    "ALL";
+    elements.qualityFilter?.value ?? "ALL";
 
   const sort =
-    elements.sortFilter?.value ??
-    "catalogue";
+    elements.sortFilter?.value ?? "catalogue";
 
+  let videos = state.videos.filter(video => {
 
-  let videos =
-    state.videos.filter(
-      video => {
-        const title =
-          normalise(
-            getTitle(video)
-          );
-
-        const videoSeries =
-          normalise(
-            getSeries(video)
-          );
-
-        const description =
-          normalise(
-            getDescription(video)
-          );
-
-        const videoGenres =
-          getGenres(video)
-            .map(normalise);
-
-        const videoQuality =
-          normalise(
-            getQuality(video)
-          );
-
-
-        const matchesSearch =
-          !query ||
-          title.includes(query) ||
-          videoSeries.includes(query) ||
-          description.includes(query) ||
-          videoGenres.some(
-            name =>
-              name.includes(query)
-          ) ||
-          videoQuality.includes(query);
-
-
-        const matchesSeries =
-          series === "ALL" ||
-          getSeries(video) ===
-            series;
-
-
-        const matchesGenre =
-          genre === "ALL" ||
-          getGenres(video).includes(
-            genre
-          );
-
-
-        const matchesQuality =
-          quality === "ALL" ||
-          getQuality(video) ===
-            quality;
-
-
-        return (
-          matchesSearch &&
-          matchesSeries &&
-          matchesGenre &&
-          matchesQuality
-        );
-      }
+    const title = normalise(getTitle(video));
+    const videoSeries = normalise(getSeries(video));
+    const description = normalise(
+      getDescription(video)
     );
 
+    const videoGenres = getGenres(video)
+      .map(normalise);
 
-  state.filteredVideos =
-    sortVideos(
-      videos,
-      sort
+    const videoQuality = normalise(
+      getQuality(video)
     );
 
+    const matchesSearch =
+      !query ||
+      title.includes(query) ||
+      videoSeries.includes(query) ||
+      description.includes(query) ||
+      videoGenres.some(
+        genreName => genreName.includes(query)
+      ) ||
+      videoQuality.includes(query);
+
+    const matchesSeries =
+      series === "ALL" ||
+      getSeries(video) === series;
+
+    const matchesGenre =
+      genre === "ALL" ||
+      getGenres(video).includes(genre);
+
+    const matchesQuality =
+      quality === "ALL" ||
+      getQuality(video) === quality;
+
+    return (
+      matchesSearch &&
+      matchesSeries &&
+      matchesGenre &&
+      matchesQuality
+    );
+  });
+
+  videos = sortVideos(
+    videos,
+    sort
+  );
+
+  state.filteredVideos = videos;
 
   renderGrid();
 }
@@ -1258,15 +589,11 @@ function applyFilters() {
  * Sorting
  * ----------------------------------------------------- */
 
-function sortVideos(
-  videos,
-  sort
-) {
-  const result =
-    [...videos];
-
+function sortVideos(videos, sort) {
+  const result = [...videos];
 
   switch (sort) {
+
     case "title":
       result.sort(
         (a, b) =>
@@ -1281,7 +608,6 @@ function sortVideos(
       );
       break;
 
-
     case "episode-asc":
       result.sort(
         (a, b) =>
@@ -1289,7 +615,6 @@ function sortVideos(
           getEpisodeNumber(b)
       );
       break;
-
 
     case "episode-desc":
       result.sort(
@@ -1299,7 +624,6 @@ function sortVideos(
       );
       break;
 
-
     case "year-desc":
       result.sort(
         (a, b) =>
@@ -1307,7 +631,6 @@ function sortVideos(
           getYear(a)
       );
       break;
-
 
     case "year-asc":
       result.sort(
@@ -1317,11 +640,9 @@ function sortVideos(
       );
       break;
 
-
     default:
       break;
   }
-
 
   return result;
 }
@@ -1332,28 +653,22 @@ function sortVideos(
  * ----------------------------------------------------- */
 
 function chooseFeaturedVideo() {
-  if (
-    !state.videos.length
-  ) {
+  if (!state.videos.length) {
     return null;
   }
 
-  return (
-    state.videos.find(
-      video =>
-        state.favorites.has(
-          video.id
-        )
-    ) ??
-    state.videos[0]
-  );
+  const favourite =
+    state.videos.find(video =>
+      state.favorites.has(video.id)
+    );
+
+  return favourite ??
+    state.videos[0];
 }
 
 
 function renderHero() {
-  const video =
-    state.featuredVideo;
-
+  const video = state.featuredVideo;
 
   if (!video) {
     elements.heroTitle.textContent =
@@ -1362,110 +677,55 @@ function renderHero() {
     elements.heroDescription.textContent =
       "";
 
-    elements.heroBackground.style.backgroundImage =
-      "";
-
     return;
   }
 
+  const title = getTitle(video);
+  const series = getSeries(video);
+  const quality = getQuality(video);
+  const episode = getEpisodeNumber(video);
 
-  elements.heroTitle.textContent =
-    getTitle(video);
-
+  elements.heroTitle.textContent = title;
 
   elements.heroBadge.textContent =
-    state.favorites.has(
-      video.id
-    )
+    state.favorites.has(video.id)
       ? "YOUR FAVORITE"
       : "FEATURED";
 
-
   const metaParts = [];
 
-
-  const series =
-    getSeries(video);
-
-  const quality =
-    getQuality(video);
-
-  const episode =
-    getEpisodeNumber(video);
-
-
   if (series) {
-    metaParts.push(
-      series
-    );
+    metaParts.push(series);
   }
 
-
-  if (
-    Number.isFinite(
-      episode
-    )
-  ) {
-    metaParts.push(
-      `Episode ${episode}`
-    );
+  if (Number.isFinite(episode)) {
+    metaParts.push(`Episode ${episode}`);
   }
-
 
   if (quality) {
-    metaParts.push(
-      quality
-    );
+    metaParts.push(quality);
   }
-
 
   if (getYear(video)) {
-    metaParts.push(
-      String(
-        getYear(video)
-      )
-    );
+    metaParts.push(String(getYear(video)));
   }
 
-
   elements.heroMeta.textContent =
-    metaParts.join(
-      " • "
-    );
-
+    metaParts.join(" • ");
 
   elements.heroDescription.textContent =
     getDescription(video) ||
     "Watch this title from the catalogue.";
 
+  const image = getImage(video);
 
-  /*
-   * Clear an old hero image immediately so
-   * switching featured items cannot display a
-   * previous video's image.
-   */
-  elements.heroBackground.style.backgroundImage =
-    "";
-
-
-  resolveThumbnail(video)
-    .then(image => {
-      /*
-       * The user may have changed the featured
-       * item while this request was running.
-       */
-      if (
-        !image ||
-        state.featuredVideo?.id !==
-          video.id
-      ) {
-        return;
-      }
-
-
-      elements.heroBackground.style.backgroundImage =
-        `url("${image.replaceAll('"', "%22")}")`;
-    });
+  if (image) {
+    elements.heroBackground.style.backgroundImage =
+      `url("${image.replaceAll('"', "%22")}")`;
+  } else {
+    elements.heroBackground.style.backgroundImage =
+      "";
+  }
 }
 
 
@@ -1474,9 +734,7 @@ function renderHero() {
  * ----------------------------------------------------- */
 
 function renderGrid() {
-  const videos =
-    state.filteredVideos;
-
+  const videos = state.filteredVideos;
 
   elements.resultCount.textContent =
     `${videos.length} ${
@@ -1485,114 +743,62 @@ function renderGrid() {
         : "items"
     }`;
 
-
-  elements.videoGrid.innerHTML =
-    "";
-
+  elements.videoGrid.innerHTML = "";
 
   if (!videos.length) {
-    elements.videoGrid.classList.add(
-      "hidden"
-    );
-
-    elements.emptyState.classList.remove(
-      "hidden"
-    );
-
+    elements.videoGrid.classList.add("hidden");
+    elements.emptyState.classList.remove("hidden");
     return;
   }
 
-
-  elements.emptyState.classList.add(
-    "hidden"
-  );
-
-  elements.videoGrid.classList.remove(
-    "hidden"
-  );
-
+  elements.emptyState.classList.add("hidden");
+  elements.videoGrid.classList.remove("hidden");
 
   const fragment =
     document.createDocumentFragment();
 
-
-  for (
-    const video
-    of videos
-  ) {
+  for (const video of videos) {
     fragment.appendChild(
       createCard(video)
     );
   }
 
-
   elements.videoGrid.appendChild(
     fragment
   );
-
-
-  /*
-   * Resolve all visible thumbnails after
-   * the cards are inserted into the DOM.
-   */
-  for (
-    const video
-    of videos
-  ) {
-    const escapedId =
-      CSS.escape(
-        video.id
-      );
-
-    const card =
-      elements.videoGrid.querySelector(
-        `[data-video-id="${escapedId}"]`
-      );
-
-    if (card) {
-      setCardThumbnail(
-        video,
-        card.querySelector(
-          ".card-image"
-        )
-      );
-    }
-  }
 }
 
 
 function createCard(video) {
   const card =
-    document.createElement(
-      "article"
-    );
+    document.createElement("article");
 
+  card.className = "video-card";
 
-  card.className =
-    "video-card";
+  const image = getImage(video);
+  const quality = getQuality(video);
+  const series = getSeries(video);
+  const episode = getEpisodeNumber(video);
 
-
-  card.dataset.videoId =
-    video.id;
-
-
-  const quality =
-    getQuality(video);
-
-  const series =
-    getSeries(video);
-
-  const episode =
-    getEpisodeNumber(video);
-
+  const imageHtml = image
+    ? `
+      <img
+        src="${escapeHtml(image)}"
+        alt=""
+        loading="lazy"
+        onerror="this.remove();"
+      >
+    `
+    : `
+      <div class="card-placeholder">
+        ▶
+      </div>
+    `;
 
   const episodeText =
-    Number.isFinite(
-      episode
-    )
+    Number.isFinite(episode)
       ? `Episode ${episode}`
       : "";
-
 
   const meta =
     [
@@ -1603,39 +809,19 @@ function createCard(video) {
       .filter(Boolean)
       .join(" • ");
 
-
   const favorite =
-    state.favorites.has(
-      video.id
-    );
+    state.favorites.has(video.id);
 
-
-  /*
-   * The placeholder is shown first.
-   * setCardThumbnail() replaces it when
-   * VidMoly's image is resolved.
-   */
   card.innerHTML = `
     <div class="card-image">
 
-      <div class="card-placeholder">
-        ▶
-      </div>
-
-      <img
-        class="auto-thumbnail hidden"
-        alt=""
-        loading="lazy"
-        decoding="async"
-      >
+      ${imageHtml}
 
       ${
         quality
           ? `
             <span class="card-badge">
-              ${escapeHtml(
-                quality
-              )}
+              ${escapeHtml(quality)}
             </span>
           `
           : ""
@@ -1643,9 +829,7 @@ function createCard(video) {
 
       <button
         class="card-favorite ${
-          favorite
-            ? "active"
-            : ""
+          favorite ? "active" : ""
         }"
         type="button"
         data-action="favorite"
@@ -1660,11 +844,7 @@ function createCard(video) {
             : "Add to favorites"
         }"
       >
-        ${
-          favorite
-            ? "♥"
-            : "♡"
-        }
+        ${favorite ? "♥" : "♡"}
       </button>
 
     </div>
@@ -1672,18 +852,14 @@ function createCard(video) {
     <div class="card-body">
 
       <h3 class="card-title">
-        ${escapeHtml(
-          getTitle(video)
-        )}
+        ${escapeHtml(getTitle(video))}
       </h3>
 
       ${
         meta
           ? `
             <p class="card-meta">
-              ${escapeHtml(
-                meta
-              )}
+              ${escapeHtml(meta)}
             </p>
           `
           : ""
@@ -1694,9 +870,7 @@ function createCard(video) {
           ? `
             <p class="card-description">
               ${escapeHtml(
-                getDescription(
-                  video
-                )
+                getDescription(video)
               )}
             </p>
           `
@@ -1726,47 +900,35 @@ function createCard(video) {
     </div>
   `;
 
-
   card.addEventListener(
     "click",
     event => {
+
       const button =
         event.target.closest(
           "[data-action]"
         );
 
-
       if (!button) {
         return;
       }
 
-
       const action =
         button.dataset.action;
 
-
-      if (
-        action === "watch"
-      ) {
+      if (action === "watch") {
         openPlayer(video);
       }
 
-
-      if (
-        action === "details"
-      ) {
+      if (action === "details") {
         openDetails(video);
       }
 
-
-      if (
-        action === "favorite"
-      ) {
+      if (action === "favorite") {
         toggleFavorite(video);
       }
     }
   );
-
 
   return card;
 }
@@ -1777,48 +939,29 @@ function createCard(video) {
  * ----------------------------------------------------- */
 
 function toggleFavorite(video) {
-  if (
-    state.favorites.has(
-      video.id
-    )
-  ) {
-    state.favorites.delete(
-      video.id
-    );
+  if (state.favorites.has(video.id)) {
+    state.favorites.delete(video.id);
 
     notify(
       "Removed from favorites."
     );
-
   } else {
-    state.favorites.add(
-      video.id
-    );
+    state.favorites.add(video.id);
 
     notify(
       "Added to favorites."
     );
   }
 
-
   saveFavorites();
-
 
   updateFavoriteCount();
 
-
-  if (
-    state.featuredVideo?.id ===
-    video.id
-  ) {
+  if (state.featuredVideo?.id === video.id) {
     renderHero();
   }
 
-
-  if (
-    state.currentView ===
-    "favorites"
-  ) {
+  if (state.currentView === "favorites") {
     applyFilters();
   } else {
     renderGrid();
@@ -1828,9 +971,7 @@ function toggleFavorite(video) {
 
 function updateFavoriteCount() {
   elements.favoriteCount.textContent =
-    String(
-      state.favorites.size
-    );
+    String(state.favorites.size);
 }
 
 
@@ -1839,9 +980,7 @@ function updateFavoriteCount() {
  * ----------------------------------------------------- */
 
 function openPlayer(video) {
-  const embed =
-    getEmbed(video);
-
+  const embed = getEmbed(video);
 
   if (!embed) {
     notify(
@@ -1851,58 +990,41 @@ function openPlayer(video) {
     return;
   }
 
-
-  state.currentVideo =
-    video;
-
+  state.currentVideo = video;
 
   elements.playerTitle.textContent =
     getTitle(video);
-
 
   elements.playerLoading.classList.remove(
     "hidden"
   );
 
-
-  elements.playerFrame.src =
-    "";
-
+  elements.playerFrame.src = "";
 
   elements.playerModal.classList.remove(
     "hidden"
   );
 
-
-  document.body.style.overflow =
-    "hidden";
-
+  document.body.style.overflow = "hidden";
 
   recordHistory(video);
 
-
-  requestAnimationFrame(
-    () => {
-      elements.playerFrame.src =
-        embed;
-    }
-  );
+  requestAnimationFrame(() => {
+    elements.playerFrame.src = embed;
+  });
 }
 
 
 function closePlayer() {
-  elements.playerFrame.src =
-    "";
+  elements.playerFrame.src = "";
 
   elements.playerModal.classList.add(
     "hidden"
   );
 
-  document.body.style.overflow =
-    "";
+  document.body.style.overflow = "";
 
-  state.currentVideo =
-    null;
+  state.currentVideo = null;
 }
 
 
@@ -1911,19 +1033,17 @@ function closePlayer() {
  * ----------------------------------------------------- */
 
 function recordHistory(video) {
+  const now = Date.now();
+
   state.history =
     state.history.filter(
-      item =>
-        item.id !==
-        video.id
+      item => item.id !== video.id
     );
-
 
   state.history.unshift({
     id: video.id,
-    timestamp: Date.now()
+    timestamp: now
   });
-
 
   state.history =
     state.history.slice(
@@ -1931,29 +1051,22 @@ function recordHistory(video) {
       CONFIG.maxHistory
     );
 
-
   saveHistory();
 }
 
 
 function openHistory() {
-  state.currentView =
-    "history";
-
+  state.currentView = "history";
 
   updateNavigation();
 
-
   renderHistory();
-
 
   elements.historyModal.classList.remove(
     "hidden"
   );
 
-
-  document.body.style.overflow =
-    "hidden";
+  document.body.style.overflow = "hidden";
 }
 
 
@@ -1962,15 +1075,12 @@ function closeHistory() {
     "hidden"
   );
 
-  document.body.style.overflow =
-    "";
+  document.body.style.overflow = "";
 }
 
 
 function renderHistory() {
-  if (
-    !state.history.length
-  ) {
+  if (!state.history.length) {
     elements.historyContent.innerHTML = `
       <div class="history-empty">
         You have not watched anything yet.
@@ -1980,38 +1090,22 @@ function renderHistory() {
     return;
   }
 
-
   const videosById =
     new Map(
       state.videos.map(
-        video => [
-          video.id,
-          video
-        ]
+        video => [video.id, video]
       )
     );
 
-
   const available =
     state.history
-      .map(
-        item => ({
-          item,
-          video:
-            videosById.get(
-              item.id
-            )
-        })
-      )
-      .filter(
-        entry =>
-          entry.video
-      );
+      .map(item => ({
+        item,
+        video: videosById.get(item.id)
+      }))
+      .filter(entry => entry.video);
 
-
-  if (
-    !available.length
-  ) {
+  if (!available.length) {
     elements.historyContent.innerHTML = `
       <div class="history-empty">
         Your saved history does not match
@@ -2022,64 +1116,58 @@ function renderHistory() {
     return;
   }
 
-
   elements.historyContent.innerHTML =
-    available
-      .map(
-        ({
-          item,
-          video
-        }) => `
-          <div class="history-item">
+    available.map(
+      ({
+        item,
+        video
+      }) => `
+        <div class="history-item">
 
-            <div class="history-info">
+          <div class="history-info">
 
-              <p class="history-title">
-                ${escapeHtml(
-                  getTitle(video)
-                )}
-              </p>
+            <p class="history-title">
+              ${escapeHtml(
+                getTitle(video)
+              )}
+            </p>
 
-              <div class="history-date">
-                ${escapeHtml(
-                  formatDate(
-                    item.timestamp
-                  )
-                )}
-              </div>
-
+            <div class="history-date">
+              ${escapeHtml(
+                formatDate(item.timestamp)
+              )}
             </div>
 
-            <button
-              class="history-watch"
-              type="button"
-              data-history-id="${escapeHtml(
-                video.id
-              )}"
-            >
-              Watch
-            </button>
-
           </div>
-        `
-      )
-      .join("");
 
+          <button
+            class="history-watch"
+            type="button"
+            data-history-id="${
+              escapeHtml(video.id)
+            }"
+          >
+            Watch
+          </button>
+
+        </div>
+      `
+    ).join("");
 
   elements.historyContent
     .querySelectorAll(
       "[data-history-id]"
     )
     .forEach(button => {
+
       button.addEventListener(
         "click",
         () => {
+
           const video =
             videosById.get(
-              button.dataset
-                .historyId
+              button.dataset.historyId
             );
-
 
           if (video) {
             closeHistory();
@@ -2087,13 +1175,13 @@ function renderHistory() {
           }
         }
       );
+
     });
 }
 
 
 function clearHistory() {
-  state.history =
-    [];
+  state.history = [];
 
   saveHistory();
 
@@ -2105,9 +1193,7 @@ function clearHistory() {
 }
 
 
-function formatDate(
-  timestamp
-) {
+function formatDate(timestamp) {
   try {
     return new Intl.DateTimeFormat(
       undefined,
@@ -2116,11 +1202,8 @@ function formatDate(
         timeStyle: "short"
       }
     ).format(
-      new Date(
-        timestamp
-      )
+      new Date(timestamp)
     );
-
   } catch {
     return "Previously watched";
   }
@@ -2135,41 +1218,20 @@ function openDetails(video) {
   elements.detailsTitle.textContent =
     getTitle(video);
 
-
-  const genres =
-    getGenres(video);
-
+  const genres = getGenres(video);
 
   const fields = [
-    [
-      "Series",
-      getSeries(video)
-    ],
-
+    ["Series", getSeries(video)],
     [
       "Episode",
       Number.isFinite(
-        getEpisodeNumber(
-          video
-        )
+        getEpisodeNumber(video)
       )
-        ? getEpisodeNumber(
-            video
-          )
+        ? getEpisodeNumber(video)
         : ""
     ],
-
-    [
-      "Quality",
-      getQuality(video)
-    ],
-
-    [
-      "Year",
-      getYear(video) ||
-        ""
-    ],
-
+    ["Quality", getQuality(video)],
+    ["Year", getYear(video) || ""],
     [
       "Genres",
       genres.join(", ")
@@ -2179,49 +1241,38 @@ function openDetails(video) {
       String(value).trim() !== ""
   );
 
-
   elements.detailsContent.innerHTML = `
     <div class="details-grid">
 
-      ${fields
-        .map(
-          ([label, value]) => `
-            <div class="detail-item">
+      ${fields.map(
+        ([label, value]) => `
+          <div class="detail-item">
 
-              <span class="detail-label">
-                ${escapeHtml(
-                  label
-                )}
-              </span>
+            <span class="detail-label">
+              ${escapeHtml(label)}
+            </span>
 
-              <span class="detail-value">
-                ${escapeHtml(
-                  value
-                )}
-              </span>
+            <span class="detail-value">
+              ${escapeHtml(value)}
+            </span>
 
-            </div>
-          `
-        )
-        .join("")}
+          </div>
+        `
+      ).join("")}
 
     </div>
-
 
     ${
       getDescription(video)
         ? `
           <p class="details-description">
             ${escapeHtml(
-              getDescription(
-                video
-              )
+              getDescription(video)
             )}
           </p>
         `
         : ""
     }
-
 
     <div class="hero-actions">
 
@@ -2239,9 +1290,7 @@ function openDetails(video) {
         type="button"
       >
         ${
-          state.favorites.has(
-            video.id
-          )
+          state.favorites.has(video.id)
             ? "Remove Favorite"
             : "Add Favorite"
         }
@@ -2250,20 +1299,14 @@ function openDetails(video) {
     </div>
   `;
 
-
   elements.detailsModal.classList.remove(
     "hidden"
   );
 
-
-  document.body.style.overflow =
-    "hidden";
-
+  document.body.style.overflow = "hidden";
 
   document
-    .getElementById(
-      "detailsWatchButton"
-    )
+    .getElementById("detailsWatchButton")
     ?.addEventListener(
       "click",
       () => {
@@ -2272,11 +1315,8 @@ function openDetails(video) {
       }
     );
 
-
   document
-    .getElementById(
-      "detailsFavoriteButton"
-    )
+    .getElementById("detailsFavoriteButton")
     ?.addEventListener(
       "click",
       () => {
@@ -2292,8 +1332,7 @@ function closeDetails() {
     "hidden"
   );
 
-  document.body.style.overflow =
-    "";
+  document.body.style.overflow = "";
 }
 
 
@@ -2302,23 +1341,17 @@ function closeDetails() {
  * ----------------------------------------------------- */
 
 function showHome() {
-  state.currentView =
-    "home";
-
+  state.currentView = "home";
 
   updateNavigation();
-
 
   elements.libraryTitle.textContent =
     "Library";
 
-
   elements.librarySubtitle.textContent =
     "Browse the catalogue";
 
-
   applyFilters();
-
 
   window.scrollTo({
     top: 0,
@@ -2328,40 +1361,29 @@ function showHome() {
 
 
 function showFavorites() {
-  state.currentView =
-    "favorites";
-
+  state.currentView = "favorites";
 
   updateNavigation();
-
 
   elements.libraryTitle.textContent =
     "Favorites";
 
-
   elements.librarySubtitle.textContent =
     "Your saved titles";
 
-
-  state.filteredVideos =
+  const videos =
     state.videos.filter(
       video =>
-        state.favorites.has(
-          video.id
-        )
+        state.favorites.has(video.id)
     );
 
+  state.filteredVideos = videos;
 
   renderGrid();
 
-
   window.scrollTo({
-    top:
-      document.querySelector(
-        ".library"
-      )?.offsetTop ??
-      0,
-
+    top: document.querySelector(".library")
+      ?.offsetTop ?? 0,
     behavior: "smooth"
   });
 }
@@ -2370,15 +1392,12 @@ function showFavorites() {
 function updateNavigation() {
   elements.homeButton.classList.toggle(
     "active",
-    state.currentView ===
-      "home"
+    state.currentView === "home"
   );
-
 
   elements.favoritesButton.classList.toggle(
     "active",
-    state.currentView ===
-      "favorites"
+    state.currentView === "favorites"
   );
 }
 
@@ -2387,14 +1406,11 @@ function updateNavigation() {
  * Loading / Errors
  * ----------------------------------------------------- */
 
-function setLoading(
-  loading
-) {
+function setLoading(loading) {
   elements.loadingState.classList.toggle(
     "hidden",
     !loading
   );
-
 
   if (loading) {
     elements.videoGrid.classList.add(
@@ -2408,22 +1424,17 @@ function setLoading(
 }
 
 
-function showError(
-  message
-) {
+function showError(message) {
   elements.errorMessage.textContent =
     message;
-
 
   elements.errorState.classList.remove(
     "hidden"
   );
 
-
   elements.videoGrid.classList.add(
     "hidden"
   );
-
 
   elements.emptyState.classList.add(
     "hidden"
@@ -2449,22 +1460,17 @@ function hideEmpty() {
  * Notifications
  * ----------------------------------------------------- */
 
-function notify(
-  message
-) {
+function notify(message) {
   clearTimeout(
     state.notificationTimer
   );
 
-
   elements.notification.textContent =
     message;
-
 
   elements.notification.classList.add(
     "visible"
   );
-
 
   state.notificationTimer =
     setTimeout(
@@ -2483,36 +1489,21 @@ function notify(
  * ----------------------------------------------------- */
 
 function resetFilters() {
-  elements.searchInput.value =
-    "";
+  elements.searchInput.value = "";
+  elements.seriesFilter.value = "ALL";
+  elements.genreFilter.value = "ALL";
+  elements.qualityFilter.value = "ALL";
+  elements.sortFilter.value = "catalogue";
 
-  elements.seriesFilter.value =
-    "ALL";
-
-  elements.genreFilter.value =
-    "ALL";
-
-  elements.qualityFilter.value =
-    "ALL";
-
-  elements.sortFilter.value =
-    "catalogue";
-
-
-  state.currentView =
-    "home";
-
+  state.currentView = "home";
 
   updateNavigation();
-
 
   elements.libraryTitle.textContent =
     "Library";
 
-
   elements.librarySubtitle.textContent =
     "Browse the catalogue";
-
 
   applyFilters();
 }
@@ -2529,35 +1520,32 @@ function setupEvents() {
     showHome
   );
 
-
   elements.homeButton.addEventListener(
     "click",
-    showHome
+    () => {
+      showHome();
+    }
   );
-
 
   elements.favoritesButton.addEventListener(
     "click",
-    showFavorites
+    () => {
+      showFavorites();
+    }
   );
-
 
   elements.historyButton.addEventListener(
     "click",
     openHistory
   );
 
-
   elements.searchInput.addEventListener(
     "input",
     () => {
       if (
-        state.currentView !==
-        "home"
+        state.currentView !== "home"
       ) {
-        state.currentView =
-          "home";
-
+        state.currentView = "home";
         updateNavigation();
       }
 
@@ -2565,52 +1553,41 @@ function setupEvents() {
     }
   );
 
-
   [
     elements.seriesFilter,
     elements.genreFilter,
     elements.qualityFilter,
     elements.sortFilter
-  ].forEach(
-    select => {
-      select.addEventListener(
-        "change",
-        () => {
-          if (
-            state.currentView !==
-            "home"
-          ) {
-            state.currentView =
-              "home";
-
-            updateNavigation();
-          }
-
-          applyFilters();
+  ].forEach(select => {
+    select.addEventListener(
+      "change",
+      () => {
+        if (
+          state.currentView !== "home"
+        ) {
+          state.currentView = "home";
+          updateNavigation();
         }
-      );
-    }
-  );
 
+        applyFilters();
+      }
+    );
+  });
 
   elements.resetButton.addEventListener(
     "click",
     resetFilters
   );
 
-
   elements.retryButton.addEventListener(
     "click",
     loadCatalogue
   );
 
-
   elements.heroWatchButton.addEventListener(
     "click",
     () => {
-      if (
-        state.featuredVideo
-      ) {
+      if (state.featuredVideo) {
         openPlayer(
           state.featuredVideo
         );
@@ -2618,13 +1595,10 @@ function setupEvents() {
     }
   );
 
-
   elements.heroInfoButton.addEventListener(
     "click",
     () => {
-      if (
-        state.featuredVideo
-      ) {
+      if (state.featuredVideo) {
         openDetails(
           state.featuredVideo
         );
@@ -2632,48 +1606,40 @@ function setupEvents() {
     }
   );
 
-
   elements.closePlayerButton.addEventListener(
     "click",
     closePlayer
   );
-
 
   elements.playerBackdrop.addEventListener(
     "click",
     closePlayer
   );
 
-
   elements.closeDetailsButton.addEventListener(
     "click",
     closeDetails
   );
-
 
   elements.detailsBackdrop.addEventListener(
     "click",
     closeDetails
   );
 
-
   elements.closeHistoryButton.addEventListener(
     "click",
     closeHistory
   );
-
 
   elements.historyBackdrop.addEventListener(
     "click",
     closeHistory
   );
 
-
   elements.clearHistoryButton.addEventListener(
     "click",
     clearHistory
   );
-
 
   elements.playerFrame.addEventListener(
     "load",
@@ -2684,17 +1650,13 @@ function setupEvents() {
     }
   );
 
-
   document.addEventListener(
     "keydown",
     event => {
-      if (
-        event.key !==
-        "Escape"
-      ) {
+
+      if (event.key !== "Escape") {
         return;
       }
-
 
       if (
         !elements.playerModal.classList.contains(
@@ -2705,7 +1667,6 @@ function setupEvents() {
         return;
       }
 
-
       if (
         !elements.detailsModal.classList.contains(
           "hidden"
@@ -2714,7 +1675,6 @@ function setupEvents() {
         closeDetails();
         return;
       }
-
 
       if (
         !elements.historyModal.classList.contains(
@@ -2746,16 +1706,13 @@ async function init() {
 
 
 if (
-  document.readyState ===
-  "loading"
+  document.readyState === "loading"
 ) {
   document.addEventListener(
     "DOMContentLoaded",
     init,
-    {
-      once: true
-    }
+    { once: true }
   );
 } else {
   init();
-}
+          }
