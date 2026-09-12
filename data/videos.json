@@ -29,7 +29,7 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 002.",
     "embed": "https://vidmoly.org/embed-4k80pg3xm5vr.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/4k80pg3xm5vr.jpg?gha_thumb=65b91cfe6fd956a9"
+    "thumbnail": ""
   },
   {
     "id": "kiteretsu-003",
@@ -45,7 +45,7 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 003.",
     "embed": "https://vidmoly.org/embed-k3l0vaxzz2am.html",
-    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/k3l0vaxzz2am.jpg?gha_thumb=a0ca06f19be0dfdb"
+    "thumbnail": ""
   },
   {
     "id": "kiteretsu-004",
@@ -61,6 +61,22 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 004.",
     "embed": "https://vidmoly.org/embed-u9ljvtaw88fc.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/u9ljvtaw88fc.jpg?gha_thumb=0bd6c48dbee799af"
+    "thumbnail": ""
+  },
+  {
+    "id": "kiteretsu-005",
+    "title": "Kiteretsu Daihyakka - Episode 005",
+    "series": "Kiteretsu Daihyakka",
+    "episode": 5,
+    "year": 1988,
+    "genres": [
+      "Anime",
+      "Comedy",
+      "Family"
+    ],
+    "quality": "1080p",
+    "description": "Kiteretsu Daihyakka episode 005.",
+    "embed": "https://vidmoly.org/embed-nl8iwhs0qg4f.html",
+    "thumbnail": ""
   }
 ]
