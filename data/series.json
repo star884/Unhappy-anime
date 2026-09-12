@@ -3,20 +3,15 @@
     {
       "id": "kiteretsu-daihyakka",
       "name": "Kiteretsu Daihyakka",
-
-      "thumbnail": "",
-      "backdrop": "",
-
+      "thumbnail": "https://image.tmdb.org/t/p/original/39bnzUkZTfekyz1HVXN4eHxiCaX.jpg",
+      "backdrop": "https://m.media-amazon.com/images/M/MV5BODQ0OTdjMjctY2ZjMy00MGUzLWEzYWYtMTQyOTQ0ZGViNTExXkEyXkFqcGc%40._V1_FMjpg_UX1000_.jpg",
       "description": "The series is the story of a scientific inventor boy genius named Eiichi Kite, a descendant of an inventor named Kiteretsu Saisama, who has built a companion robot named Korosuke. His friends are Miyoko, a girl in his neighborhood who has a crush on him, Buta Gorira (Kumada Kaoru), a local bully, and Tongari, a rich boy. They all attend the same school and are in the same grade. Eiichi goes on frequent adventures with his friends and Korosuke in the time machine which he built",
-
       "year": 1988,
-
       "genres": [
         "Anime",
         "Comedy",
         "Family"
       ],
-
       "status": "Complete"
     }
   ]
