@@ -1,815 +1,4163 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#07080d">
-  <meta name="color-scheme" content="dark">
-  <meta name="description" content="UNHAPPY — a polished anime and media library.">
-  <title>UNHAPPY — Anime & Media</title>
-  <link rel="stylesheet" href="./style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07080d">
+<title>UNHAPPY — Anime & Media</title>
+
+<style>
+:root{
+  --bg:#07080d;
+  --surface:#10131b;
+  --surface2:#161a24;
+  --line:#ffffff18;
+  --text:#f7f8fb;
+  --muted:#9ca5b5;
+  --max:1440px;
+  --r:18px
+}
+
+*{box-sizing:border-box}
+
+html{
+  scroll-behavior:smooth
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 10% -10%,#1a2238,transparent 32%),
+    radial-gradient(circle at 100% 0,#171a2b,transparent 28%),
+    var(--bg);
+  color:var(--text);
+  font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif;
+  -webkit-font-smoothing:antialiased
+}
+
+body.lock{
+  overflow:hidden
+}
+
+button,
+input,
+select{
+  font:inherit
+}
+
+button{
+  color:inherit;
+  cursor:pointer
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible{
+  outline:2px solid #fff;
+  outline-offset:3px
+}
+
+.hidden{
+  display:none!important
+}
+
+
+/* HEADER */
+
+.header{
+  height:70px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:#07080dcc;
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(20px)
+}
+
+.head{
+  height:100%;
+  width:min(var(--max),calc(100% - 30px));
+  margin:auto;
+  display:flex;
+  align-items:center;
+  gap:26px
+}
+
+.brand{
+  border:0;
+  background:none;
+  padding:0;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  text-align:left
+}
+
+.logo{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#fff,#9ca8bd);
+  color:#080a0f;
+  font-weight:950;
+  font-size:20px
+}
+
+.brand strong{
+  display:block;
+  letter-spacing:.15em
+}
+
+.brand small{
+  display:block;
+  color:var(--muted);
+  font-size:9px;
+  letter-spacing:.18em
+}
+
+.nav{
+  display:flex;
+  gap:3px
+}
+
+.nav button,
+.mobile-nav button{
+  border:0;
+  background:none;
+  padding:9px 12px;
+  border-radius:10px;
+  color:var(--muted)
+}
+
+.nav button.active,
+.nav button:hover,
+.mobile-nav button:hover{
+  background:#ffffff0d;
+  color:var(--text)
+}
+
+.actions{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:8px
+}
+
+.search{
+  width:min(330px,30vw);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 11px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#ffffff08
+}
+
+.search input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:none;
+  color:var(--text);
+  min-width:0
+}
+
+.icon,
+.button{
+  border:1px solid var(--line);
+  background:#ffffff09;
+  border-radius:12px;
+  padding:10px 13px
+}
+
+.icon{
+  width:40px;
+  height:40px;
+  padding:0
+}
+
+.button.primary{
+  background:#fff;
+  color:#080a0f;
+  border-color:#fff;
+  font-weight:800
+}
+
+.button:hover{
+  transform:translateY(-1px)
+}
+
+.mobile-nav{
+  display:none
+}
+
+
+/* VIEWS */
+
+.view{
+  display:none;
+  min-height:calc(100vh - 70px);
+  animation:in .25s ease
+}
+
+.view.active{
+  display:block
+}
+
+@keyframes in{
+  from{
+    opacity:0;
+    transform:translateY(8px)
+  }
+  to{
+    opacity:1;
+    transform:none
+  }
+}
+
+.wrap{
+  width:min(var(--max),calc(100% - 30px));
+  margin:auto;
+  padding:42px 0 70px
+}
+
+.eyebrow,
+.kicker{
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:.18em;
+  color:var(--muted)
+}
+
+h1,
+h2,
+h3,
+p{
+  margin-top:0
+}
+
+.heading{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:end;
+  margin-bottom:24px
+}
+
+.heading h1{
+  font-size:clamp(2rem,5vw,3.8rem);
+  letter-spacing:-.05em;
+  margin:5px 0
+}
+
+.heading p{
+  color:var(--muted);
+  max-width:700px;
+  margin:0
+}
+
+.count{
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:6px 10px;
+  color:var(--muted);
+  white-space:nowrap
+}
+
+
+/* HERO */
+
+.hero{
+  min-height:590px;
+  position:relative;
+  overflow:hidden;
+  border-bottom:1px solid var(--line)
+}
+
+.hero-bg{
+  position:absolute;
+  inset:0;
+  background-position:center;
+  background-size:cover;
+  filter:saturate(.9)
+}
+
+.hero:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      90deg,
+      #07080d 0%,
+      #07080db8 40%,
+      #07080d35 75%,
+      #07080d 100%
+    ),
+    linear-gradient(
+      0deg,
+      #07080d,
+      transparent 45%
+    )
+}
+
+.hero-inner{
+  position:relative;
+  z-index:1;
+  width:min(var(--max),calc(100% - 30px));
+  min-height:590px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:1fr 250px;
+  gap:40px;
+  align-items:end;
+  padding:70px 0
+}
+
+.hero-copy{
+  max-width:760px
+}
+
+.hero h1{
+  font-size:clamp(3rem,7vw,6.5rem);
+  line-height:.95;
+  letter-spacing:-.065em;
+  margin:10px 0 18px
+}
+
+.hero p{
+  color:#d0d5df;
+  max-width:690px;
+  font-size:1.05rem
+}
+
+.meta,
+.tags{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap
+}
+
+.meta span,
+.tags span{
+  border:1px solid var(--line);
+  background:#ffffff08;
+  border-radius:999px;
+  padding:5px 9px;
+  color:var(--muted);
+  font-size:12px
+}
+
+.hero-actions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-top:24px
+}
+
+.poster{
+  aspect-ratio:2/3;
+  border-radius:18px;
+  overflow:hidden;
+  background:var(--surface);
+  border:1px solid var(--line);
+  box-shadow:0 25px 80px #0009
+}
+
+.poster img,
+.card img{
+  width:100%;
+  height:100%;
+  object-fit:cover
+}
+
+
+/* SECTIONS */
+
+.section{
+  padding:38px 0
+}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:end;
+  margin-bottom:18px
+}
+
+.section-head h2{
+  margin:4px 0;
+  font-size:1.55rem
+}
+
+.section-head p{
+  margin:0;
+  color:var(--muted)
+}
+
+
+/* SERIES CARDS */
+
+.grid{
+  display:grid;
+  grid-template-columns:
+    repeat(auto-fill,minmax(210px,1fr));
+  gap:14px
+}
+
+.card{
+  position:relative;
+  border:1px solid var(--line);
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff08,
+      #ffffff03
+    );
+  border-radius:16px;
+  overflow:hidden;
+  text-align:left;
+  transition:
+    .2s transform,
+    .2s border-color
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  border-color:#ffffff35
+}
+
+.card-main{
+  display:block;
+  width:100%;
+  padding:0;
+  border:0;
+  background:none;
+  text-align:left
+}
+
+.thumb{
+  aspect-ratio:2/3;
+  background:#0c0f15;
+  position:relative
+}
+
+.badge{
+  position:absolute;
+  left:9px;
+  top:9px;
+  background:#000b;
+  border:1px solid #fff2;
+  border-radius:8px;
+  padding:4px 7px;
+  font-size:10px;
+  font-weight:800
+}
+
+.fav{
+  position:absolute;
+  right:9px;
+  top:9px;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  border:1px solid #fff2;
+  background:#000b
+}
+
+.fav.saved{
+  background:#fff;
+  color:#000
+}
+
+.card-body{
+  padding:12px
+}
+
+.card-title{
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+.card-meta,
+.card-body p{
+  font-size:12px;
+  color:var(--muted)
+}
+
+.card-body p{
+  margin:7px 0;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden
+}
+
+.progress{
+  height:3px;
+  background:#ffffff12
+}
+
+.progress i{
+  display:block;
+  height:100%;
+  background:#fff
+}
+
+
+/* TOOLBAR */
+
+.toolbar{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-bottom:22px
+}
+
+.field{
+  display:grid;
+  gap:5px
+}
+
+.field span{
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.1em
+}
+
+.field select,
+.toolbar input,
+.searchbox{
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--text);
+  border-radius:11px;
+  padding:10px 12px
+}
+
+
+/* EPISODES */
+
+.episode-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(auto-fill,minmax(250px,1fr));
+  gap:12px
+}
+
+.episode{
+  border:1px solid var(--line);
+  background:#ffffff05;
+  border-radius:14px;
+  overflow:hidden;
+  text-align:left;
+  padding:0
+}
+
+.episode:hover{
+  border-color:#fff3
+}
+
+.ep-img{
+  aspect-ratio:16/9;
+  background:#0c0f15;
+  position:relative
+}
+
+.ep-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover
+}
+
+.ep-body{
+  padding:11px
+}
+
+.ep-body strong,
+.ep-body small{
+  display:block;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+.ep-body small{
+  color:var(--muted);
+  margin-top:3px
+}
+
+
+/* EMPTY / LOADING */
+
+.empty,
+.state{
+  text-align:center;
+  padding:70px 20px;
+  color:var(--muted);
+  border:1px dashed var(--line);
+  border-radius:16px
+}
+
+.spinner{
+  width:28px;
+  height:28px;
+  border:3px solid #fff2;
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+  margin:auto
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg)
+  }
+}
+
+
+/* SERIES PAGE */
+
+.series-hero{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:30px;
+  align-items:end
+}
+
+.series-hero img{
+  width:100%;
+  aspect-ratio:2/3;
+  object-fit:cover;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:var(--surface)
+}
+
+.series-copy h1{
+  font-size:clamp(2.3rem,6vw,5rem);
+  line-height:.95;
+  letter-spacing:-.06em;
+  margin:8px 0 15px
+}
+
+.series-copy p{
+  max-width:800px;
+  color:var(--muted)
+}
+
+.series-actions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin:20px 0 38px
+}
+
+.episode-tools{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-bottom:15px
+}
+
+.episode-tools input,
+.episode-tools select{
+  flex:1;
+  min-width:210px;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--text);
+  border-radius:11px;
+  padding:10px 12px
+}
+
+
+/* WATCH */
+
+.watch{
+  background:#030407
+}
+
+.watch-wrap{
+  width:min(1500px,100%);
+  margin:auto;
+  padding:15px
+}
+
+.watch-top{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px
+}
+
+.watch-title{
+  min-width:0;
+  flex:1
+}
+
+.watch-title span,
+.watch-title strong{
+  display:block;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+.watch-title span{
+  font-size:12px;
+  color:var(--muted)
+}
+
+.stage{
+  position:relative;
+  aspect-ratio:16/9;
+  background:#000;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 25px 100px #000
+}
+
+.stage iframe{
+  width:100%;
+  height:100%;
+  border:0
+}
+
+.loading{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  color:var(--muted);
+  pointer-events:none
+}
+
+.watch-bar{
+  display:flex;
+  gap:8px;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  padding:15px 0;
+  border-bottom:1px solid var(--line)
+}
+
+.watch-info{
+  padding:20px 0
+}
+
+.watch-info h1{
+  margin:0 0 5px
+}
+
+.watch-info p{
+  color:var(--muted);
+  margin:0
+}
+
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#000b;
+  display:grid;
+  place-items:center;
+  padding:20px
+}
+
+.modal-box{
+  width:min(900px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#0b0e15;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:20px
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+
+.modal-close{
+  border:0;
+  background:none;
+  font-size:28px
+}
+
+.history-list{
+  display:grid;
+  gap:10px
+}
+
+
+/* FOOTER */
+
+.footer{
+  border-top:1px solid var(--line);
+  padding:25px 15px;
+  text-align:center;
+  color:var(--muted);
+  display:flex;
+  justify-content:center;
+  gap:10px
+}
+
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:25px;
+  z-index:200;
+  transform:translate(-50%,20px);
+  opacity:0;
+  pointer-events:none;
+  background:#fff;
+  color:#000;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:700;
+  transition:.2s
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0)
+}
+
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+  .header{
+    height:62px
+  }
+
+  .head{
+    width:calc(100% - 20px);
+    gap:10px
+  }
+
+  .brand-copy{
+    display:none
+  }
+
+  .nav{
+    display:none
+  }
+
+  .search{
+    width:auto;
+    flex:1
+  }
+
+  .mobile-nav{
+    display:flex;
+    position:absolute;
+    top:62px;
+    left:0;
+    right:0;
+    background:#090b11;
+    border-bottom:1px solid var(--line);
+    padding:8px;
+    flex-wrap:wrap
+  }
+
+  .hero,
+  .hero-inner{
+    min-height:560px
+  }
+
+  .hero-inner{
+    grid-template-columns:1fr;
+    padding:50px 0 35px
+  }
+
+  .hero .poster{
+    display:none
+  }
+
+  .wrap{
+    width:calc(100% - 20px);
+    padding-top:28px
+  }
+
+  .series-hero{
+    grid-template-columns:120px 1fr;
+    gap:16px;
+    align-items:start
+  }
+
+  .series-copy h1{
+    font-size:1.8rem
+  }
+
+  .grid{
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+    gap:9px
+  }
+
+  .episode-grid{
+    grid-template-columns:1fr
+  }
+
+  .card-body{
+    padding:9px
+  }
+
+  .card-body p{
+    display:none
+  }
+
+  .stage{
+    border-radius:8px
+  }
+
+  .watch-wrap{
+    padding:8px
+  }
+
+  .watch-top{
+    gap:7px
+  }
+
+  .watch-top .button{
+    padding:8px
+  }
+
+  .heading{
+    align-items:flex-start;
+    flex-direction:column
+  }
+
+  .footer{
+    font-size:12px
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *:before,
+  *:after{
+    scroll-behavior:auto!important;
+    animation:none!important;
+    transition:none!important
+  }
+}
+</style>
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header" id="siteHeader">
-    <div class="header-inner">
+<header class="header">
+
+  <div class="head">
+
+    <button
+      class="brand"
+      id="brand"
+      type="button"
+      aria-label="Go to home"
+    >
+      <span class="logo">U</span>
+
+      <span class="brand-copy">
+        <strong>UNHAPPY</strong>
+        <small>ANIME &amp; MEDIA</small>
+      </span>
+    </button>
+
+
+    <nav
+      class="nav"
+      aria-label="Primary"
+    >
+      <button data-nav="home">Home</button>
+      <button data-nav="browse">Browse</button>
+      <button data-nav="search">Search</button>
+
+      <button data-nav="favorites">
+        My List
+        <b id="favCount">0</b>
+      </button>
+    </nav>
+
+
+    <div class="actions">
+
+      <label class="search">
+        ⌕
+
+        <input
+          id="globalSearch"
+          type="search"
+          placeholder="Search…"
+          autocomplete="off"
+        >
+      </label>
 
       <button
-        class="brand"
-        id="brandButton"
-        type="button"
-        aria-label="Go to home"
+        class="icon"
+        id="historyBtn"
+        aria-label="History"
       >
-        <span class="brand-mark">U</span>
+        ◷
+      </button>
 
-        <span class="brand-copy">
-          <strong>UNHAPPY</strong>
-          <small>ANIME &amp; MEDIA</small>
+      <button
+        class="icon"
+        id="menuBtn"
+        aria-label="Menu"
+      >
+        ☰
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <nav
+    class="mobile-nav hidden"
+    id="mobileNav"
+  >
+
+    <button data-nav="home">
+      Home
+    </button>
+
+    <button data-nav="browse">
+      Browse
+    </button>
+
+    <button data-nav="search">
+      Search
+    </button>
+
+    <button data-nav="favorites">
+      My List
+      <b id="favCountMobile">0</b>
+    </button>
+
+    <button id="historyMobile">
+      History
+    </button>
+
+  </nav>
+
+</header>
+
+
+<main>
+
+
+<!-- ==================================================
+     HOME
+================================================== -->
+
+<section
+  class="view active"
+  id="homeView"
+>
+
+  <div class="hero">
+
+    <div
+      class="hero-bg"
+      id="heroBg"
+    ></div>
+
+
+    <div class="hero-inner">
+
+      <div class="hero-copy">
+
+        <span class="eyebrow">
+          FEATURED SERIES
         </span>
-      </button>
 
-      <nav class="desktop-nav" aria-label="Primary">
-        <button
-          class="nav-link active"
-          data-view="home"
-          type="button"
-        >
-          Home
-        </button>
+        <h1 id="heroTitle">
+          Loading…
+        </h1>
 
-        <button
-          class="nav-link"
-          data-view="browse"
-          type="button"
-        >
-          Browse
-        </button>
+        <div
+          class="meta"
+          id="heroMeta"
+        ></div>
 
-        <button
-          class="nav-link"
-          data-view="favorites"
-          type="button"
-        >
-          My List
-          <b id="favoriteCount">0</b>
-        </button>
-      </nav>
+        <p id="heroDesc"></p>
 
-      <div class="header-actions">
 
-        <label class="search-box" for="searchInput">
-          <span aria-hidden="true">⌕</span>
+        <div class="hero-actions">
 
-          <input
-            id="searchInput"
-            type="search"
-            autocomplete="off"
-            placeholder="Search series, episodes, genres…"
+          <button
+            class="button primary"
+            id="heroPlay"
           >
+            ▶ Watch
+          </button>
 
-          <kbd>/</kbd>
-        </label>
-
-        <button
-          class="icon-button"
-          id="historyButton"
-          type="button"
-          aria-label="Watch history"
-        >
-          ◷
-        </button>
-
-        <button
-          class="icon-button mobile-only"
-          id="mobileMenuButton"
-          type="button"
-          aria-label="Menu"
-          aria-expanded="false"
-        >
-          ☰
-        </button>
-
-      </div>
-    </div>
-
-    <div class="mobile-nav" id="mobileNav" hidden>
-      <button data-view="home" type="button">
-        Home
-      </button>
-
-      <button data-view="browse" type="button">
-        Browse
-      </button>
-
-      <button data-view="favorites" type="button">
-        My List
-        <span id="mobileFavoriteCount">0</span>
-      </button>
-
-      <button id="mobileHistoryButton" type="button">
-        History
-      </button>
-    </div>
-  </header>
-
-
-  <main id="main">
-
-    <!-- HERO -->
-
-    <section class="hero" id="hero">
-
-      <div
-        class="hero-bg"
-        id="heroBackground"
-      ></div>
-
-      <div class="hero-overlay"></div>
-
-      <div class="hero-inner">
-
-        <div class="hero-copy">
-
-          <span
-            class="eyebrow"
-            id="heroBadge"
+          <button
+            class="button"
+            id="heroSeries"
           >
-            FEATURED SERIES
-          </span>
+            View series
+          </button>
 
-          <h1 id="heroTitle">
-            Loading…
-          </h1>
-
-          <div
-            class="hero-meta"
-            id="heroMeta"
-          ></div>
-
-          <p id="heroDescription"></p>
-
-          <div class="hero-actions">
-
-            <button
-              class="button primary"
-              id="heroWatchButton"
-              type="button"
-            >
-              ▶ Watch
-            </button>
-
-            <button
-              class="button glass"
-              id="heroSeriesButton"
-              type="button"
-            >
-              View series
-            </button>
-
-            <button
-              class="button glass"
-              id="heroFavoriteButton"
-              type="button"
-            >
-              ♡
-              <span id="heroFavoriteLabel">
-                My List
-              </span>
-            </button>
-
-          </div>
-        </div>
-
-        <div class="hero-poster">
-          <img
-            id="heroPoster"
-            alt=""
-            loading="eager"
+          <button
+            class="button"
+            id="heroFav"
           >
+            ♡ My List
+          </button>
+
         </div>
 
       </div>
-    </section>
 
 
-    <!-- CONTINUE WATCHING -->
+      <div class="poster">
+
+        <img
+          id="heroImg"
+          alt=""
+        >
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="wrap">
+
+
+    <!-- CONTINUE -->
 
     <section
-      class="section continue-section hidden"
+      class="section hidden"
       id="continueSection"
     >
 
       <div class="section-head">
 
         <div>
-          <span class="section-kicker">
+
+          <span class="kicker">
             PICK UP WHERE YOU LEFT OFF
           </span>
 
           <h2>
             Continue watching
           </h2>
+
         </div>
 
         <button
-          class="text-button"
-          id="openHistoryButton"
-          type="button"
+          class="button"
+          id="historyOpen"
         >
           Full history →
         </button>
 
       </div>
 
+
       <div
-        class="episode-row"
-        id="continueRow"
+        class="episode-grid"
+        id="continueGrid"
       ></div>
 
     </section>
 
 
-    <!-- SERIES -->
+    <!-- DISCOVER -->
 
-    <section
-      class="section"
-      id="seriesSection"
-    >
+    <section class="section">
 
       <div class="section-head">
 
         <div>
-          <span class="section-kicker">
-            YOUR COLLECTION
+
+          <span class="kicker">
+            DISCOVER
           </span>
 
-          <h2 id="seriesTitle">
-            Series
+          <h2>
+            Browse your library
           </h2>
 
-          <p id="seriesSubtitle">
-            Everything grouped neatly by series.
+          <p>
+            Series are grouped automatically and
+            episodes are sorted numerically.
           </p>
+
         </div>
 
-        <span
-          class="count-pill"
-          id="seriesCount"
+        <button
+          class="button"
+          data-nav="browse"
         >
-          0 series
-        </span>
+          Open Browse →
+        </button>
 
       </div>
 
 
-      <div class="toolbar">
+      <div
+        class="grid"
+        id="homeGrid"
+      ></div>
 
-        <label class="mobile-search">
-          <span>⌕</span>
+    </section>
 
-          <input
-            id="mobileSearchInput"
-            type="search"
-            autocomplete="off"
-            placeholder="Search your library…"
+  </div>
+
+</section>
+
+
+<!-- ==================================================
+     BROWSE
+================================================== -->
+
+<section
+  class="view"
+  id="browseView"
+>
+
+  <div class="wrap">
+
+    <div class="heading">
+
+      <div>
+
+        <span class="kicker">
+          LIBRARY
+        </span>
+
+        <h1>
+          Browse
+        </h1>
+
+        <p>
+          Explore the complete catalogue without
+          putting every view on one long page.
+        </p>
+
+      </div>
+
+      <span
+        class="count"
+        id="browseCount"
+      >
+        0 series
+      </span>
+
+    </div>
+
+
+    <div class="toolbar">
+
+      <label class="field">
+
+        <span>
+          Genre
+        </span>
+
+        <select id="genre">
+
+          <option value="ALL">
+            All genres
+          </option>
+
+        </select>
+
+      </label>
+
+
+      <label class="field">
+
+        <span>
+          Sort
+        </span>
+
+        <select id="seriesSort">
+
+          <option value="recommended">
+            Recommended
+          </option>
+
+          <option value="az">
+            A–Z
+          </option>
+
+          <option value="za">
+            Z–A
+          </option>
+
+          <option value="episodes">
+            Most episodes
+          </option>
+
+          <option value="year">
+            Newest
+          </option>
+
+        </select>
+
+      </label>
+
+    </div>
+
+
+    <div
+      id="browseGrid"
+      class="grid"
+    ></div>
+
+
+    <div
+      id="browseEmpty"
+      class="empty hidden"
+    >
+      No matching series.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ==================================================
+     SEARCH
+================================================== -->
+
+<section
+  class="view"
+  id="searchView"
+>
+
+  <div class="wrap">
+
+    <div class="heading">
+
+      <div>
+
+        <span class="kicker">
+          FIND SOMETHING
+        </span>
+
+        <h1>
+          Search
+        </h1>
+
+        <p>
+          Search series, episode titles,
+          episode numbers and genres.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="toolbar">
+
+      <input
+        class="searchbox"
+        id="searchPage"
+        type="search"
+        placeholder="Search your library…"
+      >
+
+      <button
+        class="button"
+        id="searchClear"
+      >
+        Clear
+      </button>
+
+    </div>
+
+
+    <section>
+
+      <div class="section-head">
+
+        <h2>
+          Series
+
+          <span
+            class="count"
+            id="searchSeriesCount"
           >
-        </label>
+            0
+          </span>
 
-        <label>
-          <span>Genre</span>
-
-          <select id="genreFilter">
-            <option value="ALL">
-              All genres
-            </option>
-          </select>
-        </label>
-
-        <label>
-          <span>Sort</span>
-
-          <select id="seriesSort">
-            <option value="recommended">
-              Recommended
-            </option>
-
-            <option value="az">
-              A–Z
-            </option>
-
-            <option value="za">
-              Z–A
-            </option>
-
-            <option value="episodes">
-              Most episodes
-            </option>
-
-            <option value="year">
-              Newest
-            </option>
-          </select>
-        </label>
-
-        <button
-          class="clear-button"
-          id="resetButton"
-          type="button"
-        >
-          Clear
-        </button>
+        </h2>
 
       </div>
 
 
       <div
-        id="loadingState"
-        class="state"
-      >
-        <div class="spinner"></div>
-        <p>
-          Building your library…
-        </p>
-      </div>
-
-
-      <div
-        id="errorState"
-        class="state hidden"
-      >
-        <strong>
-          Couldn't load the library.
-        </strong>
-
-        <p id="errorMessage"></p>
-
-        <button
-          class="button primary"
-          id="retryButton"
-          type="button"
-        >
-          Try again
-        </button>
-      </div>
-
-
-      <div
-        id="emptyState"
-        class="state hidden"
-      >
-        <strong>
-          No matching series
-        </strong>
-
-        <p>
-          Try another search or clear your filters.
-        </p>
-      </div>
-
-
-      <div
-        class="series-grid hidden"
-        id="seriesGrid"
+        class="grid"
+        id="searchSeriesGrid"
       ></div>
 
     </section>
 
 
-    <!-- EPISODE LIBRARY -->
-
-    <section
-      class="section episode-library"
-      id="episodeLibrary"
-    >
+    <section>
 
       <div class="section-head">
 
-        <div>
-          <span class="section-kicker">
-            EPISODE LIBRARY
+        <h2>
+          Episodes
+
+          <span
+            class="count"
+            id="searchEpisodeCount"
+          >
+            0
           </span>
 
-          <h2 id="episodeTitle">
-            All episodes
-          </h2>
-
-          <p id="episodeSubtitle">
-            Search results and direct episode access.
-          </p>
-        </div>
-
-        <span
-          class="count-pill"
-          id="resultCount"
-        >
-          0 episodes
-        </span>
-
-      </div>
-
-
-      <div class="episode-toolbar">
-
-        <label>
-          <span>Series</span>
-
-          <select id="seriesFilter">
-            <option value="ALL">
-              All series
-            </option>
-          </select>
-        </label>
-
-        <label>
-          <span>Sort</span>
-
-          <select id="episodeSort">
-
-            <option value="series-episode">
-              Series / Episode
-            </option>
-
-            <option value="episode">
-              Episode ↑
-            </option>
-
-            <option value="episode-desc">
-              Episode ↓
-            </option>
-
-            <option value="title">
-              Title A–Z
-            </option>
-
-            <option value="newest">
-              Newest
-            </option>
-
-          </select>
-        </label>
+        </h2>
 
       </div>
 
 
       <div
         class="episode-grid"
-        id="videoGrid"
+        id="searchEpisodeGrid"
       ></div>
 
     </section>
 
-  </main>
-
-
-  <footer class="footer">
-
-    <strong>
-      UNHAPPY
-    </strong>
-
-    <span>
-      Anime &amp; Media
-    </span>
-
-    <span>
-      •
-    </span>
-
-    <span id="footerStats">
-      0 titles
-    </span>
-
-  </footer>
-
-
-  <!-- SERIES DETAIL MODAL -->
-
-  <div
-    class="modal hidden"
-    id="seriesModal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="seriesModalTitle"
-  >
 
     <div
-      class="modal-backdrop"
-      data-close="series"
+      class="empty hidden"
+      id="searchEmpty"
+    >
+      No results found.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ==================================================
+     MY LIST
+================================================== -->
+
+<section
+  class="view"
+  id="favoritesView"
+>
+
+  <div class="wrap">
+
+    <div class="heading">
+
+      <div>
+
+        <span class="kicker">
+          YOUR COLLECTION
+        </span>
+
+        <h1>
+          My List
+        </h1>
+
+        <p>
+          Saved series and episodes.
+        </p>
+
+      </div>
+
+
+      <span
+        class="count"
+        id="favSeriesCount"
+      >
+        0 series
+      </span>
+
+    </div>
+
+
+    <div
+      class="grid"
+      id="favGrid"
     ></div>
 
-    <div class="series-modal">
+
+    <div
+      class="empty hidden"
+      id="favEmpty"
+    >
+      Your list is empty.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ==================================================
+     SERIES
+================================================== -->
+
+<section
+  class="view"
+  id="seriesView"
+>
+
+  <div class="wrap">
+
+    <button
+      class="button"
+      id="seriesBack"
+    >
+      ← Back
+    </button>
+
+
+    <div class="series-hero">
+
+      <img
+        id="seriesImg"
+        alt=""
+      >
+
+
+      <div class="series-copy">
+
+        <span class="eyebrow">
+          SERIES
+        </span>
+
+        <h1 id="seriesTitle"></h1>
+
+
+        <div
+          class="meta"
+          id="seriesMeta"
+        ></div>
+
+
+        <p id="seriesDesc"></p>
+
+
+        <div
+          class="tags"
+          id="seriesTags"
+        ></div>
+
+      </div>
+
+    </div>
+
+
+    <div class="series-actions">
+
+      <button
+        class="button primary"
+        id="seriesPlay"
+      >
+        ▶ Play first episode
+      </button>
+
+      <button
+        class="button"
+        id="seriesContinue"
+      >
+        Continue
+      </button>
+
+      <button
+        class="button"
+        id="seriesFav"
+      >
+        ♡ My List
+      </button>
+
+    </div>
+
+
+    <div class="section-head">
+
+      <h2>
+        Episodes
+      </h2>
+
+      <span
+        class="count"
+        id="seriesEpCount"
+      >
+        0
+      </span>
+
+    </div>
+
+
+    <div class="episode-tools">
+
+      <input
+        id="seriesEpSearch"
+        type="search"
+        placeholder="Episode number or title…"
+      >
+
+      <select id="seriesEpSort">
+
+        <option value="asc">
+          001 → latest
+        </option>
+
+        <option value="desc">
+          Latest → 001
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div
+      class="episode-grid"
+      id="seriesEpGrid"
+    ></div>
+
+  </div>
+
+</section>
+
+
+<!-- ==================================================
+     WATCH
+================================================== -->
+
+<section
+  class="view watch"
+  id="watchView"
+>
+
+  <div class="watch-wrap">
+
+
+    <div class="watch-top">
+
+      <button
+        class="button"
+        id="watchBack"
+      >
+        ← Back
+      </button>
+
+
+      <div class="watch-title">
+
+        <span id="watchSeries"></span>
+
+        <strong id="watchHeading">
+          Loading…
+        </strong>
+
+      </div>
+
+
+      <button
+        class="icon"
+        id="watchPrev"
+        aria-label="Previous episode"
+      >
+        ‹
+      </button>
+
+      <button
+        class="icon"
+        id="watchNext"
+        aria-label="Next episode"
+      >
+        ›
+      </button>
+
+    </div>
+
+
+    <div class="stage">
+
+      <div
+        class="loading"
+        id="watchLoading"
+      >
+        Loading player…
+      </div>
+
+
+      <iframe
+        id="frame"
+        allow="autoplay;fullscreen;picture-in-picture"
+        allowfullscreen
+        referrerpolicy="no-referrer"
+      ></iframe>
+
+    </div>
+
+
+    <div class="watch-bar">
+
+      <button
+        class="button"
+        id="watchFav"
+      >
+        ♡ My List
+      </button>
+
+
+      <button
+        class="button"
+        id="watchSeriesBtn"
+      >
+        Series info
+      </button>
+
+    </div>
+
+
+    <div class="watch-info">
+
+      <h1 id="watchTitle"></h1>
+
+      <p id="watchMeta"></p>
+
+    </div>
+
+
+    <h2>
+      More episodes
+    </h2>
+
+
+    <div
+      class="episode-grid"
+      id="watchEpisodes"
+    ></div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<footer class="footer">
+
+  <strong>
+    UNHAPPY
+  </strong>
+
+  <span>
+    Anime &amp; Media
+  </span>
+
+  <span>
+    •
+  </span>
+
+  <span id="stats">
+    0 titles
+  </span>
+
+</footer>
+
+
+<!-- HISTORY -->
+
+<div
+  class="modal hidden"
+  id="historyModal"
+>
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <div>
+
+        <span class="kicker">
+          YOUR ACTIVITY
+        </span>
+
+        <h2>
+          Watch history
+        </h2>
+
+      </div>
+
 
       <button
         class="modal-close"
-        id="closeSeriesButton"
-        type="button"
-        aria-label="Close"
+        id="historyClose"
       >
         ×
       </button>
 
-
-      <div class="series-hero">
-
-        <img
-          id="seriesModalImage"
-          alt=""
-        >
-
-        <div class="series-hero-shade"></div>
-
-        <div class="series-hero-copy">
-
-          <span class="eyebrow">
-            SERIES
-          </span>
-
-          <h2 id="seriesModalTitle"></h2>
-
-          <div
-            id="seriesModalMeta"
-            class="hero-meta"
-          ></div>
-
-        </div>
-
-      </div>
-
-
-      <div class="series-content">
-
-        <div class="series-main">
-
-          <div
-            class="series-description"
-            id="seriesModalDescription"
-          ></div>
-
-          <div
-            class="tag-list"
-            id="seriesModalGenres"
-          ></div>
-
-        </div>
-
-
-        <aside
-          class="series-stats"
-          id="seriesModalStats"
-        ></aside>
-
-      </div>
-
-
-      <div class="series-actions">
-
-        <button
-          class="button primary"
-          id="seriesPlayButton"
-          type="button"
-        >
-          ▶ Play first episode
-        </button>
-
-        <button
-          class="button glass"
-          id="seriesContinueButton"
-          type="button"
-        >
-          Continue
-        </button>
-
-        <button
-          class="button glass"
-          id="seriesFavoriteButton"
-          type="button"
-        >
-          ♡ My List
-        </button>
-
-      </div>
-
-
-      <div class="episodes-header">
-
-        <div>
-
-          <span class="section-kicker">
-            EPISODES
-          </span>
-
-          <h3>
-            All episodes
-          </h3>
-
-        </div>
-
-        <label class="episode-search">
-
-          <span>⌕</span>
-
-          <input
-            id="seriesEpisodeSearch"
-            type="search"
-            placeholder="Episode number or title…"
-          >
-
-        </label>
-
-      </div>
-
-
-      <div
-        class="episode-strip"
-        id="seriesEpisodeList"
-      ></div>
-
     </div>
+
+
+    <div
+      class="history-list"
+      id="historyList"
+    ></div>
+
+
+    <button
+      class="button"
+      id="clearHistory"
+    >
+      Clear history
+    </button>
 
   </div>
 
+</div>
 
-  <!-- PLAYER -->
 
-  <div
-    class="modal hidden"
-    id="playerModal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="playerTitle"
-  >
+<div
+  class="toast"
+  id="toast"
+></div>
 
-    <div
-      class="modal-backdrop"
-      data-close="player"
-    ></div>
 
-    <div class="player-modal">
+<script>
+"use strict";
 
-      <div class="player-topbar">
 
-        <button
-          class="modal-close inline"
-          id="playerBackButton"
-          type="button"
-        >
-          ← Back
-        </button>
+/* ==================================================
+   STATE
+================================================== */
 
-        <div class="player-heading">
+const $ = id =>
+  document.getElementById(id);
 
-          <span id="playerSeries"></span>
 
-          <strong id="playerTitle"></strong>
+const S = {
 
-        </div>
+  videos: [],
 
-        <div class="player-nav">
+  series: [],
+
+  meta: new Map(),
+
+  favorites: new Set(),
+
+  history: [],
+
+  view: "home",
+
+  series: null,
+
+  video: null,
+
+  timer: null
+
+};
+
+
+const KEYS = {
+
+  fav: "unhappy:favorites:v4",
+
+  hist: "unhappy:history:v4"
+
+};
+
+
+/* ==================================================
+   HELPERS
+================================================== */
+
+const text = value =>
+  String(value ?? "").trim();
+
+
+const norm = value =>
+  text(value).toLocaleLowerCase();
+
+
+const arr = value => {
+
+  if (Array.isArray(value)) {
+
+    return value
+      .map(text)
+      .filter(Boolean);
+
+  }
+
+  if (typeof value === "string") {
+
+    return value
+      .split(",")
+      .map(text)
+      .filter(Boolean);
+
+  }
+
+  return [];
+
+};
+
+
+const num = value => {
+
+  const n = Number(value);
+
+  return Number.isFinite(n)
+    ? n
+    : null;
+
+};
+
+
+const title = video =>
+  text(
+    video.title ??
+    video.name
+  ) || "Untitled";
+
+
+const seriesName = video =>
+  text(
+    video.series ??
+    video.show ??
+    video.anime
+  ) || "Other";
+
+
+const ep = video =>
+  num(
+    video.episode ??
+    video.episodeNumber ??
+    video.episode_number
+  );
+
+
+const year = video =>
+  num(video.year);
+
+
+const genres = video =>
+  arr(
+    video.genres ??
+    video.genre
+  );
+
+
+const image = video =>
+  text(
+    video.thumbnail ??
+    video.poster ??
+    video.image
+  );
+
+
+const source = video =>
+  text(
+    video.embed ??
+    video.url ??
+    video.videoUrl
+  );
+
+
+const desc = video =>
+  text(
+    video.description ??
+    video.summary
+  );
+
+
+const esc = value =>
+  text(value).replace(
+    /[&<>"']/g,
+    character => ({
+
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+
+    }[character])
+  );
+
+
+const label = video => {
+
+  const n = ep(video);
+
+  if (n == null) {
+    return "Special";
+  }
+
+  return Number.isInteger(n)
+    ? String(n).padStart(3,"0")
+    : String(n);
+
+};
+
+
+const key = value =>
+  norm(value);
+
+
+function safe(value){
+
+  try{
+
+    const u =
+      new URL(
+        text(value),
+        location.href
+      );
+
+    return [
+      "http:",
+      "https:",
+      "blob:",
+      "data:"
+    ].includes(u.protocol)
+      ? u.href
+      : "";
+
+  }catch{
+
+    return "";
+
+  }
+
+}
+
+
+/* ==================================================
+   STORAGE
+================================================== */
+
+function loadStore(){
+
+  try{
+
+    S.favorites =
+      new Set(
+        JSON.parse(
+          localStorage.getItem(
+            KEYS.fav
+          ) || "[]"
+        ).filter(
+          x =>
+            typeof x === "string"
+        )
+      );
+
+
+    S.history =
+      JSON.parse(
+        localStorage.getItem(
+          KEYS.hist
+        ) || "[]"
+      )
+      .filter(
+        x =>
+          x &&
+          typeof x.id === "string"
+      )
+      .slice(0,50);
+
+  }catch{
+
+    S.favorites =
+      new Set();
+
+    S.history = [];
+
+  }
+
+}
+
+
+function save(){
+
+  try{
+
+    localStorage.setItem(
+      KEYS.fav,
+      JSON.stringify(
+        [...S.favorites]
+      )
+    );
+
+
+    localStorage.setItem(
+      KEYS.hist,
+      JSON.stringify(
+        S.history
+      )
+    );
+
+  }catch{}
+
+}
+
+
+/* ==================================================
+   TOAST
+================================================== */
+
+function toast(message){
+
+  $("toast").textContent =
+    message;
+
+  $("toast")
+    .classList
+    .add("show");
+
+  clearTimeout(
+    S.timer
+  );
+
+  S.timer =
+    setTimeout(
+      () =>
+        $("toast")
+          .classList
+          .remove("show"),
+      2200
+    );
+
+}
+
+
+/* ==================================================
+   DATA
+================================================== */
+
+async function getJSON(url){
+
+  const response =
+    await fetch(
+      url,
+      {
+        cache:"no-store"
+      }
+    );
+
+  if(!response.ok){
+
+    throw Error(
+      "Request failed (" +
+      response.status +
+      ")"
+    );
+
+  }
+
+  return response.json();
+
+}
+
+
+async function load(){
+
+  try{
+
+    const [
+      videoData,
+      seriesData
+    ] =
+      await Promise.all([
+
+        getJSON(
+          "./data/videos.json"
+        ),
+
+        getJSON(
+          "./data/series.json"
+        ).catch(
+          () => ({
+            series:[]
+          })
+        )
+
+      ]);
+
+
+    const rawVideos =
+      Array.isArray(videoData)
+        ? videoData
+        : (
+            videoData.videos ||
+            videoData.items ||
+            []
+          );
+
+
+    S.videos =
+      rawVideos
+        .filter(
+          video =>
+            video &&
+            text(video.id) &&
+            source(video)
+        )
+        .map(
+          video => ({
+            ...video,
+            id:text(video.id)
+          })
+        );
+
+
+    const rawSeries =
+      Array.isArray(seriesData)
+        ? seriesData
+        : (
+            seriesData.series ||
+            []
+          );
+
+
+    S.meta =
+      new Map(
+        rawSeries
+          .filter(
+            series =>
+              series &&
+              text(series.name)
+          )
+          .map(
+            series => [
+              key(series.name),
+              series
+            ]
+          )
+      );
+
+
+    const groups =
+      new Map();
+
+
+    for(
+      const video
+      of S.videos
+    ){
+
+      const k =
+        key(
+          seriesName(video)
+        );
+
+
+      if(
+        !groups.has(k)
+      ){
+
+        groups.set(
+          k,
+          []
+        );
+
+      }
+
+
+      groups
+        .get(k)
+        .push(video);
+
+    }
+
+
+    S.series =
+      [...groups]
+        .map(
+          ([k,episodes]) => {
+
+            episodes.sort(
+              (a,b) =>
+
+                (
+                  ep(a) ??
+                  Infinity
+                ) -
+                (
+                  ep(b) ??
+                  Infinity
+                )
+
+                ||
+
+                title(a)
+                  .localeCompare(
+                    title(b),
+                    undefined,
+                    {
+                      numeric:true,
+                      sensitivity:"base"
+                    }
+                  )
+            );
+
+
+            const meta =
+              S.meta.get(k) ||
+              {};
+
+            const first =
+              episodes[0];
+
+            const metadataGenres =
+              arr(
+                meta.genres
+              );
+
+
+            return {
+
+              key:k,
+
+              name:
+                text(meta.name) ||
+                seriesName(first),
+
+              episodes,
+
+              thumbnail:
+                safe(meta.thumbnail) ||
+                safe(image(first)),
+
+              backdrop:
+                safe(meta.backdrop) ||
+                safe(meta.thumbnail) ||
+                safe(image(first)),
+
+              description:
+                text(meta.description) ||
+                desc(first) ||
+                (
+                  "A collection of " +
+                  episodes.length +
+                  " episodes."
+                ),
+
+              year:
+                num(meta.year) ??
+                year(first),
+
+              genres:
+                metadataGenres.length
+                  ? metadataGenres
+                  : [
+                      ...new Set(
+                        episodes.flatMap(
+                          genres
+                        )
+                      )
+                    ],
+
+              status:
+                text(meta.status) ||
+                "Library"
+
+            };
+
+          }
+        );
+
+
+    const validIds =
+      new Set(
+        S.videos.map(
+          video =>
+            video.id
+        )
+      );
+
+
+    S.favorites =
+      new Set(
+        [...S.favorites]
+          .filter(
+            id =>
+              validIds.has(id)
+          )
+      );
+
+
+    S.history =
+      S.history.filter(
+        item =>
+          validIds.has(
+            item.id
+          )
+      );
+
+
+    save();
+
+    buildFilters();
+
+    renderHome();
+
+    renderBrowse();
+
+    renderFavorites();
+
+    renderSearch(
+      norm(
+        $("globalSearch").value
+      )
+    );
+
+    updateCounts();
+
+  }catch(error){
+
+    console.error(
+      "Library error:",
+      error
+    );
+
+
+    $("homeView").innerHTML = `
+
+      <div class="wrap">
+
+        <div class="state">
+
+          <strong>
+            Could not load the library.
+          </strong>
+
+          <p>
+            ${esc(error.message)}
+          </p>
 
           <button
-            id="playerPrevButton"
-            type="button"
-            aria-label="Previous episode"
+            class="button primary"
+            onclick="location.reload()"
           >
-            ‹
-          </button>
-
-          <button
-            id="playerNextButton"
-            type="button"
-            aria-label="Next episode"
-          >
-            ›
+            Retry
           </button>
 
         </div>
 
       </div>
 
+    `;
 
-      <div class="player-stage">
+  }
 
-        <div
-          class="player-loading"
-          id="playerLoading"
-        >
-          Loading player…
-        </div>
-
-        <iframe
-          id="playerFrame"
-          title="Video player"
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowfullscreen
-          referrerpolicy="no-referrer"
-        ></iframe>
-
-      </div>
+}
 
 
-      <div class="player-info">
+/* ==================================================
+   FILTERS
+================================================== */
 
-        <div>
+function buildFilters(){
 
-          <span id="playerTitleBelow"></span>
-
-          <p id="playerMeta"></p>
-
-        </div>
-
-        <button
-          class="button glass"
-          id="playerFavoriteButton"
-          type="button"
-        >
-          ♡ My List
-        </button>
-
-        <button
-          class="button glass"
-          id="playerInfoButton"
-          type="button"
-        >
-          Series info
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
+  const allGenres =
+    [
+      ...new Set(
+        S.series.flatMap(
+          series =>
+            series.genres
+        )
+      )
+    ]
+    .sort();
 
 
-  <!-- HISTORY -->
+  $("genre").innerHTML =
 
-  <div
-    class="modal hidden"
-    id="historyModal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="historyTitle"
-  >
+    '<option value="ALL">All genres</option>' +
 
-    <div
-      class="modal-backdrop"
-      data-close="history"
-    ></div>
+    allGenres
+      .map(
+        genre =>
+          '<option value="' +
+          esc(genre) +
+          '">' +
+          esc(genre) +
+          "</option>"
+      )
+      .join("");
 
-    <div class="simple-modal">
+}
 
-      <div class="modal-heading">
 
-        <div>
+/* ==================================================
+   CARDS
+================================================== */
 
-          <span class="section-kicker">
-            YOUR ACTIVITY
-          </span>
+function card(series){
 
-          <h2 id="historyTitle">
-            Watch history
-          </h2>
+  const saved =
+    series.episodes.every(
+      video =>
+        S.favorites.has(
+          video.id
+        )
+    );
 
-        </div>
 
-        <button
-          class="modal-close inline"
-          id="closeHistoryButton"
-          type="button"
-        >
-          ×
-        </button>
+  const watched =
+    S.history.filter(
+      history =>
+        series.episodes.some(
+          video =>
+            video.id ===
+            history.id
+        )
+    ).length;
 
-      </div>
 
-      <div id="historyContent"></div>
+  const progress =
+    series.episodes.length
+      ? Math.round(
+          watched /
+          series.episodes.length *
+          100
+        )
+      : 0;
+
+
+  return `
+
+    <article class="card">
 
       <button
-        class="clear-history"
-        id="clearHistoryButton"
+        class="card-main"
+        data-series="${esc(series.key)}"
         type="button"
       >
-        Clear history
+
+        <div class="thumb">
+
+          <img
+            src="${esc(series.thumbnail)}"
+            alt=""
+            loading="lazy"
+          >
+
+          <span class="badge">
+
+            ${series.episodes.length}
+
+            EP${series.episodes.length === 1 ? "" : "S"}
+
+          </span>
+
+        </div>
+
+
+        <div class="card-body">
+
+          <div class="card-title">
+
+            ${esc(series.name)}
+
+          </div>
+
+
+          <div class="card-meta">
+
+            ${esc(series.year || "")}
+
+            ·
+
+            ${esc(series.status)}
+
+          </div>
+
+
+          <p>
+
+            ${esc(series.description)}
+
+          </p>
+
+
+          <div class="tags">
+
+            ${series.genres
+              .slice(0,3)
+              .map(
+                genre =>
+                  "<span>" +
+                  esc(genre) +
+                  "</span>"
+              )
+              .join("")}
+
+          </div>
+
+
+          ${
+            progress
+              ? `
+
+                <div class="progress">
+
+                  <i
+                    style="width:${progress}%"
+                  ></i>
+
+                </div>
+
+              `
+              : ""
+          }
+
+        </div>
+
       </button>
 
-    </div>
 
-  </div>
+      <button
+        class="fav ${saved ? "saved" : ""}"
+        data-fav="${esc(series.key)}"
+        type="button"
+        aria-label="Toggle My List"
+      >
+        ${saved ? "♥" : "♡"}
+      </button>
+
+    </article>
+
+  `;
+
+}
 
 
-  <div
-    class="toast"
-    id="toast"
-    role="status"
-    aria-live="polite"
-  ></div>
+function epCard(video){
+
+  return `
+
+    <button
+      class="episode"
+      data-ep="${esc(video.id)}"
+      type="button"
+    >
+
+      <div class="ep-img">
+
+        <img
+          src="${esc(image(video))}"
+          alt=""
+          loading="lazy"
+        >
+
+        <span class="badge">
+          ${esc(label(video))}
+        </span>
+
+      </div>
 
 
-  <script
-    src="./app.js"
-    defer
-  ></script>
+      <div class="ep-body">
+
+        <strong>
+          ${esc(title(video))}
+        </strong>
+
+        <small>
+          ${esc(seriesName(video))}
+        </small>
+
+      </div>
+
+    </button>
+
+  `;
+
+}
+
+
+/* ==================================================
+   BIND DYNAMIC CONTENT
+================================================== */
+
+function bind(root){
+
+  root
+    .querySelectorAll(
+      "[data-series]"
+    )
+    .forEach(
+      button => {
+
+        button.onclick =
+          () => {
+
+            const series =
+              S.series.find(
+                item =>
+                  item.key ===
+                  button.dataset.series
+              );
+
+            openSeries(series);
+
+          };
+
+      }
+    );
+
+
+  root
+    .querySelectorAll(
+      "[data-fav]"
+    )
+    .forEach(
+      button => {
+
+        button.onclick =
+          event => {
+
+            event.stopPropagation();
+
+            const series =
+              S.series.find(
+                item =>
+                  item.key ===
+                  button.dataset.fav
+              );
+
+            toggleSeries(series);
+
+          };
+
+      }
+    );
+
+
+  root
+    .querySelectorAll(
+      "[data-ep]"
+    )
+    .forEach(
+      button => {
+
+        button.onclick =
+          () => {
+
+            const video =
+              S.videos.find(
+                item =>
+                  item.id ===
+                  button.dataset.ep
+              );
+
+            openWatch(video);
+
+          };
+
+      }
+    );
+
+}
+
+
+/* ==================================================
+   HOME
+================================================== */
+
+function renderHome(){
+
+  const series =
+    S.series[0];
+
+
+  if(!series){
+    return;
+  }
+
+
+  $("heroTitle").textContent =
+    series.name;
+
+
+  $("heroDesc").textContent =
+    series.description;
+
+
+  $("heroImg").src =
+    series.thumbnail;
+
+
+  $("heroBg").style.backgroundImage =
+    series.backdrop
+      ? 'url("' +
+        series.backdrop.replace(
+          /"/g,
+          "%22"
+        ) +
+        '")'
+      : "";
+
+
+  $("heroMeta").innerHTML =
+    [
+      series.year,
+      series.episodes.length +
+        " episodes",
+      ...series.genres.slice(0,3)
+    ]
+    .filter(Boolean)
+    .map(
+      value =>
+        "<span>" +
+        esc(value) +
+        "</span>"
+    )
+    .join("");
+
+
+  $("heroPlay").onclick =
+    () =>
+      openWatch(
+        series.episodes[0]
+      );
+
+
+  $("heroSeries").onclick =
+    () =>
+      openSeries(series);
+
+
+  $("heroFav").onclick =
+    () =>
+      toggleSeries(series);
+
+
+  $("homeGrid").innerHTML =
+    S.series
+      .slice(0,6)
+      .map(card)
+      .join("");
+
+
+  bind(
+    $("homeGrid")
+  );
+
+
+  renderContinue();
+
+}
+
+
+function renderContinue(){
+
+  const videos =
+    S.history
+      .slice()
+      .sort(
+        (a,b) =>
+          b.timestamp -
+          a.timestamp
+      )
+      .map(
+        history =>
+          S.videos.find(
+            video =>
+              video.id ===
+              history.id
+          )
+      )
+      .filter(Boolean)
+      .slice(0,6);
+
+
+  $("continueSection")
+    .classList
+    .toggle(
+      "hidden",
+      !videos.length
+    );
+
+
+  $("continueGrid").innerHTML =
+    videos
+      .map(epCard)
+      .join("");
+
+
+  bind(
+    $("continueGrid")
+  );
+
+}
+
+
+/* ==================================================
+   BROWSE
+================================================== */
+
+function renderBrowse(){
+
+  let list =
+    S.series.slice();
+
+
+  const genre =
+    $("genre").value;
+
+
+  const sort =
+    $("seriesSort").value;
+
+
+  if(
+    genre !== "ALL"
+  ){
+
+    list =
+      list.filter(
+        series =>
+          series.genres.includes(
+            genre
+          )
+      );
+
+  }
+
+
+  if(sort === "az"){
+
+    list.sort(
+      (a,b) =>
+        a.name.localeCompare(
+          b.name,
+          undefined,
+          {
+            numeric:true
+          }
+        )
+    );
+
+  }
+
+
+  if(sort === "za"){
+
+    list.sort(
+      (a,b) =>
+        b.name.localeCompare(
+          a.name,
+          undefined,
+          {
+            numeric:true
+          }
+        )
+    );
+
+  }
+
+
+  if(sort === "episodes"){
+
+    list.sort(
+      (a,b) =>
+        b.episodes.length -
+        a.episodes.length
+    );
+
+  }
+
+
+  if(sort === "year"){
+
+    list.sort(
+      (a,b) =>
+        (b.year || 0) -
+        (a.year || 0)
+    );
+
+  }
+
+
+  $("browseGrid").innerHTML =
+    list
+      .map(card)
+      .join("");
+
+
+  $("browseEmpty")
+    .classList
+    .toggle(
+      "hidden",
+      !!list.length
+    );
+
+
+  $("browseCount").textContent =
+    list.length +
+    " series";
+
+
+  bind(
+    $("browseGrid")
+  );
+
+}
+
+
+/* ==================================================
+   SEARCH
+================================================== */
+
+function renderSearch(query){
+
+  const seriesResults =
+    S.series.filter(
+      series =>
+        !query ||
+        norm(
+          [
+            series.name,
+            series.description,
+            series.status,
+            ...series.genres,
+            ...series.episodes.map(
+              video =>
+                title(video) +
+                " " +
+                (
+                  ep(video) ??
+                  ""
+                )
+            )
+          ].join(" ")
+        ).includes(query)
+    );
+
+
+  const episodeResults =
+    S.videos.filter(
+      video =>
+        !query ||
+        norm(
+          [
+            title(video),
+            seriesName(video),
+            desc(video),
+            ...genres(video),
+            ep(video) ?? ""
+          ].join(" ")
+        ).includes(query)
+    );
+
+
+  $("searchSeriesGrid").innerHTML =
+    seriesResults
+      .map(card)
+      .join("");
+
+
+  $("searchEpisodeGrid").innerHTML =
+    episodeResults
+      .slice(0,100)
+      .map(epCard)
+      .join("");
+
+
+  $("searchSeriesCount").textContent =
+    seriesResults.length;
+
+
+  $("searchEpisodeCount").textContent =
+    episodeResults.length;
+
+
+  $("searchEmpty")
+    .classList
+    .toggle(
+      "hidden",
+      !!(
+        seriesResults.length ||
+        episodeResults.length
+      )
+    );
+
+
+  bind(
+    $("searchSeriesGrid")
+  );
+
+
+  bind(
+    $("searchEpisodeGrid")
+  );
+
+}
+
+
+/* ==================================================
+   FAVORITES
+================================================== */
+
+function renderFavorites(){
+
+  const list =
+    S.series.filter(
+      series =>
+        series.episodes.some(
+          video =>
+            S.favorites.has(
+              video.id
+            )
+        )
+    );
+
+
+  $("favGrid").innerHTML =
+    list
+      .map(card)
+      .join("");
+
+
+  $("favEmpty")
+    .classList
+    .toggle(
+      "hidden",
+      !!list.length
+    );
+
+
+  $("favSeriesCount").textContent =
+    list.length +
+    " series";
+
+
+  bind(
+    $("favGrid")
+  );
+
+}
+
+
+function updateCounts(){
+
+  const count =
+    S.favorites.size;
+
+
+  $("favCount").textContent =
+    count;
+
+
+  $("favCountMobile").textContent =
+    count;
+
+
+  $("stats").textContent =
+    S.videos.length +
+    " titles · " +
+    S.series.length +
+    " series";
+
+}
+
+
+function toggleSeries(series){
+
+  if(!series){
+    return;
+  }
+
+
+  const allSaved =
+    series.episodes.every(
+      video =>
+        S.favorites.has(
+          video.id
+        )
+    );
+
+
+  series.episodes.forEach(
+    video => {
+
+      if(allSaved){
+
+        S.favorites.delete(
+          video.id
+        );
+
+      }else{
+
+        S.favorites.add(
+          video.id
+        );
+
+      }
+
+    }
+  );
+
+
+  save();
+
+  updateCounts();
+
+  renderHome();
+
+  renderBrowse();
+
+  renderFavorites();
+
+  renderSearch(
+    norm(
+      $("globalSearch").value
+    )
+  );
+
+
+  if(
+    S.series &&
+    S.series.key ===
+      series.key
+  ){
+
+    renderSeries(series);
+
+  }
+
+
+  toast(
+    allSaved
+      ? series.name +
+        " removed from My List"
+      : series.name +
+        " added to My List"
+  );
+
+}
+
+
+function toggleVideo(video){
+
+  if(
+    S.favorites.has(
+      video.id
+    )
+  ){
+
+    S.favorites.delete(
+      video.id
+    );
+
+  }else{
+
+    S.favorites.add(
+      video.id
+    );
+
+  }
+
+
+  save();
+
+  updateCounts();
+
+  renderFavorites();
+
+  renderBrowse();
+
+  renderHome();
+
+
+  $("watchFav").textContent =
+    S.favorites.has(
+      video.id
+    )
+      ? "♥ In My List"
+      : "♡ My List";
+
+}
+
+
+/* ==================================================
+   SERIES VIEW
+================================================== */
+
+function openSeries(series){
+
+  if(!series){
+    return;
+  }
+
+
+  S.series =
+    series;
+
+
+  location.hash =
+    "#series/" +
+    encodeURIComponent(
+      series.key
+    );
+
+}
+
+
+function renderSeries(series){
+
+  $("seriesImg").src =
+    series.thumbnail;
+
+
+  $("seriesTitle").textContent =
+    series.name;
+
+
+  $("seriesDesc").textContent =
+    series.description;
+
+
+  $("seriesMeta").innerHTML =
+    [
+      series.year,
+      series.episodes.length +
+        " episodes",
+      series.status
+    ]
+    .filter(Boolean)
+    .map(
+      value =>
+        "<span>" +
+        esc(value) +
+        "</span>"
+    )
+    .join("");
+
+
+  $("seriesTags").innerHTML =
+    series.genres
+      .map(
+        genre =>
+          "<span>" +
+          esc(genre) +
+          "</span>"
+      )
+      .join("");
+
+
+  $("seriesFav").textContent =
+    series.episodes.every(
+      video =>
+        S.favorites.has(
+          video.id
+        )
+    )
+      ? "♥ In My List"
+      : "♡ My List";
+
+
+  $("seriesPlay").onclick =
+    () =>
+      openWatch(
+        series.episodes[0]
+      );
+
+
+  const last =
+    S.history
+      .filter(
+        history =>
+          series.episodes.some(
+            video =>
+              video.id ===
+              history.id
+          )
+      )
+      .sort(
+        (a,b) =>
+          b.timestamp -
+          a.timestamp
+      )[0];
+
+
+  $("seriesContinue").onclick =
+    () =>
+      openWatch(
+        series.episodes.find(
+          video =>
+            video.id ===
+            last?.id
+        ) ||
+        series.episodes[0]
+      );
+
+
+  $("seriesContinue").disabled =
+    !last;
+
+
+  $("seriesFav").onclick =
+    () =>
+      toggleSeries(series);
+
+
+  renderSeriesEpisodes();
+
+}
+
+
+function renderSeriesEpisodes(){
+
+  if(!S.series){
+    return;
+  }
+
+
+  const query =
+    norm(
+      $("seriesEpSearch").value
+    );
+
+
+  let list =
+    S.series.episodes.filter(
+      video =>
+        !query ||
+        norm(
+          title(video) +
+          " " +
+          (
+            ep(video) ??
+            ""
+          )
+        ).includes(query)
+    );
+
+
+  if(
+    $("seriesEpSort").value ===
+    "desc"
+  ){
+
+    list =
+      list
+        .slice()
+        .reverse();
+
+  }
+
+
+  $("seriesEpCount").textContent =
+    list.length;
+
+
+  $("seriesEpGrid").innerHTML =
+    list
+      .map(epCard)
+      .join("");
+
+
+  bind(
+    $("seriesEpGrid")
+  );
+
+}
+
+
+/* ==================================================
+   WATCH HISTORY
+================================================== */
+
+function markWatched(video){
+
+  S.history =
+    S.history.filter(
+      history =>
+        history.id !==
+        video.id
+    );
+
+
+  S.history.unshift({
+
+    id:video.id,
+
+    timestamp:Date.now()
+
+  });
+
+
+  S.history =
+    S.history.slice(0,50);
+
+
+  save();
+
+  renderContinue();
+
+}
+
+
+/* ==================================================
+   WATCH VIEW
+================================================== */
+
+function openWatch(video){
+
+  if(!video){
+    return;
+  }
+
+
+  S.video =
+    video;
+
+
+  markWatched(video);
+
+
+  location.hash =
+    "#watch/" +
+    encodeURIComponent(
+      video.id
+    );
+
+}
+
+
+function renderWatch(video){
+
+  const series =
+    S.series.find(
+      item =>
+        item.episodes.some(
+          episode =>
+            episode.id ===
+            video.id
+        )
+    );
+
+
+  const index =
+    series
+      ? series.episodes.findIndex(
+          episode =>
+            episode.id ===
+            video.id
+        )
+      : -1;
+
+
+  $("watchSeries").textContent =
+    series?.name ||
+    seriesName(video);
+
+
+  $("watchHeading").textContent =
+    title(video);
+
+
+  $("watchTitle").textContent =
+    title(video);
+
+
+  $("watchMeta").textContent =
+    [
+      year(video),
+      video.quality,
+      ...genres(video)
+    ]
+    .filter(Boolean)
+    .join(" · ");
+
+
+  $("watchPrev").disabled =
+    !series ||
+    index <= 0;
+
+
+  $("watchNext").disabled =
+    !series ||
+    index < 0 ||
+    index >=
+      series.episodes.length - 1;
+
+
+  $("watchPrev").onclick =
+    () =>
+      openWatch(
+        series.episodes[
+          index - 1
+        ]
+      );
+
+
+  $("watchNext").onclick =
+    () =>
+      openWatch(
+        series.episodes[
+          index + 1
+        ]
+      );
+
+
+  $("watchFav").textContent =
+    S.favorites.has(
+      video.id
+    )
+      ? "♥ In My List"
+      : "♡ My List";
+
+
+  $("watchFav").onclick =
+    () =>
+      toggleVideo(video);
+
+
+  $("watchSeriesBtn").onclick =
+    () =>
+      series &&
+      openSeries(series);
+
+
+  $("watchEpisodes").innerHTML =
+    (
+      series
+        ? series.episodes
+        : []
+    )
+    .map(epCard)
+    .join("");
+
+
+  bind(
+    $("watchEpisodes")
+  );
+
+
+  const src =
+    safe(
+      source(video)
+    );
+
+
+  $("watchLoading")
+    .classList
+    .remove("hidden");
+
+
+  $("watchLoading").textContent =
+    "Loading player…";
+
+
+  $("frame").src =
+    "about:blank";
+
+
+  requestAnimationFrame(
+    () => {
+
+      if(!src){
+
+        $("watchLoading")
+          .textContent =
+            "No playable source.";
+
+        return;
+
+      }
+
+
+      $("frame").src =
+        src;
+
+
+      $("frame").onload =
+        () =>
+          $("watchLoading")
+            .classList
+            .add("hidden");
+
+    }
+  );
+
+}
+
+
+/* ==================================================
+   ROUTING
+================================================== */
+
+function setView(view){
+
+  S.view =
+    view;
+
+
+  document
+    .querySelectorAll(".view")
+    .forEach(
+      element => {
+
+        element
+          .classList
+          .toggle(
+            "active",
+            element.id ===
+            view + "View"
+          );
+
+      }
+    );
+
+
+  document
+    .querySelectorAll("[data-nav]")
+    .forEach(
+      element => {
+
+        element
+          .classList
+          .toggle(
+            "active",
+            element.dataset.nav ===
+            view
+          );
+
+      }
+    );
+
+
+  $("mobileNav")
+    .classList
+    .add("hidden");
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+
+
+  if(view === "browse"){
+    renderBrowse();
+  }
+
+
+  if(view === "favorites"){
+    renderFavorites();
+  }
+
+
+  if(view === "search"){
+
+    renderSearch(
+      norm(
+        $("searchPage").value
+      )
+    );
+
+  }
+
+}
+
+
+function route(){
+
+  const raw =
+    location.hash.slice(1) ||
+    "home";
+
+
+  const parts =
+    raw.split("/");
+
+
+  const view =
+    parts[0];
+
+
+  if(
+    view === "series"
+  ){
+
+    const series =
+      S.series.find(
+        item =>
+          item.key ===
+          decodeURIComponent(
+            parts
+              .slice(1)
+              .join("/")
+          )
+      );
+
+
+    if(series){
+
+      S.series =
+        series;
+
+      renderSeries(series);
+
+      setView("series");
+
+      return;
+
+    }
+
+  }
+
+
+  if(
+    view === "watch"
+  ){
+
+    const video =
+      S.videos.find(
+        item =>
+          item.id ===
+          decodeURIComponent(
+            parts
+              .slice(1)
+              .join("/")
+          )
+      );
+
+
+    if(video){
+
+      S.video =
+        video;
+
+      renderWatch(video);
+
+      setView("watch");
+
+      return;
+
+    }
+
+  }
+
+
+  if(
+    [
+      "home",
+      "browse",
+      "search",
+      "favorites"
+    ].includes(view)
+  ){
+
+    setView(view);
+
+  }else{
+
+    setView("home");
+
+  }
+
+}
+
+
+/* ==================================================
+   HISTORY MODAL
+================================================== */
+
+function historyModal(){
+
+  const list =
+    S.history
+      .map(
+        history =>
+          S.videos.find(
+            video =>
+              video.id ===
+              history.id
+          )
+      )
+      .filter(Boolean);
+
+
+  $("historyList").innerHTML =
+    list.length
+
+      ? list
+          .map(epCard)
+          .join("")
+
+      : `
+          <div class="empty">
+            No watch history yet.
+          </div>
+        `;
+
+
+  bind(
+    $("historyList")
+  );
+
+
+  $("historyModal")
+    .classList
+    .remove("hidden");
+
+
+  document.body
+    .classList
+    .add("lock");
+
+}
+
+
+function closeHistory(){
+
+  $("historyModal")
+    .classList
+    .add("hidden");
+
+
+  document.body
+    .classList
+    .remove("lock");
+
+}
+
+
+/* ==================================================
+   EVENTS
+================================================== */
+
+document
+  .querySelectorAll(
+    "[data-nav]"
+  )
+  .forEach(
+    button => {
+
+      button.onclick =
+        () => {
+
+          location.hash =
+            "#" +
+            button.dataset.nav;
+
+        };
+
+    }
+  );
+
+
+$("brand").onclick =
+  () =>
+    location.hash =
+      "#home";
+
+
+$("menuBtn").onclick =
+  () =>
+    $("mobileNav")
+      .classList
+      .toggle("hidden");
+
+
+$("historyBtn").onclick =
+  historyModal;
+
+
+$("historyMobile").onclick =
+  historyModal;
+
+
+$("historyOpen").onclick =
+  historyModal;
+
+
+$("historyClose").onclick =
+  closeHistory;
+
+
+$("historyModal").onclick =
+  event => {
+
+    if(
+      event.target ===
+      $("historyModal")
+    ){
+
+      closeHistory();
+
+    }
+
+  };
+
+
+$("clearHistory").onclick =
+  () => {
+
+    S.history = [];
+
+    save();
+
+    renderContinue();
+
+    historyModal();
+
+    toast(
+      "Watch history cleared"
+    );
+
+  };
+
+
+$("genre").onchange =
+  renderBrowse;
+
+
+$("seriesSort").onchange =
+  renderBrowse;
+
+
+$("seriesEpSearch").oninput =
+  renderSeriesEpisodes;
+
+
+$("seriesEpSort").onchange =
+  renderSeriesEpisodes;
+
+
+$("searchClear").onclick =
+  () => {
+
+    $("searchPage").value =
+      "";
+
+    renderSearch("");
+
+  };
+
+
+$("searchPage").oninput =
+  event =>
+    renderSearch(
+      norm(
+        event.target.value
+      )
+    );
+
+
+$("globalSearch").oninput =
+  event => {
+
+    const query =
+      event.target.value;
+
+
+    $("searchPage").value =
+      query;
+
+
+    if(
+      query &&
+      !location.hash.startsWith(
+        "#search"
+      )
+    ){
+
+      location.hash =
+        "#search";
+
+    }
+
+
+    renderSearch(
+      norm(query)
+    );
+
+  };
+
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key === "/" &&
+      !/INPUT|TEXTAREA|SELECT/
+        .test(
+          document.activeElement.tagName
+        )
+    ){
+
+      $("globalSearch").focus();
+
+      event.preventDefault();
+
+    }
+
+
+    if(
+      event.key === "Escape"
+    ){
+
+      closeHistory();
+
+    }
+
+  }
+);
+
+
+window.addEventListener(
+  "hashchange",
+  route
+);
+
+
+/* ==================================================
+   START
+================================================== */
+
+loadStore();
+
+load().then(
+  route
+);
+
+</script>
 
 </body>
-            </html>
+</html>
