@@ -1,19 +1,4 @@
 #!/usr/bin/env python3
-"""
-Automatically add VidMoly thumbnail URLs to data/videos.json.
-
-No thumbnail files are created.
-No backend is required.
-
-GitHub Actions performs the heavy work:
-    VidMoly embed URL
-        -> fetch embed page
-        -> extract player image/poster
-        -> verify image URL
-        -> write "thumbnail" into videos.json
-
-The thumbnail property is inserted immediately after "embed".
-"""
 
 from __future__ import annotations
 
@@ -38,7 +23,6 @@ USER_AGENT = (
 REQUEST_TIMEOUT = 30
 RETRIES = 3
 
-
 VIDMOLY_HOSTS = {
     "vidmoly.org",
     "www.vidmoly.org",
@@ -54,14 +38,11 @@ VIDMOLY_HOSTS = {
     "www.vidmoly.cam",
 }
 
-
 EMBED_PATH_RE = re.compile(
     r"^/embed-[A-Za-z0-9_-]+\.html$",
     re.IGNORECASE,
 )
 
-
-# Player/JWPlayer-style image fields.
 PLAYER_VALUE_RE = re.compile(
     r"""
     (?:
@@ -75,8 +56,6 @@ PLAYER_VALUE_RE = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
-
-# OpenGraph/Twitter image metadata.
 META_IMAGE_RE = re.compile(
     r"""
     <meta\b
@@ -95,8 +74,6 @@ META_IMAGE_RE = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
-
-# Same metadata with attributes reversed.
 META_IMAGE_RE_REVERSED = re.compile(
     r"""
     <meta\b
@@ -115,8 +92,6 @@ META_IMAGE_RE_REVERSED = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
-
-# Generic HTML image/poster fallback.
 HTML_IMAGE_RE = re.compile(
     r"""
     <
@@ -134,7 +109,6 @@ HTML_IMAGE_RE = re.compile(
     """,
     re.IGNORECASE | re.VERBOSE,
 )
-
 
 IMAGE_EXTENSION_RE = re.compile(
     r"\.(?:jpe?g|png|webp|avif)(?:[?#].*)?$",
@@ -157,10 +131,12 @@ def is_vidmoly_embed(url: str) -> bool:
 
     return (
         parsed.scheme in {"http", "https"}
-        and (parsed.hostname or "").lower() in VIDMOLY_HOSTS
+        and (parsed.hostname or "").lower()
+        in VIDMOLY_HOSTS
         and EMBED_PATH_RE.fullmatch(
             parsed.path or ""
-        ) is not None
+        )
+        is not None
     )
 
 
@@ -214,9 +190,8 @@ def normalise_url(
 def deduplicate(
     values: list[tuple[str, str]],
 ) -> list[tuple[str, str]]:
-    result: list[tuple[str, str]] = []
-
     seen: set[str] = set()
+    result: list[tuple[str, str]] = []
 
     for source, value in values:
         if not value:
@@ -243,20 +218,16 @@ def extract_html_candidates(
 ) -> list[tuple[str, str]]:
     candidates: list[tuple[str, str]] = []
 
-    # Extract script blocks first because the player
-    # configuration is the most useful source.
-    script_blocks = re.findall(
-        r"<script\b[^>]*>.*?</script>",
-        page_html,
-        re.IGNORECASE | re.DOTALL,
-    )
-
-    script_text = "\n".join(
-        script_blocks
+    scripts = "\n".join(
+        re.findall(
+            r"<script\b[^>]*>.*?</script>",
+            page_html,
+            re.IGNORECASE | re.DOTALL,
+        )
     )
 
     for match in PLAYER_VALUE_RE.finditer(
-        script_text
+        scripts
     ):
         value = normalise_url(
             match.group(1),
@@ -271,7 +242,6 @@ def extract_html_candidates(
                 )
             )
 
-    # Some variants may expose configuration directly.
     for match in PLAYER_VALUE_RE.finditer(
         page_html
     ):
@@ -288,7 +258,6 @@ def extract_html_candidates(
                 )
             )
 
-    # OpenGraph / Twitter fallback.
     for regex in (
         META_IMAGE_RE,
         META_IMAGE_RE_REVERSED,
@@ -309,7 +278,6 @@ def extract_html_candidates(
                     )
                 )
 
-    # Generic poster/src fallback.
     for match in HTML_IMAGE_RE.finditer(
         page_html
     ):
@@ -345,28 +313,36 @@ def request_embed(
     embed_url: str,
 ) -> str | None:
 
+    parsed = urlparse(
+        embed_url
+    )
+
+    referer = (
+        f"{parsed.scheme}://"
+        f"{parsed.netloc}/"
+    )
+
+    headers = {
+        "User-Agent": USER_AGENT,
+        "Accept": (
+            "text/html,application/xhtml+xml,"
+            "application/xml;q=0.9,*/*;q=0.8"
+        ),
+        "Accept-Language": (
+            "en-US,en;q=0.9"
+        ),
+        "Referer": referer,
+    }
+
     for attempt in range(
         1,
         RETRIES + 1,
     ):
-
         try:
             response = session.get(
                 embed_url,
                 timeout=REQUEST_TIMEOUT,
-                headers={
-                    "User-Agent": USER_AGENT,
-                    "Accept": (
-                        "text/html,application/xhtml+xml,"
-                        "application/xml;q=0.9,*/*;q=0.8"
-                    ),
-                    "Accept-Language": (
-                        "en-US,en;q=0.9"
-                    ),
-                    "Referer": (
-                        "https://vidmoly.biz/"
-                    ),
-                },
+                headers=headers,
                 allow_redirects=True,
             )
 
@@ -379,8 +355,6 @@ def request_embed(
                 or ""
             ).lower()
 
-            # Do not follow an embed redirect to
-            # an unrelated site.
             if final_host not in VIDMOLY_HOSTS:
                 log(
                     "refusing redirected embed host "
@@ -392,7 +366,6 @@ def request_embed(
             return response.text
 
         except requests.RequestException as exc:
-
             log(
                 f"embed request attempt "
                 f"{attempt}/{RETRIES} failed: {exc}"
@@ -411,11 +384,6 @@ def verify_image_url(
     image_url: str,
     referer_url: str,
 ) -> bool:
-    """
-    Confirm the extracted URL actually serves an image.
-
-    The thumbnail bytes are NOT stored in the repository.
-    """
 
     headers = {
         "User-Agent": USER_AGENT,
@@ -427,7 +395,6 @@ def verify_image_url(
         "Referer": referer_url,
     }
 
-    # First try HEAD.
     try:
         response = session.head(
             image_url,
@@ -436,18 +403,12 @@ def verify_image_url(
             allow_redirects=True,
         )
 
-        content_type = (
-            response.headers
-            .get(
-                "content-type",
-                "",
-            )
-            .lower()
-        )
-
         if (
             response.ok
-            and content_type.startswith(
+            and response.headers.get(
+                "content-type",
+                "",
+            ).lower().startswith(
                 "image/"
             )
         ):
@@ -456,7 +417,6 @@ def verify_image_url(
     except requests.RequestException:
         pass
 
-    # Some CDNs reject HEAD, so use a tiny ranged GET.
     try:
         response = session.get(
             image_url,
@@ -469,23 +429,19 @@ def verify_image_url(
             stream=True,
         )
 
-        content_type = (
-            response.headers
-            .get(
-                "content-type",
-                "",
+        try:
+            return (
+                response.ok
+                and response.headers.get(
+                    "content-type",
+                    "",
+                ).lower().startswith(
+                    "image/"
+                )
             )
-            .lower()
-        )
 
-        response.close()
-
-        return (
-            response.ok
-            and content_type.startswith(
-                "image/"
-            )
-        )
+        finally:
+            response.close()
 
     except requests.RequestException:
         return False
@@ -494,15 +450,12 @@ def verify_image_url(
 def browser_candidates(
     embed_url: str,
 ) -> list[tuple[str, str]]:
-    """
-    Chromium fallback for an embed which only exposes
-    its player data after JavaScript runs.
-    """
 
     try:
         from playwright.sync_api import (
             sync_playwright,
         )
+
     except ImportError:
         log(
             "Playwright unavailable; "
@@ -511,10 +464,11 @@ def browser_candidates(
 
         return []
 
-    candidates: list[tuple[str, str]] = []
+    candidates: list[
+        tuple[str, str]
+    ] = []
 
     try:
-
         with sync_playwright() as playwright:
 
             browser = (
@@ -534,72 +488,39 @@ def browser_candidates(
                 )
             )
 
-            page = context.new_page()
+            try:
+                page = context.new_page()
 
-            page.goto(
-                embed_url,
-                wait_until="domcontentloaded",
-                timeout=45000,
-            )
+                page.goto(
+                    embed_url,
+                    wait_until="domcontentloaded",
+                    timeout=45000,
+                )
 
-            # Give player scripts time to initialize.
-            page.wait_for_timeout(
-                4000
-            )
+                page.wait_for_timeout(
+                    4000
+                )
 
-            # Try JWPlayer directly.
-            jw_values = page.evaluate(
-                """
-                () => {
-                    const output = [];
-
-                    try {
-                        if (
-                            typeof window.jwplayer !==
-                            "function"
-                        ) {
-                            return output;
-                        }
-
-                        const player =
-                            window.jwplayer();
-
-                        if (!player) {
-                            return output;
-                        }
+                jw_values = page.evaluate(
+                    """
+                    () => {
+                        const output = [];
 
                         try {
-                            const item =
-                                player.getPlaylistItem();
-
-                            if (item) {
-                                for (
-                                    const key of [
-                                        "image",
-                                        "poster",
-                                        "thumbnail"
-                                    ]
-                                ) {
-                                    if (item[key]) {
-                                        output.push(
-                                            item[key]
-                                        );
-                                    }
-                                }
-                            }
-                        } catch (_) {}
-
-                        try {
-                            const playlist =
-                                player.getPlaylist();
-
                             if (
-                                Array.isArray(
-                                    playlist
-                                )
+                                typeof window.jwplayer ===
+                                "function"
                             ) {
+                                const player =
+                                    window.jwplayer();
+
+                                const items = [
+                                    player?.getPlaylistItem?.(),
+                                    ...(player?.getPlaylist?.() || [])
+                                ];
+
                                 for (
-                                    const item of playlist
+                                    const item of items
                                 ) {
                                     if (!item) continue;
 
@@ -620,105 +541,77 @@ def browser_candidates(
                             }
                         } catch (_) {}
 
-                    } catch (_) {}
-
-                    return output;
-                }
-                """
-            )
-
-            for value in (
-                jw_values or []
-            ):
-
-                candidate = normalise_url(
-                    str(value),
-                    embed_url,
-                )
-
-                if candidate:
-                    candidates.append(
-                        (
-                            "jwplayer",
-                            candidate,
-                        )
-                    )
-
-            # Inspect rendered HTML after JS.
-            rendered_html = (
-                page.content()
-            )
-
-            candidates.extend(
-                extract_html_candidates(
-                    rendered_html,
-                    embed_url,
-                )
-            )
-
-            # Inspect common poster/meta elements.
-            dom_values = page.evaluate(
-                """
-                () => {
-                    const output = [];
-
-                    for (
-                        const selector of [
-                            "video[poster]",
-                            "[data-poster]",
-                            "[poster]",
-                            "meta[property='og:image']",
-                            "meta[name='twitter:image']"
-                        ]
-                    ) {
-                        for (
-                            const node of
-                            document.querySelectorAll(
-                                selector
-                            )
-                        ) {
-                            output.push(
-                                node.getAttribute(
-                                    "poster"
-                                ) ||
-                                node.getAttribute(
-                                    "data-poster"
-                                ) ||
-                                node.getAttribute(
-                                    "content"
-                                ) ||
-                                ""
-                            );
-                        }
+                        return output;
                     }
-
-                    return output;
-                }
-                """
-            )
-
-            for value in (
-                dom_values or []
-            ):
-
-                candidate = normalise_url(
-                    str(value),
-                    embed_url,
+                    """
                 )
 
-                if candidate:
-                    candidates.append(
-                        (
-                            "rendered-dom",
-                            candidate,
-                        )
+                for value in (
+                    jw_values or []
+                ):
+                    candidate = normalise_url(
+                        str(value),
+                        embed_url,
                     )
 
-            context.close()
-            browser.close()
+                    if candidate:
+                        candidates.append(
+                            (
+                                "jwplayer",
+                                candidate,
+                            )
+                        )
+
+                candidates.extend(
+                    extract_html_candidates(
+                        page.content(),
+                        embed_url,
+                    )
+                )
+
+                dom_values = page.evaluate(
+                    """
+                    () => Array.from(
+                        document.querySelectorAll(
+                            'video[poster],' +
+                            '[data-poster],' +
+                            '[poster],' +
+                            'meta[property="og:image"],' +
+                            'meta[name="twitter:image"]'
+                        )
+                    )
+                    .map(
+                        n =>
+                            n.getAttribute("poster") ||
+                            n.getAttribute("data-poster") ||
+                            n.getAttribute("content") ||
+                            ""
+                    )
+                    .filter(Boolean)
+                    """
+                )
+
+                for value in (
+                    dom_values or []
+                ):
+                    candidate = normalise_url(
+                        str(value),
+                        embed_url,
+                    )
+
+                    if candidate:
+                        candidates.append(
+                            (
+                                "rendered-dom",
+                                candidate,
+                            )
+                        )
+
+            finally:
+                context.close()
+                browser.close()
 
     except Exception as exc:
-
         log(
             f"browser fallback failed: {exc}"
         )
@@ -738,18 +631,13 @@ def choose_thumbnail(
         embed_url,
     )
 
-    # Static extraction is cheaper and preferred.
     if page_html:
-
-        candidates = (
+        for source, candidate in (
             extract_html_candidates(
                 page_html,
                 embed_url,
             )
-        )
-
-        for source, candidate in candidates:
-
+        ):
             if verify_image_url(
                 session,
                 candidate,
@@ -760,13 +648,11 @@ def choose_thumbnail(
                     candidate,
                 )
 
-    # JavaScript-rendered fallback.
     for source, candidate in (
         browser_candidates(
             embed_url
         )
     ):
-
         if verify_image_url(
             session,
             candidate,
@@ -784,37 +670,24 @@ def put_thumbnail_after_embed(
     video: dict,
     thumbnail_url: str,
 ) -> None:
-    """
-    Preserve existing field order and place:
-
-        "embed": "...",
-        "thumbnail": "..."
-
-    directly together.
-    """
 
     rebuilt: dict = {}
-
     inserted = False
 
     for key, value in video.items():
 
-        # Remove an existing thumbnail so it can
-        # be reinserted in the correct position.
         if key == "thumbnail":
             continue
 
         rebuilt[key] = value
 
         if key == "embed":
-
             rebuilt[
                 "thumbnail"
             ] = thumbnail_url
 
             inserted = True
 
-    # Handle unusual records without an embed key.
     if not inserted:
         rebuilt[
             "thumbnail"
@@ -840,7 +713,6 @@ def process_catalogue(
         )
 
     except Exception as exc:
-
         raise RuntimeError(
             f"Could not parse "
             f"{catalogue_path}: {exc}"
@@ -867,127 +739,130 @@ def process_catalogue(
     unchanged = 0
     failed = 0
 
-    for index, video in enumerate(
-        data,
-        start=1,
-    ):
+    try:
 
-        if not isinstance(
-            video,
-            dict,
+        for index, video in enumerate(
+            data,
+            start=1,
         ):
-            log(
-                f"item {index}: invalid object"
-            )
 
-            failed += 1
-            continue
+            if not isinstance(
+                video,
+                dict,
+            ):
+                failed += 1
 
-        video_id = str(
-            video.get(
-                "id",
-                f"item-{index}",
-            )
-        ).strip()
+                log(
+                    f"item {index}: "
+                    "invalid object"
+                )
 
-        embed = str(
-            video.get(
-                "embed",
+                continue
+
+            video_id = str(
                 video.get(
-                    "url",
+                    "id",
+                    f"item-{index}",
+                )
+            ).strip()
+
+            embed = str(
+                video.get(
+                    "embed",
+                    video.get(
+                        "url",
+                        "",
+                    ),
+                )
+            ).strip()
+
+            if not is_vidmoly_embed(
+                embed
+            ):
+                unchanged += 1
+
+                log(
+                    f"{video_id}: "
+                    "not a supported VidMoly embed"
+                )
+
+                continue
+
+            existing = str(
+                video.get(
+                    "thumbnail",
                     "",
-                ),
-            )
-        ).strip()
+                )
+            ).strip()
 
-        if not is_vidmoly_embed(
-            embed
-        ):
+            if (
+                existing
+                and not force
+            ):
+                unchanged += 1
 
-            unchanged += 1
+                log(
+                    f"{video_id}: "
+                    "thumbnail already present"
+                )
 
-            log(
-                f"{video_id}: "
-                "not a supported VidMoly embed"
-            )
-
-            continue
-
-        existing = str(
-            video.get(
-                "thumbnail",
-                "",
-            )
-        ).strip()
-
-        if (
-            existing
-            and not force
-        ):
-
-            unchanged += 1
+                continue
 
             log(
-                f"{video_id}: "
-                "thumbnail already present"
+                f"{video_id}: extracting from "
+                f"{embed}"
             )
 
-            continue
+            result = choose_thumbnail(
+                session,
+                embed,
+            )
 
-        log(
-            f"{video_id}: extracting from "
-            f"{embed}"
-        )
+            if result is None:
+                failed += 1
 
-        result = choose_thumbnail(
-            session,
-            embed,
-        )
+                log(
+                    f"{video_id}: no usable "
+                    "thumbnail found; "
+                    "existing value preserved"
+                )
 
-        if result is None:
+                continue
 
-            failed += 1
+            source, thumbnail_url = result
+
+            if thumbnail_url == existing:
+                unchanged += 1
+
+                log(
+                    f"{video_id}: "
+                    "thumbnail unchanged"
+                )
+
+                continue
+
+            put_thumbnail_after_embed(
+                video,
+                thumbnail_url,
+            )
+
+            updated += 1
 
             log(
-                f"{video_id}: no usable "
-                "thumbnail found; "
-                "existing value preserved"
+                f"{video_id}: thumbnail added "
+                f"via {source}"
             )
 
-            continue
+    finally:
+        session.close()
 
-        source, thumbnail_url = result
-
-        if thumbnail_url == existing:
-
-            unchanged += 1
-
-            log(
-                f"{video_id}: thumbnail "
-                "unchanged"
-            )
-
-            continue
-
-        put_thumbnail_after_embed(
-            video,
-            thumbnail_url,
-        )
-
-        updated += 1
-
-        log(
-            f"{video_id}: thumbnail added "
-            f"via {source}"
-        )
-
-    # Deterministic JSON formatting.
     catalogue_path.write_text(
         json.dumps(
             data,
             ensure_ascii=False,
             indent=2,
-        ) + "\n",
+        )
+        + "\n",
         encoding="utf-8",
     )
 
@@ -1039,12 +914,10 @@ def main() -> int:
         f"failed={failed}"
     )
 
-    # Do not erase successful changes merely because
-    # one external provider request failed.
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(
         main()
-    )
+        )
