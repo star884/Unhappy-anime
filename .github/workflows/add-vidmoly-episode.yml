@@ -3,9 +3,20 @@ name: Add Vidmoly Episode
 on:
   workflow_dispatch:
     inputs:
+      series:
+        description: "Exact series name from data/series.json"
+        required: true
+        type: string
+
       vidmoly_url:
         description: "Vidmoly embed URL"
         required: true
+        type: string
+
+      quality:
+        description: "Quality only needed when the series has no existing episodes"
+        required: false
+        default: "1080p"
         type: string
 
 permissions:
@@ -17,7 +28,7 @@ concurrency:
 
 jobs:
   add-episode:
-    name: Add Episode to videos.json
+    name: Add Vidmoly Episode
     runs-on: ubuntu-latest
 
     steps:
@@ -33,7 +44,9 @@ jobs:
 
       - name: Add episode
         env:
+          SERIES_INPUT: ${{ inputs.series }}
           VIDMOLY_URL: ${{ inputs.vidmoly_url }}
+          QUALITY_INPUT: ${{ inputs.quality }}
         run: |
           python <<'PY'
           import json
@@ -43,98 +56,14 @@ jobs:
           from pathlib import Path
           from urllib.parse import urlparse
 
+          SERIES_FILE = Path("data/series.json")
+          VIDEOS_FILE = Path("data/videos.json")
 
-          FILE = Path("data/videos.json")
+          INPUT_SERIES = os.environ.get("SERIES_INPUT", "").strip()
           INPUT_URL = os.environ.get("VIDMOLY_URL", "").strip()
+          INPUT_QUALITY = os.environ.get("QUALITY_INPUT", "").strip()
 
-
-          def fail(message):
-              print(f"::error::{message}")
-              sys.exit(1)
-
-
-          # ============================================================
-          # 1. Validate supplied Vidmoly URL
-          # ============================================================
-
-          if not INPUT_URL:
-              fail("No Vidmoly URL was supplied.")
-
-
-          parsed = urlparse(INPUT_URL)
-
-          allowed_hosts = {
-              "vidmoly.org",
-              "www.vidmoly.org",
-              "vidmoly.me",
-              "www.vidmoly.me",
-          }
-
-          host = parsed.netloc.lower().split("@")[-1].split(":")[0]
-
-          if host not in allowed_hosts:
-              fail(
-                  "Invalid host. Please provide a Vidmoly URL."
-              )
-
-
-          if not parsed.path.lower().startswith("/embed-"):
-              fail(
-                  "Invalid Vidmoly URL. Expected an embed URL "
-                  "such as https://vidmoly.org/embed-example.html"
-              )
-
-
-          if not parsed.path.lower().endswith(".html"):
-              fail(
-                  "Invalid Vidmoly URL. The embed URL must end with .html."
-              )
-
-
-          # Strip query parameters and fragments.
-          embed_url = (
-              f"https://{host}{parsed.path}"
-          )
-
-
-          print(f"Input URL: {embed_url}")
-
-
-          # ============================================================
-          # 2. Read videos.json
-          # ============================================================
-
-          if not FILE.exists():
-              fail(f"{FILE} was not found.")
-
-
-          try:
-              with FILE.open("r", encoding="utf-8") as file:
-                  videos = json.load(file)
-          except json.JSONDecodeError as exc:
-              fail(f"videos.json contains invalid JSON: {exc}")
-          except OSError as exc:
-              fail(f"Could not read videos.json: {exc}")
-
-
-          if not isinstance(videos, list):
-              fail(
-                  "data/videos.json must contain a top-level JSON array."
-              )
-
-
-          if not videos:
-              fail(
-                  "videos.json is empty. At least one existing episode "
-                  "is required so the workflow can determine the series."
-              )
-
-
-          # ============================================================
-          # 3. Validate existing entries
-          # ============================================================
-
-          required_fields = {
+          REQUIRED_VIDEO_FIELDS = {
               "id",
               "title",
               "series",
@@ -147,243 +76,7 @@ jobs:
               "thumbnail",
           }
 
-
-          episode_entries = []
-
-
-          for index, video in enumerate(videos):
-
-              if not isinstance(video, dict):
-                  fail(
-                      f"Entry {index} in videos.json is not an object."
-                  )
-
-
-              missing = required_fields - set(video.keys())
-
-              if missing:
-                  fail(
-                      f"Entry {index} is missing required fields: "
-                      + ", ".join(sorted(missing))
-                  )
-
-
-              try:
-                  episode = int(video["episode"])
-              except (TypeError, ValueError):
-                  fail(
-                      f"Entry {index} has an invalid episode number: "
-                      f"{video.get('episode')!r}"
-                  )
-
-
-              if episode < 0:
-                  fail(
-                      f"Entry {index} has a negative episode number."
-                  )
-
-
-              if not isinstance(video["genres"], list):
-                  fail(
-                      f"Entry {index} has an invalid genres field."
-                  )
-
-
-              episode_entries.append(
-                  (episode, index, video)
-              )
-
-
-          # ============================================================
-          # 4. Normalise URLs for duplicate detection
-          # ============================================================
-
-          def normalise_url(value):
-              value = str(value or "").strip()
-
-              if not value:
-                  return ""
-
-              try:
-                  url = urlparse(value)
-
-                  if not url.netloc:
-                      return value.lower()
-
-                  return (
-                      f"{url.scheme.lower()}://"
-                      f"{url.netloc.lower()}"
-                      f"{url.path}"
-                  )
-
-              except Exception:
-                  return value.lower()
-
-
-          supplied_normalised = normalise_url(embed_url)
-
-
-          for _, index, video in episode_entries:
-              existing_url = normalise_url(
-                  video.get("embed", "")
-              )
-
-              if (
-                  existing_url
-                  and existing_url == supplied_normalised
-              ):
-                  fail(
-                      "This Vidmoly URL already exists in "
-                      f"data/videos.json at entry {index}. "
-                      "Nothing was changed."
-                  )
-
-
-          # ============================================================
-          # 5. Find the latest episode
-          # ============================================================
-
-          latest_episode, latest_index, template = max(
-              episode_entries,
-              key=lambda item: (item[0], item[1])
-          )
-
-
-          new_episode = latest_episode + 1
-
-
-          series = str(template["series"]).strip()
-          year = template["year"]
-          genres = list(template["genres"])
-          quality = str(template["quality"]).strip()
-
-
-          if not series:
-              fail("The latest episode has an empty series name.")
-
-
-          # ============================================================
-          # 6. Generate ID
-          # ============================================================
-
-          template_id = str(template["id"]).strip()
-
-
-          id_match = re.fullmatch(
-              r"(.+)-(\d+)",
-              template_id
-          )
-
-
-          if id_match:
-              prefix = id_match.group(1)
-          else:
-              prefix = re.sub(
-                  r"[^a-z0-9]+",
-                  "-",
-                  series.lower()
-              ).strip("-")
-
-
-          if not prefix:
-              fail(
-                  "Could not determine an ID prefix from the "
-                  "existing episode."
-              )
-
-
-          new_id = f"{prefix}-{new_episode:03d}"
-
-
-          existing_ids = {
-              str(video.get("id")).strip()
-              for video in videos
-              if video.get("id") is not None
-          }
-
-
-          if new_id in existing_ids:
-              fail(
-                  f"Generated ID '{new_id}' already exists. "
-                  "No changes were made."
-              )
-
-
-          # ============================================================
-          # 7. Generate metadata
-          # ============================================================
-
-          title = (
-              f"{series} - Episode "
-              f"{new_episode:03d}"
-          )
-
-
-          description = (
-              f"{series} episode "
-              f"{new_episode:03d}."
-          )
-
-
-          # IMPORTANT:
-          # Thumbnail is intentionally NOT generated here.
-          #
-          # The separate thumbnail workflow is responsible for
-          # filling the thumbnail field later.
-          #
-          # We preserve the existing videos.json schema by creating
-          # the field with an empty value.
-          thumbnail = ""
-
-
-          new_video = {
-              "id": new_id,
-              "title": title,
-              "series": series,
-              "episode": new_episode,
-              "year": year,
-              "genres": genres,
-              "quality": quality,
-              "description": description,
-              "embed": embed_url,
-              "thumbnail": thumbnail,
-          }
-
-
-          # ============================================================
-          # 8. Safety checks before modifying the file
-          # ============================================================
-
-          if new_video["episode"] != latest_episode + 1:
-              fail(
-                  "Internal validation failed: episode numbering."
-              )
-
-
-          if new_video["id"] in existing_ids:
-              fail(
-                  "Internal validation failed: duplicate ID."
-              )
-
-
-          if normalise_url(new_video["embed"]) in {
-              normalise_url(
-                  video.get("embed", "")
-              )
-              for video in videos
-          }:
-              fail(
-                  "Internal validation failed: duplicate embed URL."
-              )
-
-
-          if new_video["thumbnail"] != "":
-              fail(
-                  "Internal validation failed: thumbnail must remain empty."
-              )
-
-
-          expected_keys = [
+          EXPECTED_VIDEO_KEYS = [
               "id",
               "title",
               "series",
@@ -396,111 +89,649 @@ jobs:
               "thumbnail",
           ]
 
+          ALLOWED_HOSTS = {
+              "vidmoly.org",
+              "www.vidmoly.org",
+              "vidmoly.me",
+              "www.vidmoly.me",
+          }
 
-          if list(new_video.keys()) != expected_keys:
+          def fail(message):
+              print(f"::error::{message}")
+              sys.exit(1)
+
+          def normalise_name(value):
+              return " ".join(
+                  str(value or "").strip().split()
+              ).casefold()
+
+          def normalise_url(value):
+              value = str(value or "").strip()
+
+              if not value:
+                  return ""
+
+              try:
+                  parsed = urlparse(value)
+
+                  if not parsed.netloc:
+                      return value.lower()
+
+                  return (
+                      f"{parsed.scheme.lower()}://"
+                      f"{parsed.netloc.lower()}"
+                      f"{parsed.path}"
+                  )
+
+              except Exception:
+                  return value.lower()
+
+          def load_json(path):
+              if not path.exists():
+                  fail(f"{path} was not found.")
+
+              try:
+                  with path.open("r", encoding="utf-8") as file:
+                      return json.load(file)
+
+              except json.JSONDecodeError as exc:
+                  fail(
+                      f"{path} contains invalid JSON: {exc}"
+                  )
+
+              except OSError as exc:
+                  fail(
+                      f"Could not read {path}: {exc}"
+                  )
+
+          # ============================================================
+          # 1. Validate inputs
+          # ============================================================
+
+          if not INPUT_SERIES:
+              fail("No series name was supplied.")
+
+          if not INPUT_URL:
+              fail("No Vidmoly URL was supplied.")
+
+          parsed = urlparse(INPUT_URL)
+
+          host = (
+              parsed.netloc
+              .lower()
+              .split("@")[-1]
+              .split(":")[0]
+          )
+
+          if parsed.scheme.lower() != "https":
               fail(
-                  "Internal validation failed: field order changed."
+                  "Invalid Vidmoly URL. HTTPS is required."
               )
 
-
-          # ============================================================
-          # 9. Append the episode
-          # ============================================================
-
-          updated_videos = videos + [new_video]
-
-
-          # ============================================================
-          # 10. Validate the complete resulting catalogue
-          # ============================================================
-
-          if not isinstance(updated_videos, list):
+          if host not in ALLOWED_HOSTS:
               fail(
-                  "Internal validation failed: catalogue is not a list."
+                  "Invalid host. Please provide a Vidmoly URL."
               )
 
+          if not parsed.path.lower().startswith("/embed-"):
+              fail(
+                  "Invalid Vidmoly URL. Expected an embed URL "
+                  "such as https://vidmoly.org/embed-example.html"
+              )
 
-          for index, video in enumerate(updated_videos):
+          if not parsed.path.lower().endswith(".html"):
+              fail(
+                  "Invalid Vidmoly URL. The embed URL must end with .html."
+              )
+
+          # Remove query parameters/fragments.
+          embed_url = (
+              f"https://{host}{parsed.path}"
+          )
+
+          print(f"Input URL: {embed_url}")
+          print(f"Requested series: {INPUT_SERIES}")
+
+          # ============================================================
+          # 2. Read series.json
+          # ============================================================
+
+          series_data = load_json(SERIES_FILE)
+
+          if not isinstance(series_data, dict):
+              fail(
+                  "data/series.json must contain a top-level object."
+              )
+
+          series_list = series_data.get("series")
+
+          if not isinstance(series_list, list):
+              fail(
+                  "data/series.json must contain a 'series' array."
+              )
+
+          if not series_list:
+              fail(
+                  "data/series.json contains no series."
+              )
+
+          requested_key = normalise_name(INPUT_SERIES)
+
+          matching_series = []
+
+          for index, item in enumerate(series_list):
+
+              if not isinstance(item, dict):
+                  fail(
+                      f"series.json entry {index} is not an object."
+                  )
+
+              for required in (
+                  "id",
+                  "name",
+                  "year",
+                  "genres",
+              ):
+                  if required not in item:
+                      fail(
+                          f"series.json entry {index} is missing "
+                          f"required field '{required}'."
+                      )
+
+              if not isinstance(item["genres"], list):
+                  fail(
+                      f"series.json entry {index} has an invalid "
+                      "genres field."
+                  )
+
+              if (
+                  normalise_name(item.get("name"))
+                  == requested_key
+              ):
+                  matching_series.append(
+                      (index, item)
+                  )
+
+          if not matching_series:
+
+              available = [
+                  str(item.get("name", ""))
+                  for item in series_list
+              ]
+
+              fail(
+                  f"Series '{INPUT_SERIES}' was not found in "
+                  "data/series.json. Available series: "
+                  + ", ".join(available)
+              )
+
+          if len(matching_series) > 1:
+              fail(
+                  f"Multiple series entries match '{INPUT_SERIES}'. "
+                  "Series names must be unique in data/series.json."
+              )
+
+          series_index, series_meta = matching_series[0]
+
+          series_name = str(
+              series_meta["name"]
+          ).strip()
+
+          series_id = str(
+              series_meta["id"]
+          ).strip()
+
+          if not series_name:
+              fail(
+                  f"series.json entry {series_index} has an empty name."
+              )
+
+          if not series_id:
+              fail(
+                  f"series.json entry {series_index} has an empty id."
+              )
+
+          try:
+              series_year = int(
+                  series_meta["year"]
+              )
+
+          except (TypeError, ValueError):
+              fail(
+                  f"Series '{series_name}' has an invalid year: "
+                  f"{series_meta['year']!r}"
+              )
+
+          series_genres = list(
+              series_meta["genres"]
+          )
+
+          # ============================================================
+          # 3. Read videos.json
+          # ============================================================
+
+          videos = load_json(VIDEOS_FILE)
+
+          if not isinstance(videos, list):
+              fail(
+                  "data/videos.json must contain a top-level JSON array."
+              )
+
+          episode_entries = []
+
+          existing_ids = set()
+          existing_urls = set()
+
+          for index, video in enumerate(videos):
 
               if not isinstance(video, dict):
                   fail(
-                      f"Final validation failed at entry {index}."
+                      f"Entry {index} in videos.json is not an object."
                   )
 
-
-              missing = required_fields - set(video.keys())
+              missing = (
+                  REQUIRED_VIDEO_FIELDS
+                  - set(video.keys())
+              )
 
               if missing:
                   fail(
-                      f"Final validation failed at entry {index}: "
-                      f"missing {sorted(missing)}"
+                      f"Entry {index} is missing required fields: "
+                      + ", ".join(sorted(missing))
                   )
 
+              video_id = str(
+                  video.get("id", "")
+              ).strip()
+
+              if not video_id:
+                  fail(
+                      f"Entry {index} has an empty id."
+                  )
+
+              if video_id in existing_ids:
+                  fail(
+                      f"Duplicate video id '{video_id}' "
+                      f"at entry {index}."
+                  )
+
+              existing_ids.add(video_id)
+
+              try:
+                  episode = int(
+                      video["episode"]
+                  )
+
+              except (TypeError, ValueError):
+                  fail(
+                      f"Entry {index} has an invalid episode number: "
+                      f"{video.get('episode')!r}"
+                  )
+
+              if episode < 0:
+                  fail(
+                      f"Entry {index} has a negative episode number."
+                  )
+
+              if not isinstance(
+                  video["genres"],
+                  list
+              ):
+                  fail(
+                      f"Entry {index} has an invalid genres field."
+                  )
+
+              url_key = normalise_url(
+                  video.get("embed", "")
+              )
+
+              if url_key:
+
+                  if url_key in existing_urls:
+                      fail(
+                          f"Duplicate embed URL found at "
+                          f"entry {index}: "
+                          f"{video.get('embed')}"
+                      )
+
+                  existing_urls.add(url_key)
+
+              episode_entries.append(
+                  (
+                      episode,
+                      index,
+                      video
+                  )
+              )
+
+          # ============================================================
+          # 4. Duplicate URL check
+          # ============================================================
+
+          supplied_normalised = normalise_url(
+              embed_url
+          )
+
+          if supplied_normalised in existing_urls:
+              fail(
+                  "This Vidmoly URL already exists in "
+                  "data/videos.json. Nothing was changed."
+              )
+
+          # ============================================================
+          # 5. Select ONLY the requested series
+          # ============================================================
+
+          selected_entries = [
+              item
+              for item in episode_entries
+              if normalise_name(
+                  item[2].get("series")
+              ) == requested_key
+          ]
+
+          # ============================================================
+          # 6. Determine next episode
+          # ============================================================
+
+          if selected_entries:
+
+              latest_episode, latest_index, template = max(
+                  selected_entries,
+                  key=lambda item: (
+                      item[0],
+                      item[1]
+                  ),
+              )
+
+              new_episode = (
+                  latest_episode + 1
+              )
+
+              # Quality is currently stored per episode
+              # in videos.json, so inherit it from the
+              # latest episode of this series.
+
+              quality = str(
+                  template.get("quality", "")
+              ).strip()
+
+              if not quality:
+                  fail(
+                      f"The latest episode for '{series_name}' "
+                      "has no quality."
+                  )
+
+              print(
+                  f"Latest {series_name} episode: "
+                  f"{latest_episode:03d}"
+              )
+
+          else:
+
+              # This allows a series to exist in series.json
+              # before its first episode is added.
+
+              new_episode = 1
+
+              quality = (
+                  INPUT_QUALITY
+                  or "1080p"
+              )
+
+              print(
+                  f"No existing episodes found for "
+                  f"'{series_name}'. Starting at 001."
+              )
+
+          # ============================================================
+          # 7. Use series.json as the metadata source
+          # ============================================================
+
+          year = series_year
+          genres = series_genres
+
+          # ============================================================
+          # 8. Generate stable ID from series.json ID
+          # ============================================================
+
+          prefix = re.sub(
+              r"[^a-z0-9]+",
+              "-",
+              series_id.lower()
+          ).strip("-")
+
+          if not prefix:
+              prefix = re.sub(
+                  r"[^a-z0-9]+",
+                  "-",
+                  series_name.lower()
+              ).strip("-")
+
+          if not prefix:
+              fail(
+                  f"Could not generate an ID prefix for "
+                  f"'{series_name}'."
+              )
+
+          new_id = (
+              f"{prefix}-{new_episode:03d}"
+          )
+
+          if new_id in existing_ids:
+              fail(
+                  f"Generated ID '{new_id}' already exists. "
+                  "No changes were made."
+              )
+
+          # ============================================================
+          # 9. Build new episode
+          # ============================================================
+
+          title = (
+              f"{series_name} - Episode "
+              f"{new_episode:03d}"
+          )
+
+          description = (
+              f"{series_name} episode "
+              f"{new_episode:03d}."
+          )
+
+          # IMPORTANT:
+          #
+          # Thumbnail stays EMPTY.
+          #
+          # The separate thumbnail workflow can populate it later.
+
+          new_video = {
+              "id": new_id,
+              "title": title,
+              "series": series_name,
+              "episode": new_episode,
+              "year": year,
+              "genres": genres,
+              "quality": quality,
+              "description": description,
+              "embed": embed_url,
+              "thumbnail": "",
+          }
+
+          if (
+              list(new_video.keys())
+              != EXPECTED_VIDEO_KEYS
+          ):
+              fail(
+                  "Internal validation failed: "
+                  "video field order changed."
+              )
+
+          # ============================================================
+          # 10. Final duplicate / numbering checks
+          # ============================================================
+
+          selected_episode_numbers = {
+              item[0]
+              for item in selected_entries
+          }
+
+          if new_episode in selected_episode_numbers:
+              fail(
+                  f"Episode {new_episode:03d} already exists "
+                  f"for '{series_name}'."
+              )
+
+          if (
+              normalise_url(
+                  new_video["embed"]
+              )
+              in existing_urls
+          ):
+              fail(
+                  "Internal validation failed: "
+                  "duplicate embed URL."
+              )
+
+          if new_video["thumbnail"] != "":
+              fail(
+                  "Internal validation failed: "
+                  "thumbnail must remain empty."
+              )
+
+          # ============================================================
+          # 11. Append
+          # ============================================================
+
+          updated_videos = (
+              videos + [new_video]
+          )
+
+          if (
+              len(updated_videos)
+              != len(videos) + 1
+          ):
+              fail(
+                  "Internal validation failed: "
+                  "catalogue length changed unexpectedly."
+              )
+
+          # ============================================================
+          # 12. Validate final catalogue
+          # ============================================================
+
+          for index, video in enumerate(
+              updated_videos
+          ):
+
+              if not isinstance(video, dict):
+                  fail(
+                      f"Final validation failed "
+                      f"at entry {index}."
+                  )
+
+              missing = (
+                  REQUIRED_VIDEO_FIELDS
+                  - set(video.keys())
+              )
+
+              if missing:
+                  fail(
+                      f"Final validation failed at entry "
+                      f"{index}: missing {sorted(missing)}"
+                  )
 
           if updated_videos[-1] != new_video:
               fail(
-                  "Final validation failed: new episode mismatch."
+                  "Final validation failed: "
+                  "new episode mismatch."
               )
 
+          final_selected = [
+              int(video["episode"])
+              for video in updated_videos
+              if normalise_name(
+                  video.get("series")
+              ) == requested_key
+          ]
+
+          if not final_selected:
+              fail(
+                  "Final validation failed: "
+                  "selected series disappeared."
+              )
+
+          if max(final_selected) != new_episode:
+              fail(
+                  "Final validation failed: "
+                  "new episode is not the highest "
+                  "episode for the selected series."
+              )
 
           # ============================================================
-          # 11. Write the file
+          # 13. Write videos.json
           # ============================================================
 
           try:
-              with FILE.open(
+
+              with VIDEOS_FILE.open(
                   "w",
                   encoding="utf-8",
                   newline="\n",
               ) as file:
+
                   json.dump(
                       updated_videos,
                       file,
                       ensure_ascii=False,
                       indent=2,
                   )
+
                   file.write("\n")
+
           except OSError as exc:
               fail(
-                  f"Could not write {FILE}: {exc}"
+                  f"Could not write {VIDEOS_FILE}: {exc}"
               )
 
-
           # ============================================================
-          # 12. Re-read and verify the actual written file
+          # 14. Re-read actual file and verify
           # ============================================================
 
           try:
-              with FILE.open(
+
+              with VIDEOS_FILE.open(
                   "r",
                   encoding="utf-8",
               ) as file:
+
                   verification = json.load(file)
+
           except Exception as exc:
               fail(
-                  f"Could not re-read the generated JSON: {exc}"
+                  f"Could not re-read generated JSON: {exc}"
               )
-
 
           if verification != updated_videos:
               fail(
                   "Post-write verification failed. "
-                  "The generated file does not match the expected data."
+                  "Generated file does not match expected data."
               )
 
-
-          # Explicitly verify thumbnail remains empty.
-          if verification[-1].get("thumbnail") != "":
+          if (
+              verification[-1].get("thumbnail")
+              != ""
+          ):
               fail(
-                  "Post-write verification failed: thumbnail was populated."
+                  "Post-write verification failed: "
+                  "thumbnail is not empty."
               )
-
 
           print()
           print("==============================================")
           print("SUCCESS")
           print("==============================================")
-          print(f"Series:      {series}")
+          print(f"Series:      {series_name}")
+          print(f"Series ID:   {series_id}")
           print(f"Episode:     {new_episode:03d}")
           print(f"ID:          {new_id}")
           print(f"Title:       {title}")
@@ -511,15 +742,21 @@ jobs:
           print("JSON:        VALID")
           print("==============================================")
           print()
+
           PY
 
       - name: Validate JSON and Git diff
         run: |
+          python -m json.tool data/series.json > /dev/null
           python -m json.tool data/videos.json > /dev/null
+
           git diff --check
+
           git diff -- data/videos.json
 
       - name: Commit changes
+        env:
+          SERIES_INPUT: ${{ inputs.series }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -531,7 +768,10 @@ jobs:
             exit 1
           fi
 
-          git commit -m "Add next Vidmoly episode"
+          SERIES_SLUG="$(printf '%s' "$SERIES_INPUT" | tr '\n' ' ' | cut -c1-80)"
+
+          git commit \
+            -m "Add ${SERIES_SLUG} episode"
 
       - name: Push changes
         run: |
