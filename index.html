@@ -1092,6 +1092,35 @@ p{
   }
 }
 
+/* CINEMATIC HOME REFRESH */
+.hero{
+  min-height:clamp(600px,72vh,760px);
+  background:#090a0f;
+}
+.hero:after{
+  background:linear-gradient(90deg,#090a0fee 0%,#090a0db8 34%,#090a0d38 72%,#090a0de6 100%),linear-gradient(0deg,#090a0d 0%,transparent 55%,#090a0d44 100%);
+}
+.hero-bg{inset:-7%;filter:saturate(.9) contrast(1.08) brightness(.82);transition:background-image .7s var(--ease),transform 1.2s var(--ease)}
+.hero-inner{min-height:clamp(600px,72vh,760px);grid-template-columns:minmax(0,1fr) 290px;align-items:end;padding:72px 0 76px}
+.hero-copy{position:relative;z-index:2}
+.hero-kicker-row{display:flex;align-items:center;gap:12px}
+.hero-slide-status{color:#a9b1c0;font-size:11px;font-weight:800;letter-spacing:.12em}
+.hero h1{text-shadow:0 8px 30px #0008}
+.hero-description{max-width:620px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;transition:max-height .35s var(--ease),opacity .2s}
+.hero-description.expanded{-webkit-line-clamp:unset}
+.hero-expand{border:0;background:none;color:#f2a900;padding:0;margin-top:7px;font-weight:800;font-size:12px}
+.hero-expand span{display:inline-block;font-size:16px;transition:transform .25s}
+.hero-expand[aria-expanded="true"] span{transform:rotate(180deg)}
+.hero-nav{position:absolute;right:max(18px,calc((100vw - var(--max))/2));bottom:24px;z-index:3;display:flex;align-items:center;gap:10px}
+.hero-nav-button{width:38px;height:38px;border:1px solid #fff2;border-radius:50%;background:#0a0b10aa;color:#fff;font-size:18px;backdrop-filter:blur(10px)}
+.hero-nav-button:hover{background:#f2a900;color:#17130a;border-color:#f2a900}
+.hero-dots{display:flex;gap:5px}.hero-dots button{width:6px;height:6px;padding:0;border:0;border-radius:50%;background:#fff5}.hero-dots button.active{width:20px;border-radius:99px;background:var(--accent)}
+.poster{width:290px;position:relative;transform:rotate(1deg);box-shadow:0 30px 90px #000c}.poster:after,.hero-poster-shade{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#08090dcc,transparent 38%);pointer-events:none}
+.section{padding:46px 0}.section-head h2{font-size:2.15rem}.recent-section{padding-top:12px}.episode-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(240px,280px);overflow-x:auto;gap:14px;scroll-snap-type:x proximity;padding:4px 2px 14px}.episode{scroll-snap-align:start}
+@media(max-width:700px){
+  body{padding-bottom:70px}.header{height:62px}.hero,.hero-inner{min-height:600px}.hero-inner{display:flex;align-items:flex-end;padding:230px 10px 64px}.hero:after{background:linear-gradient(0deg,#090a0d 4%,#090a0dca 37%,#090a0d35 74%,#090a0d55 100%)}.hero-bg{inset:0;background-position:center top;filter:saturate(.92) brightness(.82)}.hero .poster{display:none}.hero h1{font-size:clamp(3rem,15vw,5rem);margin-top:12px}.hero-description{font-size:.92rem;line-height:1.55;max-width:100%;-webkit-line-clamp:2}.hero-actions{margin-top:16px}.hero-nav{right:10px;bottom:18px}.hero-nav-button{width:34px;height:34px}.hero-dots{display:none}.wrap{width:calc(100% - 28px);padding-top:22px}.section{padding:28px 0}.section-head{margin-bottom:14px}.section-head h2{font-size:1.85rem}.section-head p{font-size:.82rem}.episode-row{grid-auto-columns:minmax(220px,78vw)}.mobile-nav{position:fixed!important;top:auto!important;bottom:0;z-index:100;background:#111319ee!important;border-top:1px solid var(--line);border-bottom:0!important;padding:8px 6px!important;justify-content:space-around;backdrop-filter:blur(20px);padding-bottom:calc(8px + env(safe-area-inset-bottom))!important}.mobile-nav button{font-size:11px;padding:7px 9px}
+}
+
 @media(prefers-reduced-motion:reduce){
 
   *,
@@ -1232,9 +1261,12 @@ p{
 
       <div class="hero-copy">
 
-        <span class="eyebrow">
-          FEATURED SERIES
-        </span>
+        <div class="hero-kicker-row">
+          <span class="eyebrow" id="heroBadge">
+            FEATURED SERIES
+          </span>
+          <span class="hero-slide-status" id="heroSlideStatus" aria-live="polite">01 / 01</span>
+        </div>
 
         <h1 id="heroTitle">
           Loading…
@@ -1245,8 +1277,8 @@ p{
           id="heroMeta"
         ></div>
 
-        <p id="heroDesc"></p>
-
+        <p id="heroDesc" class="hero-description"></p>
+        <button class="hero-expand" id="heroExpand" type="button" aria-expanded="false">Read more <span aria-hidden="true">⌄</span></button>
 
         <div class="hero-actions">
 
@@ -1282,7 +1314,14 @@ p{
           id="heroImg"
           alt=""
         >
+        <div class="hero-poster-shade" aria-hidden="true"></div>
 
+      </div>
+
+      <div class="hero-nav" aria-label="Featured series navigation">
+        <button class="hero-nav-button" id="heroPrev" type="button" aria-label="Previous featured series">←</button>
+        <div class="hero-dots" id="heroDots"></div>
+        <button class="hero-nav-button" id="heroNext" type="button" aria-label="Next featured series">→</button>
       </div>
 
     </div>
@@ -1329,6 +1368,21 @@ p{
         id="continueGrid"
       ></div>
 
+    </section>
+
+
+    <!-- RECENTLY ADDED -->
+
+    <section class="section recent-section" id="recentSection">
+      <div class="section-head">
+        <div>
+          <span class="kicker">JUST IN</span>
+          <h2>Recently added</h2>
+          <p>Fresh episodes and new arrivals in your library.</p>
+        </div>
+        <button class="button" data-nav="browse">View all →</button>
+      </div>
+      <div class="episode-row" id="recentGrid"></div>
     </section>
 
 
@@ -2943,10 +2997,38 @@ function bind(root){
    HOME
 ================================================== */
 
+let featuredIndex = 0;
+let featuredTimer;
+
+function renderFeatured(){
+  const series = S.series[featuredIndex];
+  if(!series) return;
+  $("heroBadge").textContent = series.status === "Complete" ? "FEATURED SERIES" : "FEATURED";
+  $("heroTitle").textContent = series.name;
+  $("heroDesc").textContent = series.description || "Discover your next favourite series.";
+  $("heroDesc").classList.remove("expanded");
+  $("heroExpand").setAttribute("aria-expanded","false");
+  $("heroImg").src = series.thumbnail || "";
+  $("heroImg").alt = `${series.name} poster`;
+  $("heroBg").style.backgroundImage = series.backdrop ? `url("${series.backdrop.replace(/"/g,"%22")}")` : "";
+  $("heroMeta").innerHTML = [series.year, `${series.episodes.length} episodes`, ...series.genres.slice(0,3)].filter(Boolean).map(value => `<span>${esc(value)}</span>`).join("");
+  $("heroSlideStatus").textContent = `${String(featuredIndex + 1).padStart(2,"0")} / ${String(S.series.length).padStart(2,"0")}`;
+  $("heroDots").innerHTML = S.series.slice(0,8).map((_,index) => `<button type="button" class="${index === featuredIndex ? "active" : ""}" aria-label="Show featured series ${index + 1}" data-featured="${index}"></button>`).join("");
+  $("heroDots").querySelectorAll("[data-featured]").forEach(button => button.onclick = () => { featuredIndex = Number(button.dataset.featured); renderFeatured(); resetFeaturedTimer(); });
+  $("heroPlay").onclick = () => openWatch(series.episodes[0]);
+  $("heroSeries").onclick = () => openSeries(series);
+  $("heroFav").onclick = () => toggleSeries(series);
+}
+
+function resetFeaturedTimer(){
+  clearInterval(featuredTimer);
+  featuredTimer = setInterval(() => { if(document.hidden) return; featuredIndex = (featuredIndex + 1) % Math.min(S.series.length,8); renderFeatured(); }, 7000);
+}
+
 function renderHome(){
 
   const series =
-    S.series[0];
+  S.series[0];
 
 
   if(!series){
@@ -2954,8 +3036,11 @@ function renderHome(){
   }
 
 
+  renderFeatured();
+  resetFeaturedTimer();
+
   $("heroTitle").textContent =
-    series.name;
+  series.name;
 
 
   $("heroDesc").textContent =
@@ -3024,6 +3109,10 @@ function renderHome(){
 
 
   renderContinue();
+
+  const recent = S.videos.slice().sort((a,b) => String(b.addedAt || b.date || b.id).localeCompare(String(a.addedAt || a.date || a.id))).slice(0,8);
+  $("recentGrid").innerHTML = recent.map(epCard).join("");
+  bind($("recentGrid"));
 
 }
 
@@ -4150,8 +4239,17 @@ $("historyMobile").onclick =
   historyModal;
 
 
-$("historyOpen").onclick =
+  $("historyOpen").onclick =
   historyModal;
+
+  $("heroExpand").onclick = () => {
+    const description = $("heroDesc");
+    const expanded = description.classList.toggle("expanded");
+    $("heroExpand").setAttribute("aria-expanded", String(expanded));
+    $("heroExpand").firstChild.textContent = expanded ? "Show less " : "Read more ";
+  };
+  $("heroPrev").onclick = () => { featuredIndex = (featuredIndex - 1 + Math.min(S.series.length,8)) % Math.min(S.series.length,8); renderFeatured(); resetFeaturedTimer(); };
+  $("heroNext").onclick = () => { featuredIndex = (featuredIndex + 1) % Math.min(S.series.length,8); renderFeatured(); resetFeaturedTimer(); };
 
 
 $("historyClose").onclick =
