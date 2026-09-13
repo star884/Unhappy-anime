@@ -4,11 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07080d">
+<meta name="description" content="Stream your anime and media library. Browse series, search episodes, track watch history, and pick up right where you left off.">
+<meta property="og:title" content="UNHAPPY — Anime & Media">
+<meta property="og:description" content="Browse series, search episodes, and continue watching from your personal anime library.">
+<meta property="og:type" content="website">
 <title>UNHAPPY — Anime & Media</title>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap');
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+<style>
 :root{
   --bg:#0a0a0d;
   --surface:#141419;
@@ -70,6 +76,23 @@ select:focus-visible{
 
 .hidden{
   display:none!important
+}
+
+.sr-only-link{
+  position:absolute;
+  left:-9999px;
+  top:auto;
+  z-index:300;
+  padding:10px 16px;
+  background:var(--accent);
+  color:#161200;
+  border-radius:0 0 10px;
+  font-weight:800
+}
+
+.sr-only-link:focus{
+  left:0;
+  top:0
 }
 
 
@@ -1084,6 +1107,8 @@ p{
 
 <body>
 
+<a href="#main" class="sr-only-link">Skip to content</a>
+
 <header class="header">
 
   <div class="head">
@@ -1183,7 +1208,7 @@ p{
 </header>
 
 
-<main>
+<main id="main">
 
 
 <!-- ==================================================
@@ -1914,6 +1939,9 @@ p{
 <div
   class="modal hidden"
   id="historyModal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="historyModalTitle"
 >
 
   <div class="modal-box">
@@ -1926,7 +1954,7 @@ p{
           YOUR ACTIVITY
         </span>
 
-        <h2>
+        <h2 id="historyModalTitle">
           Watch history
         </h2>
 
@@ -1964,6 +1992,8 @@ p{
 <div
   class="toast"
   id="toast"
+  role="status"
+  aria-live="polite"
 ></div>
 
 
@@ -1993,7 +2023,7 @@ const S = {
 
   view: "home",
 
-  series: null,
+  activeSeries: null,
 
   video: null,
 
@@ -2768,6 +2798,7 @@ function card(series){
         data-fav="${esc(series.key)}"
         type="button"
         aria-label="Toggle My List"
+        aria-pressed="${saved}"
       >
         ${saved ? "♥" : "♡"}
       </button>
@@ -3365,8 +3396,8 @@ function toggleSeries(series){
 
 
   if(
-    S.series &&
-    S.series.key ===
+    S.activeSeries &&
+    S.activeSeries.key ===
       series.key
   ){
 
@@ -3439,7 +3470,7 @@ function openSeries(series){
   }
 
 
-  S.series =
+  S.activeSeries =
     series;
 
 
@@ -3557,7 +3588,7 @@ function renderSeries(series){
 
 function renderSeriesEpisodes(){
 
-  if(!S.series){
+  if(!S.activeSeries){
     return;
   }
 
@@ -3569,7 +3600,7 @@ function renderSeriesEpisodes(){
 
 
   let list =
-    S.series.episodes.filter(
+    S.activeSeries.episodes.filter(
       video =>
         !query ||
         norm(
@@ -3944,7 +3975,7 @@ function route(){
 
     if(series){
 
-      S.series =
+      S.activeSeries =
         series;
 
       renderSeries(series);
