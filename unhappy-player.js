@@ -1,11 +1,28 @@
 (() => {
   'use strict';
 
+  /*
+   * UNHAPPY DIRECT PLAYER
+   *
+   * Purpose:
+   * - Detect the existing player iframe.
+   * - Attempt browser-permitted extraction of a direct media URL.
+   * - Play HLS through native HLS or hls.js.
+   * - Also support direct MP4/WebM/M4V/OGV sources.
+   * - Keep the original iframe as a reliable fallback.
+   *
+   * Important:
+   * Browser CORS rules are intentionally respected.
+   * This script does NOT bypass Vidmoly/server access controls.
+   */
+
   const HLS_URL =
     'https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js';
 
-  const SOURCE_TIMEOUT = 9000;
-  const STORAGE_KEY = 'unhappy:player:v1';
+  const SOURCE_TIMEOUT = 10000;
+
+  const STORAGE_KEY =
+    'unhappy:player:v2';
 
   const state = {
     iframe: null,
@@ -15,6 +32,7 @@
     token: 0,
     hlsPromise: null,
     customRoot: null,
+
     status: null,
     quality: null,
     speed: null,
@@ -28,11 +46,18 @@
     fullscreen: null,
     pip: null,
     fallback: null,
+
     resizeObserver: null
   };
 
   const $ = (root, selector) =>
-    root.querySelector(selector);
+    root?.querySelector(selector);
+
+  /*
+   * ---------------------------------------------------------
+   * BASIC HELPERS
+   * ---------------------------------------------------------
+   */
 
   function safeText(value) {
     return String(value ?? '').trim();
@@ -40,7 +65,10 @@
 
   function isHttpUrl(value) {
     try {
-      const url = new URL(value, location.href);
+      const url = new URL(
+        value,
+        location.href
+      );
 
       return (
         url.protocol === 'http:' ||
@@ -52,13 +80,29 @@
   }
 
   function isM3u8(value) {
-    return /\.m3u8(?:[?#]|$)/i.test(value || '');
+    return /\.m3u8(?:[?#]|$)/i.test(
+      value || ''
+    );
   }
+
+  function isMediaUrl(value) {
+    return /\.(?:m3u8|mp4|webm|m4v|ogv)(?:[?#]|$)/i.test(
+      value || ''
+    );
+  }
+
+  /*
+   * ---------------------------------------------------------
+   * PLAYER SETTINGS
+   * ---------------------------------------------------------
+   */
 
   function loadSettings() {
     try {
       return JSON.parse(
-        localStorage.getItem(STORAGE_KEY) || '{}'
+        localStorage.getItem(
+          STORAGE_KEY
+        ) || '{}'
       );
     } catch (_) {
       return {};
@@ -67,17 +111,21 @@
 
   function saveSettings(patch) {
     try {
-      const current = loadSettings();
-
       localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
-          ...current,
+          ...loadSettings(),
           ...patch
         })
       );
     } catch (_) {}
   }
+
+  /*
+   * ---------------------------------------------------------
+   * TIME / STATUS
+   * ---------------------------------------------------------
+   */
 
   function formatTime(seconds) {
     if (
@@ -87,12 +135,21 @@
       return '00:00';
     }
 
-    const total = Math.floor(seconds);
-    const hours = Math.floor(total / 3600);
-    const minutes = Math.floor(
-      (total % 3600) / 60
-    );
-    const secs = total % 60;
+    const total =
+      Math.floor(seconds);
+
+    const hours =
+      Math.floor(
+        total / 3600
+      );
+
+    const minutes =
+      Math.floor(
+        (total % 3600) / 60
+      );
+
+    const secs =
+      total % 60;
 
     if (hours) {
       return (
@@ -108,16 +165,28 @@
     );
   }
 
-  function setStatus(message, busy = false) {
-    if (!state.status) return;
+  function setStatus(
+    message,
+    busy = false
+  ) {
+    if (!state.status) {
+      return;
+    }
 
-    state.status.textContent = message;
+    state.status.textContent =
+      message;
 
     state.status.classList.toggle(
       'is-busy',
       busy
     );
   }
+
+  /*
+   * ---------------------------------------------------------
+   * HLS CLEANUP
+   * ---------------------------------------------------------
+   */
 
   function destroyHls() {
     if (state.hls) {
@@ -129,7 +198,19 @@
     state.hls = null;
   }
 
+  /*
+   * ---------------------------------------------------------
+   * RESTORE ORIGINAL VIDMOLY IFRAME
+   * ---------------------------------------------------------
+   */
+
   function restoreIframe() {
+    /*
+     * Invalidate all asynchronous work
+     * belonging to the current player.
+     */
+    state.token += 1;
+
     destroyHls();
 
     if (state.resizeObserver) {
@@ -145,20 +226,51 @@
     }
 
     state.customRoot = null;
+    state.video = null;
+
+    state.status = null;
+    state.quality = null;
+    state.speed = null;
+    state.time = null;
+    state.progress = null;
+    state.volume = null;
+    state.play = null;
+    state.seekBack = null;
+    state.seekForward = null;
+    state.mute = null;
+    state.fullscreen = null;
+    state.pip = null;
+    state.fallback = null;
 
     if (state.iframe) {
       state.iframe.hidden = false;
       state.iframe.style.display = '';
     }
 
-    state.video = null;
+    /*
+     * Allow the same iframe to be detected again
+     * if the application changes its source later.
+     */
+    state.originalSrc = '';
   }
+
+  /*
+   * ---------------------------------------------------------
+   * FIND PLAYER IFRAME
+   * ---------------------------------------------------------
+   */
 
   function findIframe() {
     return (
-      document.getElementById('playerFrame') ||
-      document.querySelector('.player iframe') ||
-      document.querySelector('#playerModal iframe')
+      document.getElementById(
+        'playerFrame'
+      ) ||
+      document.querySelector(
+        '.player iframe'
+      ) ||
+      document.querySelector(
+        '#playerModal iframe'
+      )
     );
   }
 
@@ -169,30 +281,44 @@
     );
   }
 
+  /*
+   * ---------------------------------------------------------
+   * FETCH EMBED HTML
+   * ---------------------------------------------------------
+   *
+   * Deliberately uses normal browser CORS.
+   * If the remote server refuses CORS,
+   * this operation fails and the original iframe
+   * remains available.
+   */
+
   async function fetchText(url) {
     const controller =
       new AbortController();
 
-    const timer = setTimeout(
-      () => controller.abort(),
-      SOURCE_TIMEOUT
-    );
+    const timer =
+      setTimeout(
+        () => controller.abort(),
+        SOURCE_TIMEOUT
+      );
 
     try {
-      const response = await fetch(
-        url,
-        {
-          method: 'GET',
-          mode: 'cors',
-          credentials: 'omit',
-          cache: 'no-store',
-          signal: controller.signal,
-          headers: {
-            Accept:
-              'text/html,*/*;q=0.8'
+      const response =
+        await fetch(
+          url,
+          {
+            method: 'GET',
+            mode: 'cors',
+            credentials: 'omit',
+            cache: 'no-store',
+            signal: controller.signal,
+
+            headers: {
+              Accept:
+                'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8'
+            }
           }
-        }
-      );
+        );
 
       if (!response.ok) {
         throw new Error(
@@ -206,91 +332,311 @@
     }
   }
 
+  /*
+   * ---------------------------------------------------------
+   * JAVASCRIPT STRING DECODING
+   * ---------------------------------------------------------
+   */
+
   function decodeJsString(value) {
-    let output = safeText(value);
+    let output =
+      safeText(value);
 
     try {
-      output = output.replace(
-        /\\x([0-9a-f]{2})/gi,
-        (_, hex) =>
-          String.fromCharCode(
-            parseInt(hex, 16)
-          )
-      );
+      /*
+       * Decode \xNN
+       */
+      output =
+        output.replace(
+          /\\x([0-9a-f]{2})/gi,
+          (_, hex) =>
+            String.fromCharCode(
+              parseInt(hex, 16)
+            )
+        );
 
-      output = output.replace(
-        /\\u([0-9a-f]{4})/gi,
-        (_, hex) =>
-          String.fromCharCode(
-            parseInt(hex, 16)
-          )
-      );
+      /*
+       * Decode \uNNNN
+       */
+      output =
+        output.replace(
+          /\\u([0-9a-f]{4})/gi,
+          (_, hex) =>
+            String.fromCharCode(
+              parseInt(hex, 16)
+            )
+        );
 
-      output = output.replace(
-        /\\\//g,
-        '/'
-      );
+      /*
+       * Decode escaped slashes.
+       */
+      output =
+        output.replace(
+          /\\\//g,
+          '/'
+        );
+
+      /*
+       * Decode HTML entities commonly
+       * encountered inside attributes.
+       */
+      output =
+        output.replace(
+          /&amp;/g,
+          '&'
+        );
+
     } catch (_) {}
 
     return output;
   }
 
-  function absoluteUrl(candidate, base) {
-    const value = decodeJsString(candidate)
-      .replace(/&amp;/g, '&');
+  /*
+   * ---------------------------------------------------------
+   * ABSOLUTE URL
+   * ---------------------------------------------------------
+   */
 
-    if (!value) return '';
+  function absoluteUrl(
+    candidate,
+    base
+  ) {
+    const value =
+      decodeJsString(candidate)
+        .replace(
+          /^['"]|['"]$/g,
+          ''
+        );
+
+    if (!value) {
+      return '';
+    }
 
     try {
-      return new URL(
-        value,
-        base
-      ).href;
+      const url =
+        new URL(
+          value,
+          base
+        );
+
+      if (
+        url.protocol !== 'http:' &&
+        url.protocol !== 'https:'
+      ) {
+        return '';
+      }
+
+      return url.href;
+
     } catch (_) {
       return '';
     }
   }
 
-  function extractM3u8(html, base) {
-    const patterns = [
-      /(?:file|src|source|hls|playlist)\s*[:=]\s*["']([^"']+\.m3u8(?:\?[^"']*)?)["']/ig,
+  /*
+   * ---------------------------------------------------------
+   * MEDIA SOURCE EXTRACTION
+   * ---------------------------------------------------------
+   *
+   * Handles examples such as:
+   *
+   * sources: [{
+   *   file: 'https://.../master.m3u8'
+   * }]
+   *
+   * source: "..."
+   *
+   * file: "..."
+   *
+   * hls: "..."
+   *
+   * playlist: "..."
+   *
+   * and plain quoted media URLs.
+   */
 
-      /["']([^"']+\.m3u8(?:\?[^"']*)?)["']/ig,
+  function collectMediaCandidates(
+    html,
+    base
+  ) {
+    const output = [];
+    const seen = new Set();
 
-      /https?:\\?\/\\?\/[^\s"'<>\\]+\.m3u8(?:\?[^\s"'<>\\]*)?/ig
-    ];
-
-    for (const pattern of patterns) {
-      const matches = [
-        ...html.matchAll(pattern)
-      ];
-
-      for (const match of matches) {
-        const candidate =
-          match[1] || match[0];
-
-        const url = absoluteUrl(
-          candidate,
+    function addCandidate(raw) {
+      const url =
+        absoluteUrl(
+          raw,
           base
         );
 
-        if (isM3u8(url)) {
-          return url;
-        }
+      if (
+        !url ||
+        !isMediaUrl(url) ||
+        seen.has(url)
+      ) {
+        return;
+      }
+
+      seen.add(url);
+      output.push(url);
+    }
+
+    const patterns = [
+
+      /*
+       * Named source fields.
+       */
+      /(?:file|src|source|hls|playlist|url|stream)\s*[:=]\s*["']([^"']+\.(?:m3u8|mp4|webm|m4v|ogv)(?:[?#][^"']*)?)["']/ig,
+
+      /*
+       * Any quoted media URL.
+       */
+      /["']([^"']+\.(?:m3u8|mp4|webm|m4v|ogv)(?:[?#][^"']*)?)["']/ig,
+
+      /*
+       * Plain absolute URL.
+       */
+      /https?:\\?\/\\?\/[^\s"'<>\\]+\.(?:m3u8|mp4|webm|m4v|ogv)(?:\?[^\s"'<>\\]*)?/ig
+    ];
+
+    for (
+      const pattern of patterns
+    ) {
+      for (
+        const match of html.matchAll(
+          pattern
+        )
+      ) {
+        addCandidate(
+          match[1] ||
+          match[0]
+        );
       }
     }
 
-    return '';
+    return output;
   }
 
-  function createUi(iframe) {
+  function extractSource(
+    html,
+    base
+  ) {
+    const candidates =
+      collectMediaCandidates(
+        html,
+        base
+      );
+
+    /*
+     * Prefer HLS because it provides
+     * adaptive-quality playback.
+     */
+    const hls =
+      candidates.find(
+        isM3u8
+      );
+
+    if (hls) {
+      return hls;
+    }
+
+    return candidates[0] || '';
+  }
+
+  /*
+   * ---------------------------------------------------------
+   * VIDMOLY URL NORMALIZATION
+   * ---------------------------------------------------------
+   *
+   * Some Vidmoly URL forms use /v-{id}.html.
+   *
+   * When that form is encountered, we can also attempt
+   * the corresponding classic embed URL.
+   *
+   * This does NOT bypass CORS.
+   */
+
+  function vidmolyClassicUrl(
+    url
+  ) {
+    try {
+      const parsed =
+        new URL(
+          url,
+          location.href
+        );
+
+      if (
+        !/vidmoly\./i.test(
+          parsed.hostname
+        )
+      ) {
+        return '';
+      }
+
+      const match =
+        parsed.pathname.match(
+          /\/(?:v|embed)-([A-Za-z0-9_-]+)(?:\.html)?$/i
+        );
+
+      if (!match) {
+        return '';
+      }
+
+      return (
+        `${parsed.origin}/embed-` +
+        `${match[1]}.html`
+      );
+
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function sourcePages(
+    embedUrl
+  ) {
+    const pages = [
+      embedUrl
+    ];
+
+    const classic =
+      vidmolyClassicUrl(
+        embedUrl
+      );
+
+    if (
+      classic &&
+      classic !== embedUrl
+    ) {
+      pages.push(classic);
+    }
+
+    return [
+      ...new Set(pages)
+    ];
+  }
+
+  /*
+   * ---------------------------------------------------------
+   * CREATE PLAYER UI
+   * ---------------------------------------------------------
+   */
+
+  function createUi(
+    iframe
+  ) {
     const parent =
       iframe.parentElement;
 
-    if (!parent) return null;
+    if (!parent) {
+      return null;
+    }
 
     const root =
-      document.createElement('div');
+      document.createElement(
+        'div'
+      );
 
     root.className =
       'unhappy-player-root';
@@ -315,18 +661,21 @@
             type="button"
             data-action="play"
             title="Play / Pause"
+            aria-label="Play or pause"
           >▶</button>
 
           <button
             type="button"
             data-action="back"
             title="Back 10 seconds"
+            aria-label="Back 10 seconds"
           >↶10</button>
 
           <button
             type="button"
             data-action="forward"
             title="Forward 10 seconds"
+            aria-label="Forward 10 seconds"
           >10↷</button>
 
           <input
@@ -347,6 +696,7 @@
             type="button"
             data-action="mute"
             title="Mute"
+            aria-label="Mute"
           >🔊</button>
 
           <input
@@ -378,19 +728,23 @@
             title="Quality"
             aria-label="Quality"
           >
-            <option value="auto">Auto</option>
+            <option value="auto">
+              Auto
+            </option>
           </select>
 
           <button
             type="button"
             data-action="pip"
             title="Picture in Picture"
+            aria-label="Picture in Picture"
           >PiP</button>
 
           <button
             type="button"
             data-action="fullscreen"
             title="Fullscreen"
+            aria-label="Fullscreen"
           >⛶</button>
 
         </div>
@@ -418,173 +772,288 @@
       iframe
     );
 
+    /*
+     * Keep iframe available in DOM,
+     * but hide it while direct mode works.
+     */
     iframe.hidden = true;
     iframe.style.display = 'none';
 
     const video =
       $(root, 'video');
 
-    state.customRoot = root;
-    state.video = video;
+    state.customRoot =
+      root;
+
+    state.video =
+      video;
 
     state.status =
-      $(root, '[data-action="status"]');
+      $(
+        root,
+        '[data-action="status"]'
+      );
 
     state.play =
-      $(root, '[data-action="play"]');
+      $(
+        root,
+        '[data-action="play"]'
+      );
 
     state.seekBack =
-      $(root, '[data-action="back"]');
+      $(
+        root,
+        '[data-action="back"]'
+      );
 
     state.seekForward =
-      $(root, '[data-action="forward"]');
+      $(
+        root,
+        '[data-action="forward"]'
+      );
 
     state.progress =
-      $(root, '[data-action="progress"]');
+      $(
+        root,
+        '[data-action="progress"]'
+      );
 
     state.time =
       $(root, '.unhappy-time');
 
     state.volume =
-      $(root, '[data-action="volume"]');
+      $(
+        root,
+        '[data-action="volume"]'
+      );
 
     state.mute =
-      $(root, '[data-action="mute"]');
+      $(
+        root,
+        '[data-action="mute"]'
+      );
 
     state.speed =
-      $(root, '[data-action="speed"]');
+      $(
+        root,
+        '[data-action="speed"]'
+      );
 
     state.quality =
-      $(root, '[data-action="quality"]');
+      $(
+        root,
+        '[data-action="quality"]'
+      );
 
     state.pip =
-      $(root, '[data-action="pip"]');
+      $(
+        root,
+        '[data-action="pip"]'
+      );
 
     state.fullscreen =
-      $(root, '[data-action="fullscreen"]');
+      $(
+        root,
+        '[data-action="fullscreen"]'
+      );
 
     state.fallback =
-      $(root, '[data-action="fallback"]');
+      $(
+        root,
+        '[data-action="fallback"]'
+      );
 
     bindVideoEvents();
 
     return root;
   }
 
+  /*
+   * ---------------------------------------------------------
+   * PLAYER EVENTS
+   * ---------------------------------------------------------
+   */
+
   function bindVideoEvents() {
-    const video = state.video;
+    const video =
+      state.video;
 
-    if (!video) return;
+    if (!video) {
+      return;
+    }
 
-    state.play.onclick = () => {
-      if (video.paused) {
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
-    };
+    /*
+     * Play / pause.
+     */
+    state.play.onclick =
+      () => {
+        if (video.paused) {
+          video
+            .play()
+            .catch(() => {});
+        } else {
+          video.pause();
+        }
+      };
 
-    state.seekBack.onclick = () => {
-      video.currentTime =
-        Math.max(
-          0,
-          video.currentTime - 10
-        );
-    };
-
-    state.seekForward.onclick = () => {
-      if (
-        Number.isFinite(
-          video.duration
-        )
-      ) {
+    /*
+     * Back 10 seconds.
+     */
+    state.seekBack.onclick =
+      () => {
         video.currentTime =
-          Math.min(
-            video.duration,
-            video.currentTime + 10
+          Math.max(
+            0,
+            (video.currentTime || 0) - 10
           );
-      }
-    };
+      };
 
-    state.progress.oninput = () => {
-      if (
-        Number.isFinite(video.duration) &&
-        video.duration > 0
-      ) {
-        video.currentTime =
-          (
-            Number(
-              state.progress.value
-            ) / 1000
-          ) * video.duration;
-      }
-    };
+    /*
+     * Forward 10 seconds.
+     */
+    state.seekForward.onclick =
+      () => {
+        if (
+          Number.isFinite(
+            video.duration
+          )
+        ) {
+          video.currentTime =
+            Math.min(
+              video.duration,
+              video.currentTime + 10
+            );
+        }
+      };
 
-    state.volume.oninput = () => {
-      video.volume =
-        Number(state.volume.value);
+    /*
+     * Seek bar.
+     */
+    state.progress.oninput =
+      () => {
+        if (
+          Number.isFinite(
+            video.duration
+          ) &&
+          video.duration > 0
+        ) {
+          video.currentTime =
+            (
+              Number(
+                state.progress.value
+              ) / 1000
+            ) *
+            video.duration;
+        }
+      };
 
-      video.muted =
-        video.volume === 0;
+    /*
+     * Volume.
+     */
+    state.volume.oninput =
+      () => {
+        video.volume =
+          Math.max(
+            0,
+            Math.min(
+              1,
+              Number(
+                state.volume.value
+              ) || 0
+            )
+          );
 
-      saveSettings({
-        volume: video.volume,
-        muted: video.muted
-      });
-    };
+        video.muted =
+          video.volume === 0;
 
-    state.mute.onclick = () => {
-      video.muted =
-        !video.muted;
+        updateMute();
 
-      state.mute.textContent =
-        video.muted
-          ? '🔇'
-          : '🔊';
+        saveSettings({
+          volume:
+            video.volume,
 
-      saveSettings({
-        muted: video.muted
-      });
-    };
+          muted:
+            video.muted
+        });
+      };
 
-    state.speed.onchange = () => {
-      video.playbackRate =
-        Number(
-          state.speed.value
-        );
+    /*
+     * Mute.
+     */
+    state.mute.onclick =
+      () => {
+        video.muted =
+          !video.muted;
 
-      saveSettings({
-        speed: video.playbackRate
-      });
-    };
+        updateMute();
 
-    state.quality.onchange = () => {
-      if (!state.hls) return;
+        saveSettings({
+          muted:
+            video.muted
+        });
+      };
 
-      const value =
-        state.quality.value;
+    /*
+     * Playback speed.
+     */
+    state.speed.onchange =
+      () => {
+        const rate =
+          Number(
+            state.speed.value
+          );
 
-      state.hls.currentLevel =
-        value === 'auto'
-          ? -1
-          : Number(value);
-    };
+        video.playbackRate =
+          Number.isFinite(rate)
+            ? rate
+            : 1;
 
+        saveSettings({
+          speed:
+            video.playbackRate
+        });
+      };
+
+    /*
+     * HLS quality.
+     */
+    state.quality.onchange =
+      () => {
+        if (!state.hls) {
+          return;
+        }
+
+        const value =
+          state.quality.value;
+
+        state.hls.currentLevel =
+          value === 'auto'
+            ? -1
+            : Number(value);
+      };
+
+    /*
+     * Fullscreen.
+     */
     state.fullscreen.onclick =
       async () => {
         const shell =
-          $(state.customRoot,
-            '.unhappy-video-shell');
+          $(
+            state.customRoot,
+            '.unhappy-video-shell'
+          );
 
         try {
           if (
             document.fullscreenElement
           ) {
             await document.exitFullscreen();
+
           } else if (
-            shell.requestFullscreen
+            shell?.requestFullscreen
           ) {
             await shell.requestFullscreen();
+
           } else if (
             video.webkitEnterFullscreen
           ) {
@@ -593,71 +1062,98 @@
         } catch (_) {}
       };
 
+    /*
+     * Picture-in-picture.
+     */
     state.pip.onclick =
       async () => {
         try {
           if (
             document.pictureInPictureElement
           ) {
-            await document.exitPictureInPicture();
+            await document
+              .exitPictureInPicture();
+
           } else if (
             document.pictureInPictureEnabled &&
             video.requestPictureInPicture
           ) {
-            await video.requestPictureInPicture();
+            await video
+              .requestPictureInPicture();
           }
         } catch (_) {}
       };
 
+    /*
+     * Restore Vidmoly iframe.
+     */
     state.fallback.onclick =
-      restoreIframe;
+      () => {
+        restoreIframe();
+      };
 
+    /*
+     * Metadata.
+     */
     video.addEventListener(
       'loadedmetadata',
       () => {
-        const saved =
+        const settings =
           loadSettings();
 
         const savedVolume =
-          Number(saved.volume);
-
-        const volume =
-          Number.isFinite(savedVolume)
-            ? savedVolume
-            : 1;
-
-        const savedSpeed =
-          Number(saved.speed);
-
-        video.volume =
-          Math.max(
-            0,
-            Math.min(1, volume)
+          Number(
+            settings.volume
           );
 
+        const savedSpeed =
+          Number(
+            settings.speed
+          );
+
+        video.volume =
+          Number.isFinite(
+            savedVolume
+          )
+            ? Math.max(
+                0,
+                Math.min(
+                  1,
+                  savedVolume
+                )
+              )
+            : 1;
+
         video.muted =
-          Boolean(saved.muted);
+          Boolean(
+            settings.muted
+          );
 
         video.playbackRate =
-          Number.isFinite(savedSpeed)
+          Number.isFinite(
+            savedSpeed
+          )
             ? savedSpeed
             : 1;
 
         state.volume.value =
-          String(video.volume);
+          String(
+            video.volume
+          );
 
         state.speed.value =
-          String(video.playbackRate);
+          String(
+            video.playbackRate
+          );
 
-        state.mute.textContent =
-          video.muted
-            ? '🔇'
-            : '🔊';
-
+        updateMute();
         updateTime();
       }
     );
 
+    /*
+     * Time.
+     */
     video.addEventListener(
       'timeupdate',
       updateTime
@@ -668,20 +1164,28 @@
       updateTime
     );
 
+    /*
+     * Play state.
+     */
     video.addEventListener(
       'play',
       () => {
-        state.play.textContent = '❚❚';
+        state.play.textContent =
+          '❚❚';
       }
     );
 
     video.addEventListener(
       'pause',
       () => {
-        state.play.textContent = '▶';
+        state.play.textContent =
+          '▶';
       }
     );
 
+    /*
+     * Buffering.
+     */
     video.addEventListener(
       'waiting',
       () => {
@@ -692,6 +1196,9 @@
       }
     );
 
+    /*
+     * Playback started.
+     */
     video.addEventListener(
       'playing',
       () => {
@@ -701,15 +1208,51 @@
       }
     );
 
+    /*
+     * Playback error.
+     */
     video.addEventListener(
       'error',
       () => {
-        setStatus(
-          'Direct playback failed — use original player.'
-        );
+        if (
+          state.customRoot
+        ) {
+          setStatus(
+            'Playback error — original player is available.'
+          );
+        }
       }
     );
   }
+
+  /*
+   * ---------------------------------------------------------
+   * MUTE UI
+   * ---------------------------------------------------------
+   */
+
+  function updateMute() {
+    if (
+      !state.mute ||
+      !state.video
+    ) {
+      return;
+    }
+
+    state.mute.textContent =
+      (
+        state.video.muted ||
+        state.video.volume === 0
+      )
+        ? '🔇'
+        : '🔊';
+  }
+
+  /*
+   * ---------------------------------------------------------
+   * TIME UI
+   * ---------------------------------------------------------
+   */
 
   function updateTime() {
     const video =
@@ -723,21 +1266,34 @@
     }
 
     const duration =
-      Number.isFinite(video.duration)
+      Number.isFinite(
+        video.duration
+      )
         ? video.duration
         : 0;
 
     const current =
-      Number.isFinite(video.currentTime)
+      Number.isFinite(
+        video.currentTime
+      )
         ? video.currentTime
         : 0;
 
     state.progress.value =
       duration > 0
         ? String(
-            Math.round(
-              (current / duration) *
-              1000
+            Math.max(
+              0,
+              Math.min(
+                1000,
+                Math.round(
+                  (
+                    current /
+                    duration
+                  ) *
+                  1000
+                )
+              )
             )
           )
         : '0';
@@ -747,57 +1303,96 @@
       `${formatTime(duration)}`;
   }
 
+  /*
+   * ---------------------------------------------------------
+   * HLS QUALITY LEVELS
+   * ---------------------------------------------------------
+   */
+
   function setQualityLevels() {
-    if (!state.quality) return;
+    if (!state.quality) {
+      return;
+    }
 
     state.quality.innerHTML =
       '<option value="auto">Auto</option>';
 
     if (
       !state.hls ||
+      !state.hls.levels ||
       !state.hls.levels.length
     ) {
       return;
     }
 
+    const levels =
+      state.hls.levels
+        .map(
+          (level, index) => ({
+            index,
+            height:
+              Number(
+                level.height
+              ) || 0,
+            bitrate:
+              Number(
+                level.bitrate
+              ) || 0
+          })
+        )
+        .sort(
+          (a, b) =>
+            b.height - a.height ||
+            b.bitrate - a.bitrate
+        );
+
     const seen =
       new Set();
 
-    state.hls.levels.forEach(
-      (level, index) => {
-        const height =
-          Number(level.height);
+    for (
+      const level of levels
+    ) {
+      const label =
+        level.height
+          ? `${level.height}p`
+          : level.bitrate
+            ? `${Math.round(
+                level.bitrate / 1000
+              )} kbps`
+            : `Level ${level.index + 1}`;
 
-        const label =
-          height
-            ? `${height}p`
-            : level.bitrate
-              ? `${Math.round(
-                  level.bitrate / 1000
-                )} kbps`
-              : `Level ${index + 1}`;
-
-        if (seen.has(label)) return;
-
-        seen.add(label);
-
-        const option =
-          document.createElement(
-            'option'
-          );
-
-        option.value =
-          String(index);
-
-        option.textContent =
-          label;
-
-        state.quality.appendChild(
-          option
-        );
+      if (
+        seen.has(label)
+      ) {
+        continue;
       }
-    );
+
+      seen.add(label);
+
+      const option =
+        document.createElement(
+          'option'
+        );
+
+      option.value =
+        String(
+          level.index
+        );
+
+      option.textContent =
+        label;
+
+      state.quality.appendChild(
+        option
+      );
+    }
   }
+
+  /*
+   * ---------------------------------------------------------
+   * LOAD HLS.JS
+   * ---------------------------------------------------------
+   */
 
   async function loadHlsLibrary() {
     if (window.Hls) {
@@ -810,27 +1405,64 @@
 
     state.hlsPromise =
       new Promise(
-        (resolve, reject) => {
-          const existing =
+        (
+          resolve,
+          reject
+        ) => {
+          let script =
             document.querySelector(
               'script[data-unhappy-hls]'
             );
 
-          if (existing) {
-            existing.addEventListener(
+          if (script) {
+            if (window.Hls) {
+              resolve(
+                window.Hls
+              );
+
+              return;
+            }
+
+            script.addEventListener(
               'load',
-              () => resolve(window.Hls)
+              () => {
+                if (
+                  window.Hls
+                ) {
+                  resolve(
+                    window.Hls
+                  );
+                } else {
+                  reject(
+                    new Error(
+                      'HLS.js unavailable'
+                    )
+                  );
+                }
+              },
+              {
+                once: true
+              }
             );
 
-            existing.addEventListener(
+            script.addEventListener(
               'error',
-              reject
+              () => {
+                reject(
+                  new Error(
+                    'Could not load HLS.js'
+                  )
+                );
+              },
+              {
+                once: true
+              }
             );
 
             return;
           }
 
-          const script =
+          script =
             document.createElement(
               'script'
             );
@@ -843,25 +1475,31 @@
           script.dataset.unhappyHls =
             '1';
 
-          script.onload = () => {
-            if (window.Hls) {
-              resolve(window.Hls);
-            } else {
+          script.onload =
+            () => {
+              if (
+                window.Hls
+              ) {
+                resolve(
+                  window.Hls
+                );
+              } else {
+                reject(
+                  new Error(
+                    'HLS.js loaded without Hls'
+                  )
+                );
+              }
+            };
+
+          script.onerror =
+            () => {
               reject(
                 new Error(
-                  'HLS.js loaded without Hls'
+                  'Could not load HLS.js'
                 )
               );
-            }
-          };
-
-          script.onerror = () => {
-            reject(
-              new Error(
-                'Could not load HLS.js'
-              )
-            );
-          };
+            };
 
           document.head.appendChild(
             script
@@ -872,8 +1510,131 @@
     return state.hlsPromise;
   }
 
+  /*
+   * ---------------------------------------------------------
+   * WAIT FOR ACTUAL PLAYBACK
+   * ---------------------------------------------------------
+   *
+   * Important correction:
+   * video.play() resolving is not enough to claim
+   * that playback actually started.
+   */
+
+  function waitForPlaying(
+    video,
+    timeout = 8000
+  ) {
+    return new Promise(
+      (
+        resolve,
+        reject
+      ) => {
+        if (
+          !video.paused &&
+          !video.ended
+        ) {
+          resolve();
+          return;
+        }
+
+        let finished = false;
+
+        let timer;
+
+        const cleanup =
+          () => {
+            clearTimeout(
+              timer
+            );
+
+            video.removeEventListener(
+              'playing',
+              onPlaying
+            );
+
+            video.removeEventListener(
+              'error',
+              onError
+            );
+          };
+
+        const onPlaying =
+          () => {
+            if (finished) {
+              return;
+            }
+
+            finished = true;
+
+            cleanup();
+
+            resolve();
+          };
+
+        const onError =
+          () => {
+            if (finished) {
+              return;
+            }
+
+            finished = true;
+
+            cleanup();
+
+            reject(
+              new Error(
+                'Video element reported an error'
+              )
+            );
+          };
+
+        timer =
+          setTimeout(
+            () => {
+              if (finished) {
+                return;
+              }
+
+              finished = true;
+
+              cleanup();
+
+              reject(
+                new Error(
+                  'Playback did not start'
+                )
+              );
+            },
+            timeout
+          );
+
+        video.addEventListener(
+          'playing',
+          onPlaying,
+          {
+            once: true
+          }
+        );
+
+        video.addEventListener(
+          'error',
+          onError,
+          {
+            once: true
+          }
+        );
+      }
+    );
+  }
+
+  /*
+   * ---------------------------------------------------------
+   * DIRECT PLAYBACK
+   * ---------------------------------------------------------
+   */
+
   async function playDirect(
-    m3u8,
+    source,
     token
   ) {
     if (
@@ -886,32 +1647,127 @@
     const video =
       state.video;
 
+    if (
+      !isHttpUrl(source)
+    ) {
+      throw new Error(
+        'Invalid media source'
+      );
+    }
+
     setStatus(
       'Opening direct stream…',
       true
     );
+
+    destroyHls();
+
+    /*
+     * Clear any previous media source.
+     */
+    video.removeAttribute(
+      'src'
+    );
+
+    video.load();
+
+    /*
+     * -------------------------------------------------------
+     * DIRECT MP4 / WEBM / ETC.
+     * -------------------------------------------------------
+     */
+
+    if (
+      !isM3u8(source)
+    ) {
+      video.src =
+        source;
+
+      try {
+        await video.play();
+
+        await waitForPlaying(
+          video,
+          8000
+        );
+
+      } catch (error) {
+        throw new Error(
+          'Direct media playback failed: ' +
+          (
+            error?.message ||
+            'unknown error'
+          )
+        );
+      }
+
+      if (
+        token !== state.token
+      ) {
+        throw new Error(
+          'Player changed'
+        );
+      }
+
+      setStatus(
+        'Direct playback'
+      );
+
+      return true;
+    }
+
+    /*
+     * -------------------------------------------------------
+     * NATIVE HLS
+     * -------------------------------------------------------
+     */
 
     if (
       video.canPlayType(
         'application/vnd.apple.mpegurl'
       )
     ) {
-      video.src = m3u8;
+      video.src =
+        source;
 
       try {
         await video.play();
-      } catch (_) {}
 
-      if (
-        token === state.token
-      ) {
-        setStatus(
-          'Direct HLS playback'
+        await waitForPlaying(
+          video,
+          8000
+        );
+
+      } catch (error) {
+        throw new Error(
+          'Native HLS playback failed: ' +
+          (
+            error?.message ||
+            'unknown error'
+          )
         );
       }
 
+      if (
+        token !== state.token
+      ) {
+        throw new Error(
+          'Player changed'
+        );
+      }
+
+      setStatus(
+        'Direct HLS playback'
+      );
+
       return true;
     }
+
+    /*
+     * -------------------------------------------------------
+     * HLS.JS
+     * -------------------------------------------------------
+     */
 
     const Hls =
       await loadHlsLibrary();
@@ -923,15 +1779,15 @@
       return false;
     }
 
-    if (!Hls.isSupported()) {
+    if (
+      !Hls.isSupported()
+    ) {
       throw new Error(
-        'This browser does not support MSE/HLS playback.'
+        'This browser does not support HLS playback'
       );
     }
 
-    destroyHls();
-
-    state.hls =
+    const hls =
       new Hls({
         enableWorker: true,
         lowLatencyMode: false,
@@ -940,42 +1796,225 @@
         capLevelToPlayerSize: true
       });
 
-    state.hls.on(
+    state.hls =
+      hls;
+
+    /*
+     * Manifest parsed.
+     */
+    hls.on(
       Hls.Events.MANIFEST_PARSED,
       () => {
+        if (
+          token !== state.token
+        ) {
+          return;
+        }
+
         setQualityLevels();
 
-        setStatus(
-          'Direct HLS playback'
-        );
-
-        video.play().catch(
-          () => {}
-        );
+        video
+          .play()
+          .catch(() => {});
       }
     );
 
-    state.hls.on(
+    /*
+     * New/updated quality levels.
+     */
+    hls.on(
+      Hls.Events.LEVELS_UPDATED,
+      () => {
+        if (
+          token === state.token
+        ) {
+          setQualityLevels();
+        }
+      }
+    );
+
+    /*
+     * Fatal HLS errors.
+     */
+    hls.on(
       Hls.Events.ERROR,
       (_, data) => {
-        if (data?.fatal) {
+        if (
+          token !== state.token
+        ) {
+          return;
+        }
+
+        if (
+          data?.fatal
+        ) {
           setStatus(
-            'Stream error — original player remains available.'
+            'Stream error — original player is available.'
           );
         }
       }
     );
 
-    state.hls.loadSource(
-      m3u8
+    /*
+     * Attach the media element.
+     */
+    hls.attachMedia(
+      video
     );
 
-    state.hls.attachMedia(
-      video
+    /*
+     * Load the playlist.
+     */
+    hls.loadSource(
+      source
+    );
+
+    /*
+     * Wait for actual metadata.
+     */
+    await new Promise(
+      (
+        resolve,
+        reject
+      ) => {
+        let settled =
+          false;
+
+        const timer =
+          setTimeout(
+            () => {
+              if (
+                settled
+              ) {
+                return;
+              }
+
+              settled =
+                true;
+
+              cleanup();
+
+              reject(
+                new Error(
+                  'HLS manifest did not load'
+                )
+              );
+            },
+            SOURCE_TIMEOUT
+          );
+
+        const cleanup =
+          () => {
+            clearTimeout(
+              timer
+            );
+
+            video.removeEventListener(
+              'loadedmetadata',
+              onMetadata
+            );
+
+            video.removeEventListener(
+              'error',
+              onError
+            );
+          };
+
+        const onMetadata =
+          () => {
+            if (
+              settled
+            ) {
+              return;
+            }
+
+            settled =
+              true;
+
+            cleanup();
+
+            resolve();
+          };
+
+        const onError =
+          () => {
+            if (
+              settled
+            ) {
+              return;
+            }
+
+            settled =
+              true;
+
+            cleanup();
+
+            reject(
+              new Error(
+                'HLS media error'
+              )
+            );
+          };
+
+        video.addEventListener(
+          'loadedmetadata',
+          onMetadata,
+          {
+            once: true
+          }
+        );
+
+        video.addEventListener(
+          'error',
+          onError,
+          {
+            once: true
+          }
+        );
+      }
+    );
+
+    if (
+      token !== state.token
+    ) {
+      throw new Error(
+        'Player changed'
+      );
+    }
+
+    /*
+     * Confirm actual playback.
+     */
+    try {
+      await video.play();
+
+      await waitForPlaying(
+        video,
+        8000
+      );
+
+    } catch (error) {
+      throw new Error(
+        'HLS playback failed: ' +
+        (
+          error?.message ||
+          'unknown error'
+        )
+      );
+    }
+
+    setStatus(
+      'Direct HLS playback'
     );
 
     return true;
   }
+
+  /*
+   * ---------------------------------------------------------
+   * RESOLVE SOURCE
+   * ---------------------------------------------------------
+   */
 
   async function resolveSource(
     embedUrl,
@@ -989,36 +2028,96 @@
       );
     }
 
+    /*
+     * If the iframe itself already points directly
+     * to media, don't fetch HTML unnecessarily.
+     */
     if (
-      isM3u8(embedUrl)
+      isMediaUrl(embedUrl)
     ) {
       return embedUrl;
     }
 
-    const html =
-      await fetchText(
+    let lastError =
+      null;
+
+    const pages =
+      sourcePages(
         embedUrl
       );
 
-    if (
-      token !== state.token
+    for (
+      const page of pages
     ) {
-      return '';
+      if (
+        token !== state.token
+      ) {
+        return '';
+      }
+
+      try {
+        setStatus(
+          'Resolving direct source…',
+          true
+        );
+
+        const html =
+          await fetchText(
+            page
+          );
+
+        if (
+          token !== state.token
+        ) {
+          return '';
+        }
+
+        const source =
+          extractSource(
+            html,
+            page
+          );
+
+        if (source) {
+          return source;
+        }
+
+        lastError =
+          new Error(
+            'No supported media URL in page'
+          );
+
+      } catch (error) {
+        lastError =
+          error;
+      }
     }
 
-    return extractM3u8(
-      html,
-      embedUrl
+    throw (
+      lastError ||
+      new Error(
+        'Could not read embed page'
+      )
     );
   }
+
+  /*
+   * ---------------------------------------------------------
+   * ENHANCE IFRAME
+   * ---------------------------------------------------------
+   */
 
   async function enhance(
     iframe
   ) {
-    if (!iframe) return;
+    if (!iframe) {
+      return;
+    }
 
     const src =
-      getEmbedUrl(iframe);
+      getEmbedUrl(
+        iframe
+      );
 
     if (
       !src ||
@@ -1027,19 +2126,50 @@
       return;
     }
 
+    /*
+     * Save the current iframe source.
+     */
     state.originalSrc =
       src;
 
+    /*
+     * New asynchronous generation.
+     */
     state.token += 1;
 
     const token =
       state.token;
 
-    restoreIframe();
+    /*
+     * Clean previous direct player.
+     */
+    destroyHls();
 
-    createUi(iframe);
+    if (
+      state.customRoot
+    ) {
+      state.customRoot.remove();
+    }
 
-    if (!state.customRoot) {
+    state.customRoot =
+      null;
+
+    state.video =
+      null;
+
+    state.status =
+      null;
+
+    /*
+     * Create new UI.
+     */
+    createUi(
+      iframe
+    );
+
+    if (
+      !state.customRoot
+    ) {
       return;
     }
 
@@ -1058,7 +2188,7 @@
 
       if (!source) {
         throw new Error(
-          'No direct HLS source found.'
+          'No direct media source found'
         );
       }
 
@@ -1066,6 +2196,7 @@
         source,
         token
       );
+
     } catch (error) {
       if (
         token !== state.token
@@ -1078,61 +2209,92 @@
         error
       );
 
-      setStatus(
-        'Direct mode unavailable — original player ready.'
-      );
-
-      if (state.customRoot) {
+      /*
+       * Do NOT remove the iframe.
+       *
+       * The original Vidmoly player remains the
+       * guaranteed fallback.
+       */
+      if (
+        state.customRoot
+      ) {
         state.customRoot.classList.add(
           'direct-unavailable'
         );
       }
 
       if (iframe) {
-        iframe.hidden = false;
-        iframe.style.display = '';
+        iframe.hidden =
+          false;
+
+        iframe.style.display =
+          '';
       }
+
+      setStatus(
+        'Direct mode unavailable — original player ready.'
+      );
     }
   }
 
+  /*
+   * ---------------------------------------------------------
+   * WATCH FOR DYNAMICALLY CREATED IFRAME
+   * ---------------------------------------------------------
+   */
+
   function watchIframe() {
-    let last = '';
+    let lastIframe =
+      null;
 
-    const scan = () => {
-      const iframe =
-        findIframe();
+    let lastSrc =
+      '';
 
-      if (!iframe) {
-        return;
-      }
+    const scan =
+      () => {
+        const iframe =
+          findIframe();
 
-      const src =
-        getEmbedUrl(iframe);
+        if (!iframe) {
+          return;
+        }
 
-      if (
-        src &&
-        (
-          src !== last ||
-          !state.customRoot ||
-          !document.documentElement.contains(
-            state.customRoot
-          )
-        )
-      ) {
-        last = src;
+        const src =
+          getEmbedUrl(
+            iframe
+          );
 
-        enhance(
-          iframe
-        );
-      }
+        /*
+         * New iframe element.
+         */
+        if (
+          iframe !== lastIframe
+        ) {
+          lastIframe =
+            iframe;
 
-      if (
-        state.iframe !== iframe
-      ) {
-        state.iframe =
-          iframe;
-      }
-    };
+          lastSrc =
+            '';
+
+          state.iframe =
+            iframe;
+        }
+
+        /*
+         * New iframe source.
+         */
+        if (
+          src &&
+          src !== lastSrc
+        ) {
+          lastSrc =
+            src;
+
+          enhance(
+            iframe
+          );
+        }
+      };
 
     const observer =
       new MutationObserver(
@@ -1152,13 +2314,24 @@
       }
     );
 
+    /*
+     * Backup polling because some SPA code
+     * changes iframe properties in ways that are
+     * not always easy to observe.
+     */
     setInterval(
       scan,
-      1000
+      1500
     );
 
     scan();
   }
+
+  /*
+   * ---------------------------------------------------------
+   * CSS
+   * ---------------------------------------------------------
+   */
 
   function injectCss() {
     if (
@@ -1217,7 +2390,9 @@
         color:#fff;
         font-size:14px;
         text-shadow:0 2px 12px #000;
-        opacity:.85
+        opacity:.85;
+        padding:20px;
+        text-align:center
       }
 
       .unhappy-controls{
@@ -1327,7 +2502,12 @@
         }
       }
 
+      .unhappy-player-root.direct-unavailable{
+        display:none
+      }
+
       @media(max-width:700px){
+
         .unhappy-controls{
           gap:4px;
           padding:8px 6px
@@ -1352,16 +2532,18 @@
           font-size:10px
         }
       }
-
-      .unhappy-player-root.direct-unavailable{
-        display:none
-      }
     `;
 
     document.head.appendChild(
       style
     );
   }
+
+  /*
+   * ---------------------------------------------------------
+   * INITIALIZATION
+   * ---------------------------------------------------------
+   */
 
   function init() {
     injectCss();
@@ -1375,9 +2557,12 @@
     document.addEventListener(
       'DOMContentLoaded',
       init,
-      { once: true }
+      {
+        once: true
+      }
     );
   } else {
     init();
   }
+
 })();
