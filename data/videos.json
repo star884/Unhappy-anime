@@ -13,7 +13,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 001.",
     "embed": "https://vidmoly.org/embed-2es9mv924us3.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02913/2es9mv924us3.jpg?gha_thumb=e0c9bf21c177cfe3"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02913/2es9mv924us3.jpg?gha_thumb=e0c9bf21c177cfe3",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-002",
@@ -29,7 +31,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 002.",
     "embed": "https://vidmoly.org/embed-4k80pg3xm5vr.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/4k80pg3xm5vr.jpg?gha_thumb=65b91cfe6fd956a9"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/4k80pg3xm5vr.jpg?gha_thumb=65b91cfe6fd956a9",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-003",
@@ -45,7 +49,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 003.",
     "embed": "https://vidmoly.org/embed-k3l0vaxzz2am.html",
-    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/k3l0vaxzz2am.jpg?gha_thumb=a0ca06f19be0dfdb"
+    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/k3l0vaxzz2am.jpg?gha_thumb=a0ca06f19be0dfdb",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-004",
@@ -61,7 +67,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 004.",
     "embed": "https://vidmoly.org/embed-u9ljvtaw88fc.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/u9ljvtaw88fc.jpg?gha_thumb=0bd6c48dbee799af"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/u9ljvtaw88fc.jpg?gha_thumb=0bd6c48dbee799af",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-005",
@@ -77,7 +85,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 005.",
     "embed": "https://vidmoly.org/embed-nl8iwhs0qg4f.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/nl8iwhs0qg4f.jpg?gha_thumb=9677938080ae4e23"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/nl8iwhs0qg4f.jpg?gha_thumb=9677938080ae4e23",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-006",
@@ -93,7 +103,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 006.",
     "embed": "https://vidmoly.org/embed-h3570rj743im.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/h3570rj743im.jpg?gha_thumb=9e54d72b9713e855"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/h3570rj743im.jpg?gha_thumb=9e54d72b9713e855",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-007",
@@ -109,7 +121,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 007.",
     "embed": "https://vidmoly.org/embed-rmosm48fo4qr.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/rmosm48fo4qr.jpg?gha_thumb=0f6f4aed0ac659dd"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/rmosm48fo4qr.jpg?gha_thumb=0f6f4aed0ac659dd",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-008",
@@ -125,7 +139,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 008.",
     "embed": "https://vidmoly.org/embed-am4j54sq7y2k.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/am4j54sq7y2k.jpg?gha_thumb=643cb6f64301028f"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/am4j54sq7y2k.jpg?gha_thumb=643cb6f64301028f",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-009",
@@ -141,7 +157,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 009.",
     "embed": "https://vidmoly.org/embed-9rzj8vgwuiyl.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/9rzj8vgwuiyl.jpg?gha_thumb=12573e96c107c790"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/9rzj8vgwuiyl.jpg?gha_thumb=12573e96c107c790",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-010",
@@ -157,7 +175,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 010.",
     "embed": "https://vidmoly.org/embed-4szckasj64iu.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/4szckasj64iu.jpg?gha_thumb=2515391741c09b77"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/4szckasj64iu.jpg?gha_thumb=2515391741c09b77",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-011",
@@ -173,7 +193,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 011.",
     "embed": "https://vidmoly.org/embed-cm6y4qaow59d.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/cm6y4qaow59d.jpg?gha_thumb=7e65b37bc505bbaf"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/cm6y4qaow59d.jpg?gha_thumb=7e65b37bc505bbaf",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-012",
@@ -189,7 +211,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 012.",
     "embed": "https://vidmoly.org/embed-eck3b26f1jfe.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/eck3b26f1jfe.jpg?gha_thumb=d888df3a84d52dfd"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/eck3b26f1jfe.jpg?gha_thumb=d888df3a84d52dfd",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-013",
@@ -205,7 +229,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 013.",
     "embed": "https://vidmoly.org/embed-g95hymli93ek.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/g95hymli93ek.jpg?gha_thumb=beaf99220a489934"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/g95hymli93ek.jpg?gha_thumb=beaf99220a489934",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-014",
@@ -221,7 +247,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 014.",
     "embed": "https://vidmoly.org/embed-vwkm3jctbr9h.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/vwkm3jctbr9h.jpg?gha_thumb=a8052b33e9c996bc"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/vwkm3jctbr9h.jpg?gha_thumb=a8052b33e9c996bc",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-015",
@@ -237,7 +265,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 015.",
     "embed": "https://vidmoly.org/embed-ka7nqyc291bp.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/ka7nqyc291bp.jpg?gha_thumb=d90dd437925a11d0"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/ka7nqyc291bp.jpg?gha_thumb=d90dd437925a11d0",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-016",
@@ -253,7 +283,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 016.",
     "embed": "https://vidmoly.org/embed-fbw4c0aj4rwh.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/fbw4c0aj4rwh.jpg?gha_thumb=4d6ba9b93e98e490"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/fbw4c0aj4rwh.jpg?gha_thumb=4d6ba9b93e98e490",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-017",
@@ -269,7 +301,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 017.",
     "embed": "https://vidmoly.org/embed-rmq8tcv9wck8.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/rmq8tcv9wck8.jpg?gha_thumb=925448ff1c1afc80"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/rmq8tcv9wck8.jpg?gha_thumb=925448ff1c1afc80",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-018",
@@ -285,7 +319,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 018.",
     "embed": "https://vidmoly.org/embed-5r49ochripy5.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/5r49ochripy5.jpg?gha_thumb=ad3d1ecf67372391"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/5r49ochripy5.jpg?gha_thumb=ad3d1ecf67372391",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-019",
@@ -301,7 +337,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 019.",
     "embed": "https://vidmoly.org/embed-nre8zs82kgj7.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/nre8zs82kgj7.jpg?gha_thumb=607ae974bcfe77e9"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/nre8zs82kgj7.jpg?gha_thumb=607ae974bcfe77e9",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-020",
@@ -317,7 +355,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 020.",
     "embed": "https://vidmoly.org/embed-i1nd116t26zj.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/i1nd116t26zj.jpg?gha_thumb=019d804994f521bb"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/i1nd116t26zj.jpg?gha_thumb=019d804994f521bb",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-021",
@@ -333,7 +373,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 021.",
     "embed": "https://vidmoly.org/embed-zki390wqwusl.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/zki390wqwusl.jpg?gha_thumb=b343ae65021727cf"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/zki390wqwusl.jpg?gha_thumb=b343ae65021727cf",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-022",
@@ -349,7 +391,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 022.",
     "embed": "https://vidmoly.org/embed-86l79oa2ol9b.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/86l79oa2ol9b.jpg?gha_thumb=476efc5b3dd2d65f"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/86l79oa2ol9b.jpg?gha_thumb=476efc5b3dd2d65f",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-023",
@@ -365,7 +409,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 023.",
     "embed": "https://vidmoly.org/embed-pbzrbmc4p9c0.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/pbzrbmc4p9c0.jpg?gha_thumb=f67011e553ab5676"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/pbzrbmc4p9c0.jpg?gha_thumb=f67011e553ab5676",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-024",
@@ -381,7 +427,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 024.",
     "embed": "https://vidmoly.org/embed-9jzrhxi4zbtk.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/9jzrhxi4zbtk.jpg?gha_thumb=c33e749725ce3819"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/9jzrhxi4zbtk.jpg?gha_thumb=c33e749725ce3819",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-025",
@@ -397,7 +445,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 025.",
     "embed": "https://vidmoly.org/embed-igq9ip6bzw2d.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/igq9ip6bzw2d.jpg?gha_thumb=5b3fe64d135d7ad7"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/igq9ip6bzw2d.jpg?gha_thumb=5b3fe64d135d7ad7",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-026",
@@ -413,7 +463,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 026.",
     "embed": "https://vidmoly.org/embed-0a2z6l100nyh.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/0a2z6l100nyh.jpg?gha_thumb=9b78bc55f3b53a59"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/0a2z6l100nyh.jpg?gha_thumb=9b78bc55f3b53a59",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-027",
@@ -429,7 +481,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 027.",
     "embed": "https://vidmoly.org/embed-z9wndv8n1fbd.html",
-    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/z9wndv8n1fbd.jpg?gha_thumb=09620fde711a21cb"
+    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/z9wndv8n1fbd.jpg?gha_thumb=09620fde711a21cb",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-028",
@@ -445,7 +499,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 028.",
     "embed": "https://vidmoly.org/embed-dinn7cha0ww7.html",
-    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/dinn7cha0ww7.jpg?gha_thumb=97024cc1f1bee3c7"
+    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/dinn7cha0ww7.jpg?gha_thumb=97024cc1f1bee3c7",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-029",
@@ -461,7 +517,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 029.",
     "embed": "https://vidmoly.org/embed-om68vkk4fqi7.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/om68vkk4fqi7.jpg?gha_thumb=8cc16f7fa9ffc328"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/om68vkk4fqi7.jpg?gha_thumb=8cc16f7fa9ffc328",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-030",
@@ -477,7 +535,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 030.",
     "embed": "https://vidmoly.org/embed-8izdmjdmillv.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/8izdmjdmillv.jpg?gha_thumb=576d7cace41e2f7b"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/8izdmjdmillv.jpg?gha_thumb=576d7cace41e2f7b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-031",
@@ -493,7 +553,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 031.",
     "embed": "https://vidmoly.org/embed-pku6w0uo21dv.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/pku6w0uo21dv.jpg?gha_thumb=14f68d70ec09839e"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/pku6w0uo21dv.jpg?gha_thumb=14f68d70ec09839e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-032",
@@ -509,7 +571,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 032.",
     "embed": "https://vidmoly.org/embed-ukmyqhf08djc.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/ukmyqhf08djc.jpg?gha_thumb=afb95a8ba4a062f8"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/ukmyqhf08djc.jpg?gha_thumb=afb95a8ba4a062f8",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-033",
@@ -525,7 +589,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 033.",
     "embed": "https://vidmoly.org/embed-ds4e4uhms960.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/ds4e4uhms960.jpg?gha_thumb=e3dd57373c746d7b"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/ds4e4uhms960.jpg?gha_thumb=e3dd57373c746d7b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-034",
@@ -541,7 +607,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 034.",
     "embed": "https://vidmoly.org/embed-4cxo2u7azval.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/4cxo2u7azval.jpg?gha_thumb=6d98654a813a72f2"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/4cxo2u7azval.jpg?gha_thumb=6d98654a813a72f2",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-035",
@@ -557,7 +625,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 035.",
     "embed": "https://vidmoly.org/embed-v2xl8pim9vio.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/v2xl8pim9vio.jpg?gha_thumb=0b37af5858827e59"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/v2xl8pim9vio.jpg?gha_thumb=0b37af5858827e59",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-036",
@@ -573,7 +643,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 036.",
     "embed": "https://vidmoly.org/embed-dnrv7wqyww8e.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/dnrv7wqyww8e.jpg?gha_thumb=ab206da35a22eac9"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/dnrv7wqyww8e.jpg?gha_thumb=ab206da35a22eac9",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-037",
@@ -589,7 +661,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 037.",
     "embed": "https://vidmoly.org/embed-s8sr0ndx7tt7.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/s8sr0ndx7tt7.jpg?gha_thumb=cc54925617b79147"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/s8sr0ndx7tt7.jpg?gha_thumb=cc54925617b79147",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-038",
@@ -605,7 +679,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 038.",
     "embed": "https://vidmoly.org/embed-7tkuzuvvd87p.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/7tkuzuvvd87p.jpg?gha_thumb=12bf344871605640"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/7tkuzuvvd87p.jpg?gha_thumb=12bf344871605640",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-039",
@@ -621,7 +697,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 039.",
     "embed": "https://vidmoly.org/embed-3ffvx5t5bg3n.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/3ffvx5t5bg3n.jpg?gha_thumb=885bc1ef103d6175"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/3ffvx5t5bg3n.jpg?gha_thumb=885bc1ef103d6175",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-040",
@@ -637,7 +715,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 040.",
     "embed": "https://vidmoly.org/embed-bqd2i205pm54.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/bqd2i205pm54.jpg?gha_thumb=3eef2e85b2e76a98"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/bqd2i205pm54.jpg?gha_thumb=3eef2e85b2e76a98",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-041",
@@ -653,7 +733,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 041.",
     "embed": "https://vidmoly.org/embed-7n065n7nocjd.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/7n065n7nocjd.jpg?gha_thumb=4e59f81af4146500"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/7n065n7nocjd.jpg?gha_thumb=4e59f81af4146500",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-042",
@@ -669,7 +751,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 042.",
     "embed": "https://vidmoly.org/embed-driop6a9knoc.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/driop6a9knoc.jpg?gha_thumb=b46ec258ba2015a2"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/driop6a9knoc.jpg?gha_thumb=b46ec258ba2015a2",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-043",
@@ -685,7 +769,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 043.",
     "embed": "https://vidmoly.org/embed-nsjpaxggkvyl.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/nsjpaxggkvyl.jpg?gha_thumb=98f4e7d1c82c7d2c"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/nsjpaxggkvyl.jpg?gha_thumb=98f4e7d1c82c7d2c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-044",
@@ -701,7 +787,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 044.",
     "embed": "https://vidmoly.org/embed-26v86w8ouq68.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/26v86w8ouq68.jpg?gha_thumb=ce93ffef87794f97"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/26v86w8ouq68.jpg?gha_thumb=ce93ffef87794f97",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-045",
@@ -717,7 +805,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 045.",
     "embed": "https://vidmoly.org/embed-ejm537z50ggb.html",
-    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/ejm537z50ggb.jpg?gha_thumb=e227375ab2e71d0e"
+    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/ejm537z50ggb.jpg?gha_thumb=e227375ab2e71d0e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-046",
@@ -733,7 +823,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 046.",
     "embed": "https://vidmoly.org/embed-q15ki28c48rd.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/q15ki28c48rd.jpg?gha_thumb=235a2871c339a50c"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/q15ki28c48rd.jpg?gha_thumb=235a2871c339a50c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-047",
@@ -749,7 +841,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 047.",
     "embed": "https://vidmoly.org/embed-svpvir7kut6w.html",
-    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/svpvir7kut6w.jpg?gha_thumb=d48c63e5bcfff21d"
+    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/svpvir7kut6w.jpg?gha_thumb=d48c63e5bcfff21d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-048",
@@ -765,7 +859,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 048.",
     "embed": "https://vidmoly.org/embed-e89ssdlhzsci.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/e89ssdlhzsci.jpg?gha_thumb=00b2ae8b87dec8c9"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/e89ssdlhzsci.jpg?gha_thumb=00b2ae8b87dec8c9",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-049",
@@ -781,7 +877,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 049.",
     "embed": "https://vidmoly.org/embed-r5w8yscco0tc.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/r5w8yscco0tc.jpg?gha_thumb=315349613c4fb809"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/r5w8yscco0tc.jpg?gha_thumb=315349613c4fb809",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-050",
@@ -797,7 +895,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 050.",
     "embed": "https://vidmoly.org/embed-05waz5bpguv0.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/05waz5bpguv0.jpg?gha_thumb=27082d502d2e2b39"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/05waz5bpguv0.jpg?gha_thumb=27082d502d2e2b39",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-051",
@@ -813,7 +913,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 051.",
     "embed": "https://vidmoly.org/embed-qrcqw4jz8sdh.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/qrcqw4jz8sdh.jpg?gha_thumb=684bc9e00873978f"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/qrcqw4jz8sdh.jpg?gha_thumb=684bc9e00873978f",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-052",
@@ -829,7 +931,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 052.",
     "embed": "https://vidmoly.org/embed-0u81u7clykgp.html",
-    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/0u81u7clykgp.jpg?gha_thumb=5dc570c73424ea60"
+    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/0u81u7clykgp.jpg?gha_thumb=5dc570c73424ea60",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-053",
@@ -845,7 +949,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 053.",
     "embed": "https://vidmoly.org/embed-55uel2yln9mf.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/55uel2yln9mf.jpg?gha_thumb=37f613191f554be5"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/55uel2yln9mf.jpg?gha_thumb=37f613191f554be5",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-054",
@@ -861,7 +967,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 054.",
     "embed": "https://vidmoly.org/embed-023pejhx0ido.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/023pejhx0ido.jpg?gha_thumb=ba7f83ba5b4fb381"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/023pejhx0ido.jpg?gha_thumb=ba7f83ba5b4fb381",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-055",
@@ -877,7 +985,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 055.",
     "embed": "https://vidmoly.org/embed-7ojx7wlcrpmz.html",
-    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/7ojx7wlcrpmz.jpg?gha_thumb=dc0dc4fcbe4d424d"
+    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/7ojx7wlcrpmz.jpg?gha_thumb=dc0dc4fcbe4d424d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-056",
@@ -893,7 +1003,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 056.",
     "embed": "https://vidmoly.org/embed-bcxol9ackgak.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/bcxol9ackgak.jpg?gha_thumb=111453ec1009821d"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/bcxol9ackgak.jpg?gha_thumb=111453ec1009821d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-057",
@@ -909,7 +1021,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 057.",
     "embed": "https://vidmoly.org/embed-u2iq5d80f304.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/u2iq5d80f304.jpg?gha_thumb=b51a28088df88304"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/u2iq5d80f304.jpg?gha_thumb=b51a28088df88304",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-058",
@@ -925,7 +1039,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 058.",
     "embed": "https://vidmoly.org/embed-sl6n1gd02xdq.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/sl6n1gd02xdq.jpg?gha_thumb=05a4ef2f337d3ac3"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/sl6n1gd02xdq.jpg?gha_thumb=05a4ef2f337d3ac3",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-059",
@@ -941,7 +1057,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 059.",
     "embed": "https://vidmoly.org/embed-b2y4szk6usnh.html",
-    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/b2y4szk6usnh.jpg?gha_thumb=42d96ba5ab041857"
+    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/b2y4szk6usnh.jpg?gha_thumb=42d96ba5ab041857",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-060",
@@ -957,7 +1075,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 060.",
     "embed": "https://vidmoly.org/embed-9m2dx5k1g8rh.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/9m2dx5k1g8rh.jpg?gha_thumb=f95bec8684725036"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/9m2dx5k1g8rh.jpg?gha_thumb=f95bec8684725036",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-061",
@@ -973,7 +1093,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 061.",
     "embed": "https://vidmoly.org/embed-pyi0rqpq48yo.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/pyi0rqpq48yo.jpg?gha_thumb=b6da69431450a7d3"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/pyi0rqpq48yo.jpg?gha_thumb=b6da69431450a7d3",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-062",
@@ -989,7 +1111,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 062.",
     "embed": "https://vidmoly.org/embed-gt8fcilh0x03.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/gt8fcilh0x03.jpg?gha_thumb=c82ae94ced45206a"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/gt8fcilh0x03.jpg?gha_thumb=c82ae94ced45206a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-063",
@@ -1005,7 +1129,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 063.",
     "embed": "https://vidmoly.org/embed-nbmhc9xmgild.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/nbmhc9xmgild.jpg?gha_thumb=c69e1657cd47c7f7"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/nbmhc9xmgild.jpg?gha_thumb=c69e1657cd47c7f7",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-064",
@@ -1021,7 +1147,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 064.",
     "embed": "https://vidmoly.org/embed-68x37f76w9a9.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/68x37f76w9a9.jpg?gha_thumb=1a137018b993bf3a"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/68x37f76w9a9.jpg?gha_thumb=1a137018b993bf3a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-065",
@@ -1037,7 +1165,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 065.",
     "embed": "https://vidmoly.org/embed-bspf7n6uwt36.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/bspf7n6uwt36.jpg?gha_thumb=1edb8b19d9ba2f12"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/bspf7n6uwt36.jpg?gha_thumb=1edb8b19d9ba2f12",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-066",
@@ -1053,7 +1183,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 066.",
     "embed": "https://vidmoly.org/embed-q36pogc7nei5.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/q36pogc7nei5.jpg?gha_thumb=8374172b1938d993"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/q36pogc7nei5.jpg?gha_thumb=8374172b1938d993",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-067",
@@ -1069,7 +1201,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 067.",
     "embed": "https://vidmoly.org/embed-z1fxc9d9263m.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/z1fxc9d9263m.jpg?gha_thumb=061244add268136c"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/z1fxc9d9263m.jpg?gha_thumb=061244add268136c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-068",
@@ -1085,7 +1219,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 068.",
     "embed": "https://vidmoly.org/embed-jqrx7e7shvin.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/jqrx7e7shvin.jpg?gha_thumb=be44afe82a6ec91a"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/jqrx7e7shvin.jpg?gha_thumb=be44afe82a6ec91a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-069",
@@ -1101,7 +1237,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 069.",
     "embed": "https://vidmoly.org/embed-ule7wx1hz26n.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/ule7wx1hz26n.jpg?gha_thumb=6ba7be4fc9e5ae6c"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/ule7wx1hz26n.jpg?gha_thumb=6ba7be4fc9e5ae6c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-070",
@@ -1117,7 +1255,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 070.",
     "embed": "https://vidmoly.org/embed-uyyeng0s2k8t.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/uyyeng0s2k8t.jpg?gha_thumb=717e49f6e4dc46e3"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/uyyeng0s2k8t.jpg?gha_thumb=717e49f6e4dc46e3",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-071",
@@ -1133,7 +1273,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 071.",
     "embed": "https://vidmoly.org/embed-hv8n5hk31rig.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/hv8n5hk31rig.jpg?gha_thumb=b87fd5ab6ef705c4"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/hv8n5hk31rig.jpg?gha_thumb=b87fd5ab6ef705c4",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-072",
@@ -1149,7 +1291,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 072.",
     "embed": "https://vidmoly.org/embed-svy1bls3zoj9.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/svy1bls3zoj9.jpg?gha_thumb=0d0b242b2b88127c"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/svy1bls3zoj9.jpg?gha_thumb=0d0b242b2b88127c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-073",
@@ -1165,7 +1309,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 073.",
     "embed": "https://vidmoly.org/embed-06ouiymeesqz.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/06ouiymeesqz.jpg?gha_thumb=4e5e68b5ed8a81e5"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/06ouiymeesqz.jpg?gha_thumb=4e5e68b5ed8a81e5",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-074",
@@ -1181,7 +1327,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 074.",
     "embed": "https://vidmoly.org/embed-lxx8vgvcf7lb.html",
-    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/lxx8vgvcf7lb.jpg?gha_thumb=01f4e0d4a237948b"
+    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/lxx8vgvcf7lb.jpg?gha_thumb=01f4e0d4a237948b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-075",
@@ -1197,7 +1345,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 075.",
     "embed": "https://vidmoly.org/embed-kuyvkvbf3dui.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/kuyvkvbf3dui.jpg?gha_thumb=23409bc76ece703c"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/kuyvkvbf3dui.jpg?gha_thumb=23409bc76ece703c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-076",
@@ -1213,7 +1363,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 076.",
     "embed": "https://vidmoly.org/embed-p6sl51h45ae1.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/p6sl51h45ae1.jpg?gha_thumb=21536c026d111b3d"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/p6sl51h45ae1.jpg?gha_thumb=21536c026d111b3d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-077",
@@ -1229,7 +1381,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 077.",
     "embed": "https://vidmoly.org/embed-zdyfkto8z9tp.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/zdyfkto8z9tp.jpg?gha_thumb=f20de09b3958b630"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/zdyfkto8z9tp.jpg?gha_thumb=f20de09b3958b630",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-078",
@@ -1245,7 +1399,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 078.",
     "embed": "https://vidmoly.org/embed-8bdqvy2iv7tg.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/8bdqvy2iv7tg.jpg?gha_thumb=5184406285cb2769"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/8bdqvy2iv7tg.jpg?gha_thumb=5184406285cb2769",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-079",
@@ -1261,7 +1417,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 079.",
     "embed": "https://vidmoly.org/embed-q25vkd0lg9ml.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/q25vkd0lg9ml.jpg?gha_thumb=8596e7a4bd4bbf7e"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/q25vkd0lg9ml.jpg?gha_thumb=8596e7a4bd4bbf7e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-080",
@@ -1277,7 +1435,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 080.",
     "embed": "https://vidmoly.org/embed-6jiyndo3v58l.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/6jiyndo3v58l.jpg?gha_thumb=27d02da5f7be8347"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/6jiyndo3v58l.jpg?gha_thumb=27d02da5f7be8347",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-081",
@@ -1293,7 +1453,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 081.",
     "embed": "https://vidmoly.org/embed-6k4i0l1fp6ix.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/6k4i0l1fp6ix.jpg?gha_thumb=79856cc10a5e76c6"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/6k4i0l1fp6ix.jpg?gha_thumb=79856cc10a5e76c6",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-082",
@@ -1309,7 +1471,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 082.",
     "embed": "https://vidmoly.org/embed-ijhqtcc323h7.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/ijhqtcc323h7.jpg?gha_thumb=b7a9473f0b52f000"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/ijhqtcc323h7.jpg?gha_thumb=b7a9473f0b52f000",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-083",
@@ -1325,7 +1489,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 083.",
     "embed": "https://vidmoly.org/embed-j2pf5nwtozv1.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/j2pf5nwtozv1.jpg?gha_thumb=b58291848dd8c8a3"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/j2pf5nwtozv1.jpg?gha_thumb=b58291848dd8c8a3",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-084",
@@ -1341,7 +1507,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 084.",
     "embed": "https://vidmoly.org/embed-11bd40b2rcrh.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/11bd40b2rcrh.jpg?gha_thumb=8dc3bad8121804d4"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/11bd40b2rcrh.jpg?gha_thumb=8dc3bad8121804d4",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-085",
@@ -1357,7 +1525,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 085.",
     "embed": "https://vidmoly.org/embed-rk665v7qf347.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/rk665v7qf347.jpg?gha_thumb=2b8255233832f528"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/rk665v7qf347.jpg?gha_thumb=2b8255233832f528",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-086",
@@ -1373,7 +1543,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 086.",
     "embed": "https://vidmoly.org/embed-gqdt9xx58o8l.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/gqdt9xx58o8l.jpg?gha_thumb=a90426619e5022a5"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/gqdt9xx58o8l.jpg?gha_thumb=a90426619e5022a5",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-087",
@@ -1389,7 +1561,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 087.",
     "embed": "https://vidmoly.org/embed-5j3sk4kw3yyh.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/5j3sk4kw3yyh.jpg?gha_thumb=47cb0f1f0acc29b4"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/5j3sk4kw3yyh.jpg?gha_thumb=47cb0f1f0acc29b4",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-088",
@@ -1405,7 +1579,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 088.",
     "embed": "https://vidmoly.org/embed-wk35vht0eeft.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/wk35vht0eeft.jpg?gha_thumb=309aebd253b32c51"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/wk35vht0eeft.jpg?gha_thumb=309aebd253b32c51",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-089",
@@ -1421,7 +1597,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 089.",
     "embed": "https://vidmoly.org/embed-vjs91babhm00.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/vjs91babhm00.jpg?gha_thumb=6bc8ac6d799e7d52"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/vjs91babhm00.jpg?gha_thumb=6bc8ac6d799e7d52",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-090",
@@ -1437,7 +1615,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 090.",
     "embed": "https://vidmoly.org/embed-69yy1x6l8q7b.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/69yy1x6l8q7b.jpg?gha_thumb=beede5f12fc586cf"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/69yy1x6l8q7b.jpg?gha_thumb=beede5f12fc586cf",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-091",
@@ -1453,7 +1633,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 091.",
     "embed": "https://vidmoly.org/embed-1dd5pj6pfxsp.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/1dd5pj6pfxsp.jpg?gha_thumb=da5ee565e9ae56fb"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/1dd5pj6pfxsp.jpg?gha_thumb=da5ee565e9ae56fb",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-092",
@@ -1469,7 +1651,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 092.",
     "embed": "https://vidmoly.org/embed-qckz68pcer4u.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/qckz68pcer4u.jpg?gha_thumb=15152ca70f186bde"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/qckz68pcer4u.jpg?gha_thumb=15152ca70f186bde",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-093",
@@ -1485,7 +1669,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 093.",
     "embed": "https://vidmoly.org/embed-2ibf5s6m3pr4.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/2ibf5s6m3pr4.jpg?gha_thumb=420622fd2a23bb50"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/2ibf5s6m3pr4.jpg?gha_thumb=420622fd2a23bb50",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-094",
@@ -1501,7 +1687,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 094.",
     "embed": "https://vidmoly.org/embed-u25ltupegisi.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/u25ltupegisi.jpg?gha_thumb=7bf303cfbf1d5093"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/02/02914/u25ltupegisi.jpg?gha_thumb=7bf303cfbf1d5093",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-095",
@@ -1517,7 +1705,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 095.",
     "embed": "https://vidmoly.org/embed-1j1hqma0itij.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/1j1hqma0itij.jpg?gha_thumb=0c57ec3227b22de4"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/1j1hqma0itij.jpg?gha_thumb=0c57ec3227b22de4",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-096",
@@ -1533,7 +1723,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 096.",
     "embed": "https://vidmoly.org/embed-wpp7vzrvp39p.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/wpp7vzrvp39p.jpg?gha_thumb=583c000882654e60"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/wpp7vzrvp39p.jpg?gha_thumb=583c000882654e60",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-097",
@@ -1549,7 +1741,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 097.",
     "embed": "https://vidmoly.org/embed-ydrwdtqucptn.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/ydrwdtqucptn.jpg?gha_thumb=6a74af28297bdd2c"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/ydrwdtqucptn.jpg?gha_thumb=6a74af28297bdd2c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-098",
@@ -1565,7 +1759,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 098.",
     "embed": "https://vidmoly.org/embed-l4i0wdm28j3a.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/l4i0wdm28j3a.jpg?gha_thumb=355ee7f7a3e8958c"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/l4i0wdm28j3a.jpg?gha_thumb=355ee7f7a3e8958c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-099",
@@ -1581,7 +1777,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 099.",
     "embed": "https://vidmoly.org/embed-jin6nt2wmyz5.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/jin6nt2wmyz5.jpg?gha_thumb=2df510c6d70cf8b0"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/jin6nt2wmyz5.jpg?gha_thumb=2df510c6d70cf8b0",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-100",
@@ -1597,7 +1795,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 100.",
     "embed": "https://vidmoly.org/embed-jzce6b9n3m0y.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/jzce6b9n3m0y.jpg?gha_thumb=1e0cf0d36350ef8b"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/jzce6b9n3m0y.jpg?gha_thumb=1e0cf0d36350ef8b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-101",
@@ -1613,7 +1813,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 101.",
     "embed": "https://vidmoly.org/embed-3ao0k2bd769v.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/3ao0k2bd769v.jpg?gha_thumb=2cd6dbb8fee27252"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/3ao0k2bd769v.jpg?gha_thumb=2cd6dbb8fee27252",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-102",
@@ -1629,7 +1831,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 102.",
     "embed": "https://vidmoly.org/embed-rr5ixlu6o9pz.html",
-    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02917/rr5ixlu6o9pz.jpg?gha_thumb=b2482c84b97254eb"
+    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02917/rr5ixlu6o9pz.jpg?gha_thumb=b2482c84b97254eb",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-103",
@@ -1645,7 +1849,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 103.",
     "embed": "https://vidmoly.org/embed-l83tq3yo7vct.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/l83tq3yo7vct.jpg?gha_thumb=5ce69f373af6c61b"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/l83tq3yo7vct.jpg?gha_thumb=5ce69f373af6c61b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-104",
@@ -1661,7 +1867,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 104.",
     "embed": "https://vidmoly.org/embed-gaqfecvi5kfe.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/gaqfecvi5kfe.jpg?gha_thumb=94e15af2217cefd6"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/gaqfecvi5kfe.jpg?gha_thumb=94e15af2217cefd6",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-105",
@@ -1677,7 +1885,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 105.",
     "embed": "https://vidmoly.org/embed-ae38v19bm6j8.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02917/ae38v19bm6j8.jpg?gha_thumb=0bd49bfe128f3128"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02917/ae38v19bm6j8.jpg?gha_thumb=0bd49bfe128f3128",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-106",
@@ -1693,7 +1903,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 106.",
     "embed": "https://vidmoly.org/embed-nlehrdco8ybl.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/nlehrdco8ybl.jpg?gha_thumb=0219ae3881ffc6e1"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/nlehrdco8ybl.jpg?gha_thumb=0219ae3881ffc6e1",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-107",
@@ -1709,7 +1921,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 107.",
     "embed": "https://vidmoly.org/embed-glqzec4kye83.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02917/glqzec4kye83.jpg?gha_thumb=7ae98feea3b600c7"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02917/glqzec4kye83.jpg?gha_thumb=7ae98feea3b600c7",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-108",
@@ -1725,7 +1939,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 108.",
     "embed": "https://vidmoly.org/embed-1ewvwygbe507.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02917/1ewvwygbe507.jpg?gha_thumb=51b2ce4b1360216e"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02917/1ewvwygbe507.jpg?gha_thumb=51b2ce4b1360216e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-109",
@@ -1741,7 +1957,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 109.",
     "embed": "https://vidmoly.org/embed-f0pn658kjygt.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02917/f0pn658kjygt.jpg?gha_thumb=422a58d068567f79"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02917/f0pn658kjygt.jpg?gha_thumb=422a58d068567f79",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-110",
@@ -1757,7 +1975,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 110.",
     "embed": "https://vidmoly.org/embed-vwfbsdh6373c.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/vwfbsdh6373c.jpg?gha_thumb=c3ead6a8c4e42fda"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/vwfbsdh6373c.jpg?gha_thumb=c3ead6a8c4e42fda",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-111",
@@ -1773,7 +1993,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 111.",
     "embed": "https://vidmoly.org/embed-dakn6aowwf43.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02917/dakn6aowwf43.jpg?gha_thumb=9d70e5a6cc2f2ccc"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02917/dakn6aowwf43.jpg?gha_thumb=9d70e5a6cc2f2ccc",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-112",
@@ -1789,7 +2011,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 112.",
     "embed": "https://vidmoly.org/embed-wr37qi4hfti6.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02917/wr37qi4hfti6.jpg?gha_thumb=469da8ea22bc3344"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02917/wr37qi4hfti6.jpg?gha_thumb=469da8ea22bc3344",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-113",
@@ -1805,7 +2029,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 113.",
     "embed": "https://vidmoly.org/embed-9i3mjeeyse3s.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/9i3mjeeyse3s.jpg?gha_thumb=39d8834bfdb7a666"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/9i3mjeeyse3s.jpg?gha_thumb=39d8834bfdb7a666",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-114",
@@ -1821,7 +2047,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 114.",
     "embed": "https://vidmoly.org/embed-33oksylat2fz.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02917/33oksylat2fz.jpg?gha_thumb=3ae8119278d8d313"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02917/33oksylat2fz.jpg?gha_thumb=3ae8119278d8d313",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-115",
@@ -1837,7 +2065,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 115.",
     "embed": "https://vidmoly.org/embed-0723hky1fn4l.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02917/0723hky1fn4l.jpg?gha_thumb=8464065b4f9a6a71"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02917/0723hky1fn4l.jpg?gha_thumb=8464065b4f9a6a71",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-116",
@@ -1853,7 +2083,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 116.",
     "embed": "https://vidmoly.org/embed-ygzwvbdkhhez.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02917/ygzwvbdkhhez.jpg?gha_thumb=330c1751e9a40773"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02917/ygzwvbdkhhez.jpg?gha_thumb=330c1751e9a40773",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-117",
@@ -1869,7 +2101,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 117.",
     "embed": "https://vidmoly.org/embed-kx5i4ro0a24s.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/kx5i4ro0a24s.jpg?gha_thumb=15d492fd5a5f7d18"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/kx5i4ro0a24s.jpg?gha_thumb=15d492fd5a5f7d18",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-118",
@@ -1885,7 +2119,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 118.",
     "embed": "https://vidmoly.org/embed-ftfsvfmy3md2.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/ftfsvfmy3md2.jpg?gha_thumb=faf570386a94c126"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/ftfsvfmy3md2.jpg?gha_thumb=faf570386a94c126",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-119",
@@ -1901,7 +2137,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 119.",
     "embed": "https://vidmoly.org/embed-n9gd9ssf5tlc.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02917/n9gd9ssf5tlc.jpg?gha_thumb=72146c3547d8ac5d"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02917/n9gd9ssf5tlc.jpg?gha_thumb=72146c3547d8ac5d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-120",
@@ -1917,7 +2155,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 120.",
     "embed": "https://vidmoly.org/embed-b03awugbkdjv.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02917/b03awugbkdjv.jpg?gha_thumb=cadb649c8c18d0a3"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02917/b03awugbkdjv.jpg?gha_thumb=cadb649c8c18d0a3",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-121",
@@ -1933,7 +2173,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 121.",
     "embed": "https://vidmoly.org/embed-lx0e797ybubs.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/lx0e797ybubs.jpg?gha_thumb=014d0ada96cb4596"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/lx0e797ybubs.jpg?gha_thumb=014d0ada96cb4596",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-122",
@@ -1949,7 +2191,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 122.",
     "embed": "https://vidmoly.org/embed-5j09f2ncxyit.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/5j09f2ncxyit.jpg?gha_thumb=758a382fee44c0e7"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/5j09f2ncxyit.jpg?gha_thumb=758a382fee44c0e7",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-123",
@@ -1965,7 +2209,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 123.",
     "embed": "https://vidmoly.org/embed-rbu14541z543.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/rbu14541z543.jpg?gha_thumb=1e356cf6f3c85e23"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/rbu14541z543.jpg?gha_thumb=1e356cf6f3c85e23",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-124",
@@ -1981,7 +2227,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 124.",
     "embed": "https://vidmoly.org/embed-lubqdmf43ddn.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/lubqdmf43ddn.jpg?gha_thumb=27afa1db2ca6895c"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/lubqdmf43ddn.jpg?gha_thumb=27afa1db2ca6895c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-125",
@@ -1997,7 +2245,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 125.",
     "embed": "https://vidmoly.org/embed-7u8hj78z03j5.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/7u8hj78z03j5.jpg?gha_thumb=f268ef0138a12bf5"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/7u8hj78z03j5.jpg?gha_thumb=f268ef0138a12bf5",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-126",
@@ -2013,7 +2263,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 126.",
     "embed": "https://vidmoly.org/embed-tf8z2hr89qkz.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/tf8z2hr89qkz.jpg?gha_thumb=4d877fe27b0523d5"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/tf8z2hr89qkz.jpg?gha_thumb=4d877fe27b0523d5",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-127",
@@ -2029,7 +2281,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 127.",
     "embed": "https://vidmoly.org/embed-rm9cmoipfe2k.html",
-    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/rm9cmoipfe2k.jpg?gha_thumb=0452a7f02f28ac6f"
+    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/rm9cmoipfe2k.jpg?gha_thumb=0452a7f02f28ac6f",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-128",
@@ -2045,7 +2299,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 128.",
     "embed": "https://vidmoly.org/embed-1fv4clawbasq.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/1fv4clawbasq.jpg?gha_thumb=3490862dd4b5230d"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/1fv4clawbasq.jpg?gha_thumb=3490862dd4b5230d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-129",
@@ -2061,7 +2317,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 129.",
     "embed": "https://vidmoly.org/embed-1pfeu2hqav0b.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/1pfeu2hqav0b.jpg?gha_thumb=238e3f842f87eaf9"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/1pfeu2hqav0b.jpg?gha_thumb=238e3f842f87eaf9",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-130",
@@ -2077,7 +2335,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 130.",
     "embed": "https://vidmoly.org/embed-04au980uqb17.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/04au980uqb17.jpg?gha_thumb=91226ef521abecfa"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/04au980uqb17.jpg?gha_thumb=91226ef521abecfa",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-131",
@@ -2093,7 +2353,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 131.",
     "embed": "https://vidmoly.org/embed-bce3wq37tw02.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/bce3wq37tw02.jpg?gha_thumb=73a26ab3d525b4e7"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/bce3wq37tw02.jpg?gha_thumb=73a26ab3d525b4e7",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-132",
@@ -2109,7 +2371,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 132.",
     "embed": "https://vidmoly.org/embed-3tabpia58mju.html",
-    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/3tabpia58mju.jpg?gha_thumb=8377417c04ef301f"
+    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/3tabpia58mju.jpg?gha_thumb=8377417c04ef301f",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-133",
@@ -2125,7 +2389,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 133.",
     "embed": "https://vidmoly.org/embed-9kp1wqus849u.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/9kp1wqus849u.jpg?gha_thumb=d0673eedd8061e91"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/9kp1wqus849u.jpg?gha_thumb=d0673eedd8061e91",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-134",
@@ -2141,7 +2407,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 134.",
     "embed": "https://vidmoly.org/embed-ys7xc4ngb4us.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/ys7xc4ngb4us.jpg?gha_thumb=b82484660f740d8c"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/ys7xc4ngb4us.jpg?gha_thumb=b82484660f740d8c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-135",
@@ -2157,7 +2425,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 135.",
     "embed": "https://vidmoly.org/embed-w102mn4576w3.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/w102mn4576w3.jpg?gha_thumb=b1126cc667da7278"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/w102mn4576w3.jpg?gha_thumb=b1126cc667da7278",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-136",
@@ -2173,7 +2443,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 136.",
     "embed": "https://vidmoly.org/embed-ihudtecle299.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/ihudtecle299.jpg?gha_thumb=fc155ba7d60ff3af"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/ihudtecle299.jpg?gha_thumb=fc155ba7d60ff3af",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-137",
@@ -2189,7 +2461,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 137.",
     "embed": "https://vidmoly.org/embed-8dzwa9wqlteh.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/8dzwa9wqlteh.jpg?gha_thumb=36d8c5de7fc55c62"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/8dzwa9wqlteh.jpg?gha_thumb=36d8c5de7fc55c62",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-138",
@@ -2205,7 +2479,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 138.",
     "embed": "https://vidmoly.org/embed-w3vlbiu6z9yd.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/w3vlbiu6z9yd.jpg?gha_thumb=4f6147ba0512259e"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/w3vlbiu6z9yd.jpg?gha_thumb=4f6147ba0512259e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-139",
@@ -2221,7 +2497,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 139.",
     "embed": "https://vidmoly.org/embed-6b5i6uhh5g64.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/6b5i6uhh5g64.jpg?gha_thumb=035465cc0c6eeebf"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/6b5i6uhh5g64.jpg?gha_thumb=035465cc0c6eeebf",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-140",
@@ -2237,7 +2515,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 140.",
     "embed": "https://vidmoly.org/embed-7700o9w32egg.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/7700o9w32egg.jpg?gha_thumb=96fe27d62c7b149a"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/7700o9w32egg.jpg?gha_thumb=96fe27d62c7b149a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-141",
@@ -2253,7 +2533,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 141.",
     "embed": "https://vidmoly.org/embed-fcu4q7degwl9.html",
-    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/fcu4q7degwl9.jpg?gha_thumb=db4feea1ec6f03b7"
+    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/fcu4q7degwl9.jpg?gha_thumb=db4feea1ec6f03b7",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-142",
@@ -2269,7 +2551,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 142.",
     "embed": "https://vidmoly.org/embed-252lcy8gwsrv.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/252lcy8gwsrv.jpg?gha_thumb=535d7d7bd205e36a"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/252lcy8gwsrv.jpg?gha_thumb=535d7d7bd205e36a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-143",
@@ -2285,7 +2569,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 143.",
     "embed": "https://vidmoly.org/embed-dbw07mt0rvyw.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/dbw07mt0rvyw.jpg?gha_thumb=a55ea20a43f4cae3"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/dbw07mt0rvyw.jpg?gha_thumb=a55ea20a43f4cae3",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-144",
@@ -2301,7 +2587,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 144.",
     "embed": "https://vidmoly.org/embed-oj94bvdxklyr.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/oj94bvdxklyr.jpg?gha_thumb=54414e125d9fae32"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/oj94bvdxklyr.jpg?gha_thumb=54414e125d9fae32",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-145",
@@ -2317,7 +2605,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 145.",
     "embed": "https://vidmoly.org/embed-5ts35oqmysij.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/5ts35oqmysij.jpg?gha_thumb=34ade80519ac30b0"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/5ts35oqmysij.jpg?gha_thumb=34ade80519ac30b0",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-146",
@@ -2333,7 +2623,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 146.",
     "embed": "https://vidmoly.org/embed-s6e5fplwwbmg.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/s6e5fplwwbmg.jpg?gha_thumb=e2175ed44adab34c"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/s6e5fplwwbmg.jpg?gha_thumb=e2175ed44adab34c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-147",
@@ -2349,7 +2641,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 147.",
     "embed": "https://vidmoly.org/embed-p7uhzbtjrgjp.html",
-    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/p7uhzbtjrgjp.jpg?gha_thumb=34e16a08d55bde0b"
+    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/p7uhzbtjrgjp.jpg?gha_thumb=34e16a08d55bde0b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-148",
@@ -2365,7 +2659,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 148.",
     "embed": "https://vidmoly.org/embed-7t6v698ex454.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/7t6v698ex454.jpg?gha_thumb=61ee5dfd36bdee4c"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/7t6v698ex454.jpg?gha_thumb=61ee5dfd36bdee4c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-149",
@@ -2381,7 +2677,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 149.",
     "embed": "https://vidmoly.org/embed-oa6n07lwzlia.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/oa6n07lwzlia.jpg?gha_thumb=6aac06c3feae6433"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/oa6n07lwzlia.jpg?gha_thumb=6aac06c3feae6433",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-150",
@@ -2397,7 +2695,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 150.",
     "embed": "https://vidmoly.org/embed-qaylgml6k2dk.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/qaylgml6k2dk.jpg?gha_thumb=6690ea8b07a7cea2"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/qaylgml6k2dk.jpg?gha_thumb=6690ea8b07a7cea2",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-151",
@@ -2413,7 +2713,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 151.",
     "embed": "https://vidmoly.org/embed-ia0c9twv3t1y.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/ia0c9twv3t1y.jpg?gha_thumb=8348f52586175b98"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/ia0c9twv3t1y.jpg?gha_thumb=8348f52586175b98",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-152",
@@ -2429,7 +2731,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 152.",
     "embed": "https://vidmoly.org/embed-u0ah3qywnqxq.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/u0ah3qywnqxq.jpg?gha_thumb=81e36c68e159e3db"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/u0ah3qywnqxq.jpg?gha_thumb=81e36c68e159e3db",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-153",
@@ -2445,7 +2749,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 153.",
     "embed": "https://vidmoly.org/embed-4nim3ngjsx5i.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/4nim3ngjsx5i.jpg?gha_thumb=0673d646ccf42b5a"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/4nim3ngjsx5i.jpg?gha_thumb=0673d646ccf42b5a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-154",
@@ -2461,7 +2767,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 154.",
     "embed": "https://vidmoly.org/embed-vnxwxnxygc92.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/vnxwxnxygc92.jpg?gha_thumb=4d29769cac3ec64f"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/vnxwxnxygc92.jpg?gha_thumb=4d29769cac3ec64f",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-155",
@@ -2477,7 +2785,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 155.",
     "embed": "https://vidmoly.org/embed-lxgo17u4ffg4.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/lxgo17u4ffg4.jpg?gha_thumb=cb7bef619c0bc9af"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/lxgo17u4ffg4.jpg?gha_thumb=cb7bef619c0bc9af",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-156",
@@ -2493,7 +2803,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 156.",
     "embed": "https://vidmoly.org/embed-jq21c8h7hkf0.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/jq21c8h7hkf0.jpg?gha_thumb=4a6b19f854f62e77"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/jq21c8h7hkf0.jpg?gha_thumb=4a6b19f854f62e77",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-157",
@@ -2509,7 +2821,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 157.",
     "embed": "https://vidmoly.org/embed-pqxqcsr4cwm4.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/pqxqcsr4cwm4.jpg?gha_thumb=3537fe02daaad4c7"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/pqxqcsr4cwm4.jpg?gha_thumb=3537fe02daaad4c7",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-158",
@@ -2525,7 +2839,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 158.",
     "embed": "https://vidmoly.org/embed-qaqfzbf73lbv.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/qaqfzbf73lbv.jpg?gha_thumb=4d3608fc5ec34987"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/qaqfzbf73lbv.jpg?gha_thumb=4d3608fc5ec34987",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-159",
@@ -2541,7 +2857,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 159.",
     "embed": "https://vidmoly.org/embed-n2vi67xwzmkt.html",
-    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/n2vi67xwzmkt.jpg?gha_thumb=1c8d17866a592e63"
+    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/n2vi67xwzmkt.jpg?gha_thumb=1c8d17866a592e63",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-160",
@@ -2557,7 +2875,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 160.",
     "embed": "https://vidmoly.org/embed-3qaxdnbae89f.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/3qaxdnbae89f.jpg?gha_thumb=de8d5eaf71cce5f5"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/3qaxdnbae89f.jpg?gha_thumb=de8d5eaf71cce5f5",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-161",
@@ -2573,7 +2893,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 161.",
     "embed": "https://vidmoly.org/embed-h6fiz3280tdu.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/h6fiz3280tdu.jpg?gha_thumb=221557bccb9af284"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/h6fiz3280tdu.jpg?gha_thumb=221557bccb9af284",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-162",
@@ -2589,7 +2911,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 162.",
     "embed": "https://vidmoly.org/embed-iqcr9tero3mq.html",
-    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/iqcr9tero3mq.jpg?gha_thumb=d829222e7ab9be29"
+    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/iqcr9tero3mq.jpg?gha_thumb=d829222e7ab9be29",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-163",
@@ -2605,7 +2929,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 163.",
     "embed": "https://vidmoly.org/embed-5l55ovkcnhux.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/5l55ovkcnhux.jpg?gha_thumb=605213554391f288"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/5l55ovkcnhux.jpg?gha_thumb=605213554391f288",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-164",
@@ -2621,7 +2947,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 164.",
     "embed": "https://vidmoly.org/embed-euy3crdpjk8j.html",
-    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/euy3crdpjk8j.jpg?gha_thumb=f5749f1b45d30ac1"
+    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/euy3crdpjk8j.jpg?gha_thumb=f5749f1b45d30ac1",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-165",
@@ -2637,7 +2965,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 165.",
     "embed": "https://vidmoly.org/embed-yy28q4jtdfu7.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/yy28q4jtdfu7.jpg?gha_thumb=0b05034eb0999148"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/yy28q4jtdfu7.jpg?gha_thumb=0b05034eb0999148",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-166",
@@ -2653,7 +2983,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 166.",
     "embed": "https://vidmoly.org/embed-4m82skmk8zkk.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/4m82skmk8zkk.jpg?gha_thumb=a0fed4ca8d8347e1"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/4m82skmk8zkk.jpg?gha_thumb=a0fed4ca8d8347e1",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-167",
@@ -2669,7 +3001,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 167.",
     "embed": "https://vidmoly.org/embed-ncza6ujaia5u.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/ncza6ujaia5u.jpg?gha_thumb=3d10bfa134cee274"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/ncza6ujaia5u.jpg?gha_thumb=3d10bfa134cee274",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-168",
@@ -2685,7 +3019,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 168.",
     "embed": "https://vidmoly.org/embed-e0qbbryqrm4w.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/e0qbbryqrm4w.jpg?gha_thumb=5e3929d07b77ca56"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/e0qbbryqrm4w.jpg?gha_thumb=5e3929d07b77ca56",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-169",
@@ -2701,7 +3037,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 169.",
     "embed": "https://vidmoly.org/embed-hagefhuvktq5.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/hagefhuvktq5.jpg?gha_thumb=2da4db31b3c6bb83"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/hagefhuvktq5.jpg?gha_thumb=2da4db31b3c6bb83",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-170",
@@ -2717,7 +3055,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 170.",
     "embed": "https://vidmoly.org/embed-oeem4dlpsxnk.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/oeem4dlpsxnk.jpg?gha_thumb=ca2f939d6e2cfac8"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02914/oeem4dlpsxnk.jpg?gha_thumb=ca2f939d6e2cfac8",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-171",
@@ -2733,7 +3073,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 171.",
     "embed": "https://vidmoly.org/embed-9cg72udv2izi.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/9cg72udv2izi.jpg?gha_thumb=4116c9e587c78d00"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/9cg72udv2izi.jpg?gha_thumb=4116c9e587c78d00",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-172",
@@ -2749,7 +3091,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 172.",
     "embed": "https://vidmoly.org/embed-mqlyn1ric90g.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/mqlyn1ric90g.jpg?gha_thumb=0e782d3f4da96fee"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/mqlyn1ric90g.jpg?gha_thumb=0e782d3f4da96fee",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-173",
@@ -2765,7 +3109,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 173.",
     "embed": "https://vidmoly.org/embed-5q3h6lmd2muk.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/5q3h6lmd2muk.jpg?gha_thumb=32512f41ce3f15fd"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/5q3h6lmd2muk.jpg?gha_thumb=32512f41ce3f15fd",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-174",
@@ -2781,7 +3127,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 174.",
     "embed": "https://vidmoly.org/embed-tdmpascz4kmx.html",
-    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/03/02914/tdmpascz4kmx.jpg?gha_thumb=ec387a8dd29dc290"
+    "thumbnail": "https://box-1643-d1.vmeas.cloud/i/03/02914/tdmpascz4kmx.jpg?gha_thumb=ec387a8dd29dc290",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-175",
@@ -2797,7 +3145,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 175.",
     "embed": "https://vidmoly.org/embed-5mhebap3584q.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/5mhebap3584q.jpg?gha_thumb=a4e8dacbd7b8d98e"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/5mhebap3584q.jpg?gha_thumb=a4e8dacbd7b8d98e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-176",
@@ -2813,7 +3163,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 176.",
     "embed": "https://vidmoly.org/embed-9h4v9ymx5l05.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/9h4v9ymx5l05.jpg?gha_thumb=6bd84645ae56bdb5"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/9h4v9ymx5l05.jpg?gha_thumb=6bd84645ae56bdb5",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-177",
@@ -2829,7 +3181,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 177.",
     "embed": "https://vidmoly.org/embed-ph5jplnmofhs.html",
-    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/ph5jplnmofhs.jpg?gha_thumb=ad973bb855ce69f6"
+    "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/ph5jplnmofhs.jpg?gha_thumb=ad973bb855ce69f6",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-178",
@@ -2845,7 +3199,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 178.",
     "embed": "https://vidmoly.org/embed-3v3gmbo9lh3b.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/3v3gmbo9lh3b.jpg?gha_thumb=10fa4a2c78588a92"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/3v3gmbo9lh3b.jpg?gha_thumb=10fa4a2c78588a92",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-179",
@@ -2861,7 +3217,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 179.",
     "embed": "https://vidmoly.org/embed-iubmi14vem7k.html",
-    "thumbnail": "https://box-1525-e.vmeas.cloud/i/03/02914/iubmi14vem7k.jpg?gha_thumb=7048d4e577bd123a"
+    "thumbnail": "https://box-1525-e.vmeas.cloud/i/03/02914/iubmi14vem7k.jpg?gha_thumb=7048d4e577bd123a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-180",
@@ -2877,7 +3235,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 180.",
     "embed": "https://vidmoly.org/embed-c7r02zajjwn5.html",
-    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/c7r02zajjwn5.jpg?gha_thumb=3a8c85ebf477adf6"
+    "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/c7r02zajjwn5.jpg?gha_thumb=3a8c85ebf477adf6",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-181",
@@ -2893,7 +3253,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 181.",
     "embed": "https://vidmoly.org/embed-yibmozw8obp9.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/yibmozw8obp9.jpg?gha_thumb=ee5d6c8ff40eb2b1"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/yibmozw8obp9.jpg?gha_thumb=ee5d6c8ff40eb2b1",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-182",
@@ -2909,7 +3271,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 182.",
     "embed": "https://vidmoly.org/embed-6726ssx7d0n4.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/6726ssx7d0n4.jpg?gha_thumb=f2265b9541c0f0d3"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/6726ssx7d0n4.jpg?gha_thumb=f2265b9541c0f0d3",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-183",
@@ -2925,7 +3289,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 183.",
     "embed": "https://vidmoly.org/embed-o1nu4yvuk3pp.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/o1nu4yvuk3pp.jpg?gha_thumb=e641b2b1f3a99ae0"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/o1nu4yvuk3pp.jpg?gha_thumb=e641b2b1f3a99ae0",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-184",
@@ -2941,7 +3307,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 184.",
     "embed": "https://vidmoly.org/embed-6eeyqrvhv2c8.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/6eeyqrvhv2c8.jpg?gha_thumb=ceaeec0c3d4aac3b"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/6eeyqrvhv2c8.jpg?gha_thumb=ceaeec0c3d4aac3b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-185",
@@ -2957,7 +3325,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 185.",
     "embed": "https://vidmoly.org/embed-vq1zbj8wn278.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/vq1zbj8wn278.jpg?gha_thumb=2fa8645dccec40b1"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/vq1zbj8wn278.jpg?gha_thumb=2fa8645dccec40b1",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-186",
@@ -2973,7 +3343,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 186.",
     "embed": "https://vidmoly.org/embed-0v0xm5lyjoan.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/0v0xm5lyjoan.jpg?gha_thumb=ec967d178654433b"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/0v0xm5lyjoan.jpg?gha_thumb=ec967d178654433b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-187",
@@ -2989,7 +3361,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 187.",
     "embed": "https://vidmoly.org/embed-sz9479he9qos.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/sz9479he9qos.jpg?gha_thumb=1b7ed4bcaf1636c6"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/sz9479he9qos.jpg?gha_thumb=1b7ed4bcaf1636c6",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-188",
@@ -3005,7 +3379,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 188.",
     "embed": "https://vidmoly.org/embed-ttbgvib3nrxf.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/ttbgvib3nrxf.jpg?gha_thumb=0b6b4952ce0d4d8f"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/ttbgvib3nrxf.jpg?gha_thumb=0b6b4952ce0d4d8f",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-189",
@@ -3021,7 +3397,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 189.",
     "embed": "https://vidmoly.org/embed-uzajeuw15us7.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/uzajeuw15us7.jpg?gha_thumb=51d9a6d2d74cc57a"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/uzajeuw15us7.jpg?gha_thumb=51d9a6d2d74cc57a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-190",
@@ -3037,7 +3415,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 190.",
     "embed": "https://vidmoly.org/embed-5dtlh6f0szm0.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/5dtlh6f0szm0.jpg?gha_thumb=140b6ff65e2a8e1b"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/5dtlh6f0szm0.jpg?gha_thumb=140b6ff65e2a8e1b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-191",
@@ -3053,7 +3433,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 191.",
     "embed": "https://vidmoly.org/embed-ywd4f68dm3ba.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/ywd4f68dm3ba.jpg?gha_thumb=8ea67d685dae5400"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/ywd4f68dm3ba.jpg?gha_thumb=8ea67d685dae5400",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-192",
@@ -3069,7 +3451,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 192.",
     "embed": "https://vidmoly.org/embed-64m5pkpy01ce.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/64m5pkpy01ce.jpg?gha_thumb=f61cd3e89c6bd482"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/64m5pkpy01ce.jpg?gha_thumb=f61cd3e89c6bd482",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-193",
@@ -3085,7 +3469,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 193.",
     "embed": "https://vidmoly.org/embed-fktayvwto8bc.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/fktayvwto8bc.jpg?gha_thumb=1c9a03d4125bfa79"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/fktayvwto8bc.jpg?gha_thumb=1c9a03d4125bfa79",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-194",
@@ -3101,7 +3487,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 194.",
     "embed": "https://vidmoly.org/embed-520ubm14uozv.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/520ubm14uozv.jpg?gha_thumb=4dbe10caa743bfd9"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/520ubm14uozv.jpg?gha_thumb=4dbe10caa743bfd9",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-195",
@@ -3117,7 +3505,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 195.",
     "embed": "https://vidmoly.org/embed-808doa9z2r3m.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/808doa9z2r3m.jpg?gha_thumb=13b91c4825842972"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/808doa9z2r3m.jpg?gha_thumb=13b91c4825842972",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-196",
@@ -3133,7 +3523,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 196.",
     "embed": "https://vidmoly.org/embed-hy9ez37cg73j.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/hy9ez37cg73j.jpg?gha_thumb=ebc91538eb363802"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/hy9ez37cg73j.jpg?gha_thumb=ebc91538eb363802",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-197",
@@ -3149,7 +3541,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 197.",
     "embed": "https://vidmoly.org/embed-zteuzqq0qdmz.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/zteuzqq0qdmz.jpg?gha_thumb=bf7283472b6de285"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/zteuzqq0qdmz.jpg?gha_thumb=bf7283472b6de285",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-198",
@@ -3165,7 +3559,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 198.",
     "embed": "https://vidmoly.org/embed-45u23avv4hli.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/45u23avv4hli.jpg?gha_thumb=44214357b941dc1a"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/45u23avv4hli.jpg?gha_thumb=44214357b941dc1a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-199",
@@ -3181,7 +3577,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 199.",
     "embed": "https://vidmoly.org/embed-3otv3kmzcu8a.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/3otv3kmzcu8a.jpg?gha_thumb=e351fd0ee60b9f1c"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/3otv3kmzcu8a.jpg?gha_thumb=e351fd0ee60b9f1c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-200",
@@ -3197,7 +3595,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 200.",
     "embed": "https://vidmoly.org/embed-8o2ap1cohosq.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/8o2ap1cohosq.jpg?gha_thumb=811832a47cce816e"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/8o2ap1cohosq.jpg?gha_thumb=811832a47cce816e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-201",
@@ -3213,7 +3613,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 201.",
     "embed": "https://vidmoly.org/embed-u6if4ieylw5y.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/u6if4ieylw5y.jpg?gha_thumb=07a53b118ffa22fe"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/u6if4ieylw5y.jpg?gha_thumb=07a53b118ffa22fe",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-202",
@@ -3229,7 +3631,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 202.",
     "embed": "https://vidmoly.org/embed-zzv644alx02f.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/zzv644alx02f.jpg?gha_thumb=c7ede89cd821f96c"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/zzv644alx02f.jpg?gha_thumb=c7ede89cd821f96c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-203",
@@ -3245,7 +3649,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 203.",
     "embed": "https://vidmoly.org/embed-jvzgala3ul5f.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/jvzgala3ul5f.jpg?gha_thumb=af38f44100ddb425"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/jvzgala3ul5f.jpg?gha_thumb=af38f44100ddb425",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-204",
@@ -3261,7 +3667,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 204.",
     "embed": "https://vidmoly.org/embed-1kfzbyk0j77b.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/1kfzbyk0j77b.jpg?gha_thumb=e62cabae06cda413"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/1kfzbyk0j77b.jpg?gha_thumb=e62cabae06cda413",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-205",
@@ -3277,7 +3685,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 205.",
     "embed": "https://vidmoly.org/embed-60538iorj6xf.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/60538iorj6xf.jpg?gha_thumb=97d5c5aa274a15cd"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/60538iorj6xf.jpg?gha_thumb=97d5c5aa274a15cd",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-206",
@@ -3293,7 +3703,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 206.",
     "embed": "https://vidmoly.org/embed-j3mgb46es0xt.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/j3mgb46es0xt.jpg?gha_thumb=c066e44b69ccf6e2"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/j3mgb46es0xt.jpg?gha_thumb=c066e44b69ccf6e2",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-207",
@@ -3309,7 +3721,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 207.",
     "embed": "https://vidmoly.org/embed-ppjd5d7rkpui.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/ppjd5d7rkpui.jpg?gha_thumb=37cf34ae7e5d7b73"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/ppjd5d7rkpui.jpg?gha_thumb=37cf34ae7e5d7b73",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-208",
@@ -3325,7 +3739,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 208.",
     "embed": "https://vidmoly.org/embed-564hhponipno.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/564hhponipno.jpg?gha_thumb=714f2a44faed8e84"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/564hhponipno.jpg?gha_thumb=714f2a44faed8e84",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-209",
@@ -3341,7 +3757,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 209.",
     "embed": "https://vidmoly.org/embed-j99uo4qg62yh.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/j99uo4qg62yh.jpg?gha_thumb=101ca933b0a50086"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/j99uo4qg62yh.jpg?gha_thumb=101ca933b0a50086",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-210",
@@ -3357,7 +3775,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 210.",
     "embed": "https://vidmoly.org/embed-v4rux508tfib.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/v4rux508tfib.jpg?gha_thumb=3a2258ff827841bf"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/v4rux508tfib.jpg?gha_thumb=3a2258ff827841bf",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-211",
@@ -3373,7 +3793,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 211.",
     "embed": "https://vidmoly.org/embed-fer3mtklpwlt.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/fer3mtklpwlt.jpg?gha_thumb=a0c52a6cb2cc7c09"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/fer3mtklpwlt.jpg?gha_thumb=a0c52a6cb2cc7c09",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-212",
@@ -3389,7 +3811,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 212.",
     "embed": "https://vidmoly.org/embed-1gv8gmc3beoq.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/1gv8gmc3beoq.jpg?gha_thumb=ea793a4c1524221a"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/1gv8gmc3beoq.jpg?gha_thumb=ea793a4c1524221a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-213",
@@ -3405,7 +3829,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 213.",
     "embed": "https://vidmoly.org/embed-pc9vl2j03tfu.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/pc9vl2j03tfu.jpg?gha_thumb=930474345701e10d"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/pc9vl2j03tfu.jpg?gha_thumb=930474345701e10d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-214",
@@ -3421,7 +3847,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 214.",
     "embed": "https://vidmoly.org/embed-wv2nknns1io7.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/wv2nknns1io7.jpg?gha_thumb=9d9cebde606d4787"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/wv2nknns1io7.jpg?gha_thumb=9d9cebde606d4787",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-215",
@@ -3437,7 +3865,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 215.",
     "embed": "https://vidmoly.org/embed-dlmpzfh9b33x.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/dlmpzfh9b33x.jpg?gha_thumb=55ac8fa41219a858"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/dlmpzfh9b33x.jpg?gha_thumb=55ac8fa41219a858",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-216",
@@ -3453,7 +3883,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 216.",
     "embed": "https://vidmoly.org/embed-lgquu0hp9xdz.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/lgquu0hp9xdz.jpg?gha_thumb=1d90be0ee51887d2"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/lgquu0hp9xdz.jpg?gha_thumb=1d90be0ee51887d2",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-217",
@@ -3469,7 +3901,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 217.",
     "embed": "https://vidmoly.org/embed-bf42zgk7htzs.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/bf42zgk7htzs.jpg?gha_thumb=650f56b214cabba2"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/bf42zgk7htzs.jpg?gha_thumb=650f56b214cabba2",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-218",
@@ -3485,7 +3919,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 218.",
     "embed": "https://vidmoly.org/embed-cskc5i3o6kb2.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/cskc5i3o6kb2.jpg?gha_thumb=9b8f36c64043e42d"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/cskc5i3o6kb2.jpg?gha_thumb=9b8f36c64043e42d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-219",
@@ -3501,7 +3937,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 219.",
     "embed": "https://vidmoly.org/embed-cxegwbbz7gt7.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/cxegwbbz7gt7.jpg?gha_thumb=d2ced0cedf205455"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/cxegwbbz7gt7.jpg?gha_thumb=d2ced0cedf205455",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-220",
@@ -3517,7 +3955,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 220.",
     "embed": "https://vidmoly.org/embed-w398asgfojmq.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/w398asgfojmq.jpg?gha_thumb=e143b97fc3b9b433"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/w398asgfojmq.jpg?gha_thumb=e143b97fc3b9b433",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-221",
@@ -3533,7 +3973,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 221.",
     "embed": "https://vidmoly.org/embed-c7qjs7gwqcbo.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/c7qjs7gwqcbo.jpg?gha_thumb=d3edd7e5302c9f9e"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/c7qjs7gwqcbo.jpg?gha_thumb=d3edd7e5302c9f9e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-222",
@@ -3549,7 +3991,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 222.",
     "embed": "https://vidmoly.org/embed-15ve8sfad020.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/15ve8sfad020.jpg?gha_thumb=b47bc7a2062d0b4b"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/15ve8sfad020.jpg?gha_thumb=b47bc7a2062d0b4b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-223",
@@ -3565,7 +4009,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 223.",
     "embed": "https://vidmoly.org/embed-m4d0tes8ydoy.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/m4d0tes8ydoy.jpg?gha_thumb=342d7ba95371ee9d"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/m4d0tes8ydoy.jpg?gha_thumb=342d7ba95371ee9d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-224",
@@ -3581,7 +4027,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 224.",
     "embed": "https://vidmoly.org/embed-z1w6wezxo8w1.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/z1w6wezxo8w1.jpg?gha_thumb=e34b4979e1ef0b2c"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/z1w6wezxo8w1.jpg?gha_thumb=e34b4979e1ef0b2c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-225",
@@ -3597,7 +4045,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 225.",
     "embed": "https://vidmoly.org/embed-4fz2bybd9q8r.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/4fz2bybd9q8r.jpg?gha_thumb=377c1b61589e67ce"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/4fz2bybd9q8r.jpg?gha_thumb=377c1b61589e67ce",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-226",
@@ -3613,7 +4063,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 226.",
     "embed": "https://vidmoly.org/embed-fgequyrawn86.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/fgequyrawn86.jpg?gha_thumb=2758d6a1c64ac5c8"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/fgequyrawn86.jpg?gha_thumb=2758d6a1c64ac5c8",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-227",
@@ -3629,7 +4081,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 227.",
     "embed": "https://vidmoly.org/embed-x0bu8d0anhog.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/x0bu8d0anhog.jpg?gha_thumb=d0015051a280035b"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/x0bu8d0anhog.jpg?gha_thumb=d0015051a280035b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-228",
@@ -3645,7 +4099,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 228.",
     "embed": "https://vidmoly.org/embed-q4gcvj8k3q5a.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/q4gcvj8k3q5a.jpg?gha_thumb=628ae7c945b208a1"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/q4gcvj8k3q5a.jpg?gha_thumb=628ae7c945b208a1",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-229",
@@ -3661,7 +4117,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 229.",
     "embed": "https://vidmoly.org/embed-uqlg4hq0r9wx.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/uqlg4hq0r9wx.jpg?gha_thumb=cff9cc539a341e25"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/uqlg4hq0r9wx.jpg?gha_thumb=cff9cc539a341e25",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-230",
@@ -3677,7 +4135,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 230.",
     "embed": "https://vidmoly.org/embed-fx8i9w3z7c2d.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/fx8i9w3z7c2d.jpg?gha_thumb=d8b80a7689c486ed"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/fx8i9w3z7c2d.jpg?gha_thumb=d8b80a7689c486ed",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-231",
@@ -3693,7 +4153,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 231.",
     "embed": "https://vidmoly.org/embed-0a77im5yfv2j.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/0a77im5yfv2j.jpg?gha_thumb=65e774cdee320c9f"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/0a77im5yfv2j.jpg?gha_thumb=65e774cdee320c9f",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-232",
@@ -3709,7 +4171,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 232.",
     "embed": "https://vidmoly.org/embed-72gq5bctjlpy.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/72gq5bctjlpy.jpg?gha_thumb=7e419d50680fcff8"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/72gq5bctjlpy.jpg?gha_thumb=7e419d50680fcff8",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-233",
@@ -3725,7 +4189,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 233.",
     "embed": "https://vidmoly.org/embed-80bs82hz2qtj.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/80bs82hz2qtj.jpg?gha_thumb=8afff13f688f5e09"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/80bs82hz2qtj.jpg?gha_thumb=8afff13f688f5e09",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-234",
@@ -3741,7 +4207,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 234.",
     "embed": "https://vidmoly.org/embed-5yd8qvrgwjpq.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02918/5yd8qvrgwjpq.jpg?gha_thumb=df3b3f5e1f1f1312"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02918/5yd8qvrgwjpq.jpg?gha_thumb=df3b3f5e1f1f1312",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-235",
@@ -3757,7 +4225,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 235.",
     "embed": "https://vidmoly.org/embed-fj65ybqrhk4x.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/fj65ybqrhk4x.jpg?gha_thumb=1e71365122d1aad1"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/fj65ybqrhk4x.jpg?gha_thumb=1e71365122d1aad1",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-236",
@@ -3773,7 +4243,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 236.",
     "embed": "https://vidmoly.org/embed-sy6lb8hx76e4.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/sy6lb8hx76e4.jpg?gha_thumb=1ef558df17ab1287"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/sy6lb8hx76e4.jpg?gha_thumb=1ef558df17ab1287",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-237",
@@ -3789,7 +4261,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 237.",
     "embed": "https://vidmoly.org/embed-rxrqt7eny93c.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/rxrqt7eny93c.jpg?gha_thumb=0e7801416ad4ba6c"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/rxrqt7eny93c.jpg?gha_thumb=0e7801416ad4ba6c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-238",
@@ -3805,7 +4279,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 238.",
     "embed": "https://vidmoly.org/embed-9f7wd41law1k.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/9f7wd41law1k.jpg?gha_thumb=3d0d52dbae27de97"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/9f7wd41law1k.jpg?gha_thumb=3d0d52dbae27de97",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-239",
@@ -3821,7 +4297,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 239.",
     "embed": "https://vidmoly.org/embed-jp3awgc1x8xw.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/jp3awgc1x8xw.jpg?gha_thumb=726a59e53ea115ad"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/jp3awgc1x8xw.jpg?gha_thumb=726a59e53ea115ad",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-240",
@@ -3837,7 +4315,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 240.",
     "embed": "https://vidmoly.org/embed-no9zzixcapbv.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/no9zzixcapbv.jpg?gha_thumb=205573bdd2fd8767"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/no9zzixcapbv.jpg?gha_thumb=205573bdd2fd8767",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-241",
@@ -3853,7 +4333,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 241.",
     "embed": "https://vidmoly.org/embed-74c619fha5uo.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/74c619fha5uo.jpg?gha_thumb=de4113837c2dfa02"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/74c619fha5uo.jpg?gha_thumb=de4113837c2dfa02",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-242",
@@ -3869,7 +4351,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 242.",
     "embed": "https://vidmoly.org/embed-yutb11q7q57n.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/yutb11q7q57n.jpg?gha_thumb=ea28f20e2983abbb"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/yutb11q7q57n.jpg?gha_thumb=ea28f20e2983abbb",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-243",
@@ -3885,7 +4369,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 243.",
     "embed": "https://vidmoly.org/embed-jg0n7z0sag7e.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/jg0n7z0sag7e.jpg?gha_thumb=9f9db7ee7f3d890c"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/jg0n7z0sag7e.jpg?gha_thumb=9f9db7ee7f3d890c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-244",
@@ -3901,7 +4387,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 244.",
     "embed": "https://vidmoly.org/embed-717zo0dy69n9.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/717zo0dy69n9.jpg?gha_thumb=b8887b6490cd3922"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/717zo0dy69n9.jpg?gha_thumb=b8887b6490cd3922",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-245",
@@ -3917,7 +4405,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 245.",
     "embed": "https://vidmoly.org/embed-82ltjpp2gblp.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/82ltjpp2gblp.jpg?gha_thumb=8e9bd47dfc45dce1"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/82ltjpp2gblp.jpg?gha_thumb=8e9bd47dfc45dce1",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-246",
@@ -3933,7 +4423,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 246.",
     "embed": "https://vidmoly.org/embed-3z7f6bt3kent.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/3z7f6bt3kent.jpg?gha_thumb=c5443d535c495ae4"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/3z7f6bt3kent.jpg?gha_thumb=c5443d535c495ae4",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-247",
@@ -3949,7 +4441,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 247.",
     "embed": "https://vidmoly.org/embed-hp4o9s8kju2n.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/hp4o9s8kju2n.jpg?gha_thumb=2a27c8264ae3b64c"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/hp4o9s8kju2n.jpg?gha_thumb=2a27c8264ae3b64c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-248",
@@ -3965,7 +4459,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 248.",
     "embed": "https://vidmoly.org/embed-ja2gk4pp8eyo.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/ja2gk4pp8eyo.jpg?gha_thumb=abcd549a0db6f32f"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/ja2gk4pp8eyo.jpg?gha_thumb=abcd549a0db6f32f",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-249",
@@ -3981,7 +4477,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 249.",
     "embed": "https://vidmoly.org/embed-a3wpvrjf9p2w.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/a3wpvrjf9p2w.jpg?gha_thumb=eccde2294ddef96d"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/a3wpvrjf9p2w.jpg?gha_thumb=eccde2294ddef96d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-250",
@@ -3997,7 +4495,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 250.",
     "embed": "https://vidmoly.org/embed-2k0m0yvoxslc.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/2k0m0yvoxslc.jpg?gha_thumb=4010d5c22a14ecbd"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/2k0m0yvoxslc.jpg?gha_thumb=4010d5c22a14ecbd",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-251",
@@ -4013,7 +4513,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 251.",
     "embed": "https://vidmoly.org/embed-0edz32qwp5z6.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/0edz32qwp5z6.jpg?gha_thumb=b44ea13b54f4cfa1"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/0edz32qwp5z6.jpg?gha_thumb=b44ea13b54f4cfa1",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-252",
@@ -4029,7 +4531,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 252.",
     "embed": "https://vidmoly.org/embed-yghyezwnolc8.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02918/yghyezwnolc8.jpg?gha_thumb=1e4a3dc9f9789972"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02918/yghyezwnolc8.jpg?gha_thumb=1e4a3dc9f9789972",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-253",
@@ -4045,7 +4549,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 253.",
     "embed": "https://vidmoly.org/embed-d7xr0981643m.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/d7xr0981643m.jpg?gha_thumb=c661c2353c774256"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/d7xr0981643m.jpg?gha_thumb=c661c2353c774256",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-254",
@@ -4061,7 +4567,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 254.",
     "embed": "https://vidmoly.org/embed-f4fwgqjdaegl.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/f4fwgqjdaegl.jpg?gha_thumb=a45fe1eeb5c61281"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/f4fwgqjdaegl.jpg?gha_thumb=a45fe1eeb5c61281",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-255",
@@ -4077,7 +4585,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 255.",
     "embed": "https://vidmoly.org/embed-6n090z5ubuh1.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/6n090z5ubuh1.jpg?gha_thumb=3382aaad431c361c"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/6n090z5ubuh1.jpg?gha_thumb=3382aaad431c361c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-256",
@@ -4093,7 +4603,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 256.",
     "embed": "https://vidmoly.org/embed-1tnnvmtguwez.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/1tnnvmtguwez.jpg?gha_thumb=b978cdede45e3c1b"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/1tnnvmtguwez.jpg?gha_thumb=b978cdede45e3c1b",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-257",
@@ -4109,7 +4621,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 257.",
     "embed": "https://vidmoly.org/embed-m7s34vrk9gyk.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/m7s34vrk9gyk.jpg?gha_thumb=3559119a01c79b26"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/m7s34vrk9gyk.jpg?gha_thumb=3559119a01c79b26",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-258",
@@ -4125,7 +4639,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 258.",
     "embed": "https://vidmoly.org/embed-a6gebs1knrke.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/a6gebs1knrke.jpg?gha_thumb=1a178a1a207c231d"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/a6gebs1knrke.jpg?gha_thumb=1a178a1a207c231d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-259",
@@ -4141,7 +4657,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 259.",
     "embed": "https://vidmoly.org/embed-lgbmsstvakjl.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/lgbmsstvakjl.jpg?gha_thumb=49b7f695582f155c"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/lgbmsstvakjl.jpg?gha_thumb=49b7f695582f155c",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-260",
@@ -4157,7 +4675,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 260.",
     "embed": "https://vidmoly.org/embed-umjo3povaokj.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/umjo3povaokj.jpg?gha_thumb=a640371a0db979b2"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/umjo3povaokj.jpg?gha_thumb=a640371a0db979b2",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-261",
@@ -4173,7 +4693,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 261.",
     "embed": "https://vidmoly.org/embed-xh1gw0ngwevh.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/xh1gw0ngwevh.jpg?gha_thumb=4c7ce05e87049d50"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/xh1gw0ngwevh.jpg?gha_thumb=4c7ce05e87049d50",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-262",
@@ -4189,7 +4711,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 262.",
     "embed": "https://vidmoly.org/embed-1doza2mjklxo.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/1doza2mjklxo.jpg?gha_thumb=5b2458abda76bd5e"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/1doza2mjklxo.jpg?gha_thumb=5b2458abda76bd5e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-263",
@@ -4205,7 +4729,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 263.",
     "embed": "https://vidmoly.org/embed-bht038yckaau.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/bht038yckaau.jpg?gha_thumb=0333638015187b51"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/bht038yckaau.jpg?gha_thumb=0333638015187b51",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-264",
@@ -4221,7 +4747,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 264.",
     "embed": "https://vidmoly.org/embed-s3ci1f9ccs2v.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/s3ci1f9ccs2v.jpg?gha_thumb=4f040a474a8a6189"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/s3ci1f9ccs2v.jpg?gha_thumb=4f040a474a8a6189",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-265",
@@ -4237,7 +4765,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 265.",
     "embed": "https://vidmoly.org/embed-0sm32iu8xids.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/0sm32iu8xids.jpg?gha_thumb=093693df33adb917"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/0sm32iu8xids.jpg?gha_thumb=093693df33adb917",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-266",
@@ -4253,7 +4783,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 266.",
     "embed": "https://vidmoly.org/embed-tryr8dhow6pe.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/tryr8dhow6pe.jpg?gha_thumb=42c932f210186603"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/tryr8dhow6pe.jpg?gha_thumb=42c932f210186603",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-267",
@@ -4269,7 +4801,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 267.",
     "embed": "https://vidmoly.org/embed-3gg6lze5fvil.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/3gg6lze5fvil.jpg?gha_thumb=6ea37a0382b80d48"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/3gg6lze5fvil.jpg?gha_thumb=6ea37a0382b80d48",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-268",
@@ -4285,7 +4819,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 268.",
     "embed": "https://vidmoly.org/embed-sak4ku7aqs1z.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/sak4ku7aqs1z.jpg?gha_thumb=287197e390aeacbc"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/sak4ku7aqs1z.jpg?gha_thumb=287197e390aeacbc",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-269",
@@ -4301,7 +4837,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 269.",
     "embed": "https://vidmoly.org/embed-0428idnizu3z.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/0428idnizu3z.jpg?gha_thumb=8e4cc7db569fd403"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/0428idnizu3z.jpg?gha_thumb=8e4cc7db569fd403",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-270",
@@ -4317,7 +4855,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 270.",
     "embed": "https://vidmoly.org/embed-28b2wljuw7m8.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/28b2wljuw7m8.jpg?gha_thumb=43e8963c09d13dc5"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/28b2wljuw7m8.jpg?gha_thumb=43e8963c09d13dc5",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-271",
@@ -4333,7 +4873,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 271.",
     "embed": "https://vidmoly.org/embed-a711g9l9txjg.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/a711g9l9txjg.jpg?gha_thumb=bbbf28245d35d790"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/a711g9l9txjg.jpg?gha_thumb=bbbf28245d35d790",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-272",
@@ -4349,7 +4891,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 272.",
     "embed": "https://vidmoly.org/embed-yij2cx3bx01s.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/yij2cx3bx01s.jpg?gha_thumb=1cf54ee7bc048225"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/yij2cx3bx01s.jpg?gha_thumb=1cf54ee7bc048225",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-273",
@@ -4365,7 +4909,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 273.",
     "embed": "https://vidmoly.org/embed-g4e0jazeo39e.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/g4e0jazeo39e.jpg?gha_thumb=dc8ae27e4ed9d159"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/g4e0jazeo39e.jpg?gha_thumb=dc8ae27e4ed9d159",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-274",
@@ -4381,7 +4927,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 274.",
     "embed": "https://vidmoly.org/embed-cef7bd9t97o5.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/cef7bd9t97o5.jpg?gha_thumb=2e6ffff3a8316b03"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/cef7bd9t97o5.jpg?gha_thumb=2e6ffff3a8316b03",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-275",
@@ -4397,7 +4945,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 275.",
     "embed": "https://vidmoly.org/embed-c1fjfmgrj1wo.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/c1fjfmgrj1wo.jpg?gha_thumb=38d542a2b950c492"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/c1fjfmgrj1wo.jpg?gha_thumb=38d542a2b950c492",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-276",
@@ -4413,7 +4963,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 276.",
     "embed": "https://vidmoly.org/embed-lx5dzu8d23ia.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/lx5dzu8d23ia.jpg?gha_thumb=e3f9b293d8746921"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/lx5dzu8d23ia.jpg?gha_thumb=e3f9b293d8746921",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-277",
@@ -4429,7 +4981,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 277.",
     "embed": "https://vidmoly.org/embed-1dqngmsth0zo.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02918/1dqngmsth0zo.jpg?gha_thumb=7b0db1179b20ac05"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02918/1dqngmsth0zo.jpg?gha_thumb=7b0db1179b20ac05",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-278",
@@ -4445,7 +4999,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 278.",
     "embed": "https://vidmoly.org/embed-kyqlusslzdde.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/kyqlusslzdde.jpg?gha_thumb=72501c5507cf399e"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/kyqlusslzdde.jpg?gha_thumb=72501c5507cf399e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-279",
@@ -4461,7 +5017,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 279.",
     "embed": "https://vidmoly.org/embed-a662e7b1akpu.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/a662e7b1akpu.jpg?gha_thumb=3ec590c779983525"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/a662e7b1akpu.jpg?gha_thumb=3ec590c779983525",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-280",
@@ -4477,7 +5035,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 280.",
     "embed": "https://vidmoly.org/embed-ngiaofg49v4q.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/ngiaofg49v4q.jpg?gha_thumb=2195114e2a33ed26"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/ngiaofg49v4q.jpg?gha_thumb=2195114e2a33ed26",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-281",
@@ -4493,7 +5053,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 281.",
     "embed": "https://vidmoly.org/embed-w1rdbwf1nb1x.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/w1rdbwf1nb1x.jpg?gha_thumb=efb70d45dc853875"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/w1rdbwf1nb1x.jpg?gha_thumb=efb70d45dc853875",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-282",
@@ -4509,7 +5071,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 282.",
     "embed": "https://vidmoly.org/embed-p9ngogx8mb5i.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/p9ngogx8mb5i.jpg?gha_thumb=7733f593b284f744"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/p9ngogx8mb5i.jpg?gha_thumb=7733f593b284f744",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-283",
@@ -4525,7 +5089,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 283.",
     "embed": "https://vidmoly.org/embed-7krq925l7qh3.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/7krq925l7qh3.jpg?gha_thumb=5f7665aa30721d55"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/7krq925l7qh3.jpg?gha_thumb=5f7665aa30721d55",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-284",
@@ -4541,7 +5107,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 284.",
     "embed": "https://vidmoly.org/embed-te1sgvafeltl.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/te1sgvafeltl.jpg?gha_thumb=1f1361d7869d3421"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/te1sgvafeltl.jpg?gha_thumb=1f1361d7869d3421",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-285",
@@ -4557,7 +5125,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 285.",
     "embed": "https://vidmoly.org/embed-epf5en4kcva7.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/epf5en4kcva7.jpg?gha_thumb=3175551f65612509"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/epf5en4kcva7.jpg?gha_thumb=3175551f65612509",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-286",
@@ -4573,7 +5143,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 286.",
     "embed": "https://vidmoly.org/embed-o89jrs2zfead.html",
-    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02918/o89jrs2zfead.jpg?gha_thumb=d62dc4d60ea98ebf"
+    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02918/o89jrs2zfead.jpg?gha_thumb=d62dc4d60ea98ebf",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-287",
@@ -4589,7 +5161,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 287.",
     "embed": "https://vidmoly.org/embed-nevl90ocbjyp.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/nevl90ocbjyp.jpg?gha_thumb=80121c92f3ae1159"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/nevl90ocbjyp.jpg?gha_thumb=80121c92f3ae1159",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-288",
@@ -4605,7 +5179,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 288.",
     "embed": "https://vidmoly.org/embed-epw9xtze5nkp.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/epw9xtze5nkp.jpg?gha_thumb=fbb9eecdd12b3416"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/epw9xtze5nkp.jpg?gha_thumb=fbb9eecdd12b3416",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-289",
@@ -4621,7 +5197,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 289.",
     "embed": "https://vidmoly.org/embed-xe3wtgvyv8jp.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/xe3wtgvyv8jp.jpg?gha_thumb=f1f89617461dc81e"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/xe3wtgvyv8jp.jpg?gha_thumb=f1f89617461dc81e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-290",
@@ -4637,7 +5215,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 290.",
     "embed": "https://vidmoly.org/embed-8gdu9f27nhw3.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/8gdu9f27nhw3.jpg?gha_thumb=6819570bd3a555ef"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/8gdu9f27nhw3.jpg?gha_thumb=6819570bd3a555ef",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-291",
@@ -4653,7 +5233,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 291.",
     "embed": "https://vidmoly.org/embed-laoimq2icnbu.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/laoimq2icnbu.jpg?gha_thumb=dc88c2cfcf60063a"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/laoimq2icnbu.jpg?gha_thumb=dc88c2cfcf60063a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-292",
@@ -4669,7 +5251,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 292.",
     "embed": "https://vidmoly.org/embed-7fvda5ycb3xw.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/7fvda5ycb3xw.jpg?gha_thumb=804ea5d5235c0464"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/7fvda5ycb3xw.jpg?gha_thumb=804ea5d5235c0464",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-293",
@@ -4685,7 +5269,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 293.",
     "embed": "https://vidmoly.org/embed-zmwpwp7gq00h.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/zmwpwp7gq00h.jpg?gha_thumb=b4d01accccdfae3e"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/zmwpwp7gq00h.jpg?gha_thumb=b4d01accccdfae3e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-294",
@@ -4701,7 +5287,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 294.",
     "embed": "https://vidmoly.org/embed-9gctu4oowgd2.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/9gctu4oowgd2.jpg?gha_thumb=2e026840e033a356"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/9gctu4oowgd2.jpg?gha_thumb=2e026840e033a356",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-295",
@@ -4717,7 +5305,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 295.",
     "embed": "https://vidmoly.org/embed-0xat04dz94hx.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/0xat04dz94hx.jpg?gha_thumb=4a8ac5be94a6338f"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/0xat04dz94hx.jpg?gha_thumb=4a8ac5be94a6338f",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-296",
@@ -4733,7 +5323,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 296.",
     "embed": "https://vidmoly.org/embed-erac3tyzqvms.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/erac3tyzqvms.jpg?gha_thumb=2a425762ef283189"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/erac3tyzqvms.jpg?gha_thumb=2a425762ef283189",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-297",
@@ -4749,7 +5341,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 297.",
     "embed": "https://vidmoly.org/embed-75x53pe4p4al.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/75x53pe4p4al.jpg?gha_thumb=05ba854a62d69035"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/75x53pe4p4al.jpg?gha_thumb=05ba854a62d69035",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-298",
@@ -4765,7 +5359,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 298.",
     "embed": "https://vidmoly.org/embed-jm2c9tuxmako.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/jm2c9tuxmako.jpg?gha_thumb=9e6d92a4e57ba3dd"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/jm2c9tuxmako.jpg?gha_thumb=9e6d92a4e57ba3dd",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-299",
@@ -4781,7 +5377,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 299.",
     "embed": "https://vidmoly.org/embed-nbyvdku671sy.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/nbyvdku671sy.jpg?gha_thumb=fb5ce6e5c6fb26d7"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/nbyvdku671sy.jpg?gha_thumb=fb5ce6e5c6fb26d7",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-300",
@@ -4797,7 +5395,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 300.",
     "embed": "https://vidmoly.org/embed-1c0ibhoxdadd.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/1c0ibhoxdadd.jpg?gha_thumb=3f8ece040a84fdd2"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/1c0ibhoxdadd.jpg?gha_thumb=3f8ece040a84fdd2",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-301",
@@ -4813,7 +5413,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 301.",
     "embed": "https://vidmoly.org/embed-4iyrhxnd6f3q.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/4iyrhxnd6f3q.jpg?gha_thumb=a28b2dc9423f948a"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/4iyrhxnd6f3q.jpg?gha_thumb=a28b2dc9423f948a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-302",
@@ -4829,7 +5431,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 302.",
     "embed": "https://vidmoly.org/embed-vem51b9lufyq.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/vem51b9lufyq.jpg?gha_thumb=02dd754932340a45"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/vem51b9lufyq.jpg?gha_thumb=02dd754932340a45",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-303",
@@ -4845,7 +5449,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 303.",
     "embed": "https://vidmoly.org/embed-a7v510ab7osm.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02918/a7v510ab7osm.jpg?gha_thumb=051f9b7e784c4740"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02918/a7v510ab7osm.jpg?gha_thumb=051f9b7e784c4740",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-304",
@@ -4861,7 +5467,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 304.",
     "embed": "https://vidmoly.org/embed-sruoodww87w3.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/sruoodww87w3.jpg?gha_thumb=b539ac1c80daee91"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/sruoodww87w3.jpg?gha_thumb=b539ac1c80daee91",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-305",
@@ -4877,7 +5485,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 305.",
     "embed": "https://vidmoly.org/embed-z80m5ntk258s.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/z80m5ntk258s.jpg?gha_thumb=f3e3ee3e12bd5d78"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/z80m5ntk258s.jpg?gha_thumb=f3e3ee3e12bd5d78",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-306",
@@ -4893,7 +5503,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 306.",
     "embed": "https://vidmoly.org/embed-k5106l334p18.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/k5106l334p18.jpg?gha_thumb=45121ec304774d4a"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/k5106l334p18.jpg?gha_thumb=45121ec304774d4a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-307",
@@ -4909,7 +5521,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 307.",
     "embed": "https://vidmoly.org/embed-196i8iykoujd.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/196i8iykoujd.jpg?gha_thumb=cbd90c36fe6aea37"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/196i8iykoujd.jpg?gha_thumb=cbd90c36fe6aea37",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-308",
@@ -4925,7 +5539,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 308.",
     "embed": "https://vidmoly.org/embed-ejh9lzh3gs98.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/ejh9lzh3gs98.jpg?gha_thumb=ab56e5af65d2054a"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/ejh9lzh3gs98.jpg?gha_thumb=ab56e5af65d2054a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-309",
@@ -4941,7 +5557,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 309.",
     "embed": "https://vidmoly.org/embed-x5lqr6mloq30.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/x5lqr6mloq30.jpg?gha_thumb=0a4eecec4dd52edd"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/x5lqr6mloq30.jpg?gha_thumb=0a4eecec4dd52edd",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-310",
@@ -4957,7 +5575,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 310.",
     "embed": "https://vidmoly.org/embed-9x53getqqil4.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/9x53getqqil4.jpg?gha_thumb=dda1b1714cc264e6"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/9x53getqqil4.jpg?gha_thumb=dda1b1714cc264e6",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-311",
@@ -4973,7 +5593,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 311.",
     "embed": "https://vidmoly.org/embed-pcpur56m22c3.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/pcpur56m22c3.jpg?gha_thumb=d57f4775ab13b81d"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/pcpur56m22c3.jpg?gha_thumb=d57f4775ab13b81d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-312",
@@ -4989,7 +5611,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 312.",
     "embed": "https://vidmoly.org/embed-pxchi0j4xvqt.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/pxchi0j4xvqt.jpg?gha_thumb=034f336d52034ebf"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/pxchi0j4xvqt.jpg?gha_thumb=034f336d52034ebf",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-313",
@@ -5005,7 +5629,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 313.",
     "embed": "https://vidmoly.org/embed-q6wyfefqrjyq.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/q6wyfefqrjyq.jpg?gha_thumb=05f3661661a207fc"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/q6wyfefqrjyq.jpg?gha_thumb=05f3661661a207fc",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-314",
@@ -5021,7 +5647,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 314.",
     "embed": "https://vidmoly.org/embed-3zrhfj7kr0bw.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/3zrhfj7kr0bw.jpg?gha_thumb=6ac84f6e28410c51"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/3zrhfj7kr0bw.jpg?gha_thumb=6ac84f6e28410c51",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-315",
@@ -5037,7 +5665,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 315.",
     "embed": "https://vidmoly.org/embed-lj9qpb0r3862.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/lj9qpb0r3862.jpg?gha_thumb=507a12f4a110a3e6"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/lj9qpb0r3862.jpg?gha_thumb=507a12f4a110a3e6",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-316",
@@ -5053,7 +5683,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 316.",
     "embed": "https://vidmoly.org/embed-pf4prhoacxsy.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/pf4prhoacxsy.jpg?gha_thumb=5c98b560cc038c3e"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/pf4prhoacxsy.jpg?gha_thumb=5c98b560cc038c3e",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-317",
@@ -5069,7 +5701,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 317.",
     "embed": "https://vidmoly.org/embed-k4zhw7mjrjvq.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/k4zhw7mjrjvq.jpg?gha_thumb=51913066683c171f"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/k4zhw7mjrjvq.jpg?gha_thumb=51913066683c171f",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-318",
@@ -5085,7 +5719,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 318.",
     "embed": "https://vidmoly.org/embed-t4lam72t6emg.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/t4lam72t6emg.jpg?gha_thumb=f6532d7c9d129820"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/t4lam72t6emg.jpg?gha_thumb=f6532d7c9d129820",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-319",
@@ -5101,7 +5737,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 319.",
     "embed": "https://vidmoly.org/embed-lul84bwa6ajs.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/lul84bwa6ajs.jpg?gha_thumb=cf5d02e4934ccb26"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/lul84bwa6ajs.jpg?gha_thumb=cf5d02e4934ccb26",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-320",
@@ -5117,7 +5755,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 320.",
     "embed": "https://vidmoly.org/embed-cbzz312cthzb.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/cbzz312cthzb.jpg?gha_thumb=afcbfad95a19c3a6"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/cbzz312cthzb.jpg?gha_thumb=afcbfad95a19c3a6",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-321",
@@ -5133,7 +5773,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 321.",
     "embed": "https://vidmoly.org/embed-r2r7uaviixch.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/r2r7uaviixch.jpg?gha_thumb=95bcbdc9ba7228f2"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02918/r2r7uaviixch.jpg?gha_thumb=95bcbdc9ba7228f2",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-322",
@@ -5149,7 +5791,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 322.",
     "embed": "https://vidmoly.org/embed-ts5fqob8gh4n.html",
-    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02918/ts5fqob8gh4n.jpg?gha_thumb=f83cffb794bfb101"
+    "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02918/ts5fqob8gh4n.jpg?gha_thumb=f83cffb794bfb101",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-323",
@@ -5165,7 +5809,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 323.",
     "embed": "https://vidmoly.org/embed-zjp8dxdn4wua.html",
-    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02918/zjp8dxdn4wua.jpg?gha_thumb=6187c5df272c234a"
+    "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02918/zjp8dxdn4wua.jpg?gha_thumb=6187c5df272c234a",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-324",
@@ -5181,7 +5827,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 324.",
     "embed": "https://vidmoly.org/embed-j137oxs8igpy.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/j137oxs8igpy.jpg?gha_thumb=6b0cfc21c76f551d"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/j137oxs8igpy.jpg?gha_thumb=6b0cfc21c76f551d",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-325",
@@ -5197,7 +5845,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 325.",
     "embed": "https://vidmoly.org/embed-womf0969tylc.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/womf0969tylc.jpg?gha_thumb=01e986adf279f761"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02918/womf0969tylc.jpg?gha_thumb=01e986adf279f761",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-326",
@@ -5213,7 +5863,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 326.",
     "embed": "https://vidmoly.org/embed-p6s8rmx0c7kj.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/p6s8rmx0c7kj.jpg?gha_thumb=f54f2f0bca722fd9"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/p6s8rmx0c7kj.jpg?gha_thumb=f54f2f0bca722fd9",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-327",
@@ -5229,7 +5881,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 327.",
     "embed": "https://vidmoly.org/embed-ib39nfvyw68i.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/ib39nfvyw68i.jpg?gha_thumb=ccba28bea2c80eac"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02918/ib39nfvyw68i.jpg?gha_thumb=ccba28bea2c80eac",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-328",
@@ -5245,7 +5899,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 328.",
     "embed": "https://vidmoly.org/embed-ej02mwsfsi2w.html",
-    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/ej02mwsfsi2w.jpg?gha_thumb=7d71a28e0fcb10b7"
+    "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02918/ej02mwsfsi2w.jpg?gha_thumb=7d71a28e0fcb10b7",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-329",
@@ -5261,7 +5917,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 329.",
     "embed": "https://vidmoly.org/embed-uwoqhdkhqe2k.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/uwoqhdkhqe2k.jpg?gha_thumb=49fc8cb940c97b12"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/uwoqhdkhqe2k.jpg?gha_thumb=49fc8cb940c97b12",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-330",
@@ -5277,7 +5935,9 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 330.",
     "embed": "https://vidmoly.org/embed-5q0q4fxsb83s.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/5q0q4fxsb83s.jpg?gha_thumb=efbc924682ca6c83"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02918/5q0q4fxsb83s.jpg?gha_thumb=efbc924682ca6c83",
+    "type": "episode",
+    "category": "main"
   },
   {
     "id": "kiteretsu-331",
@@ -5293,6 +5953,28 @@
     "quality": "1080p",
     "description": "Kiteretsu Daihyakka episode 331.",
     "embed": "https://vidmoly.org/embed-mqwemxvl6t10.html",
-    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/mqwemxvl6t10.jpg?gha_thumb=89423d79d538b4dc"
+    "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02918/mqwemxvl6t10.jpg?gha_thumb=89423d79d538b4dc",
+    "type": "episode",
+    "category": "main"
+  },
+  {
+    "id": "kiteretsu-daihyakka-1987-11-02",
+    "title": "Kiteretsu Daihyakka - EPISODE",
+    "series": "Kiteretsu Daihyakka",
+    "type": "episode",
+    "category": "special",
+    "year": 1988,
+    "genres": [
+      "Anime",
+      "Comedy",
+      "Family"
+    ],
+    "quality": "VHS RIP",
+    "description": "November 2, 1987 TV Special — VHS",
+    "embed": "https://vidmoly.org/embed-hm4oj4cg7cnj.html",
+    "thumbnail": "",
+    "episode_title": "November 2, 1987 TV Special — VHS",
+    "special_date": "1987-11-02",
+    "source_filename": "November 2, 1987 TV Special — VHS RIP"
   }
-]
+    ]
