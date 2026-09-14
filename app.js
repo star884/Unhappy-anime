@@ -225,6 +225,51 @@ function seriesOf(video) {
 }
 
 
+const MEDIA_TYPES = new Set(["episode", "movie", "ova", "ona", "extra", "other"]);
+const MEDIA_CATEGORIES = new Set(["main", "special", "movie", "ova", "ona", "extra", "other"]);
+
+function typeOf(video) {
+  const value = normalise(video.type);
+  return MEDIA_TYPES.has(value) ? value : "episode";
+}
+
+function categoryOf(video) {
+  const value = normalise(video.category);
+  if (MEDIA_CATEGORIES.has(value)) return value;
+  return typeOf(video) === "episode" ? "main" : typeOf(video);
+}
+
+function seasonOf(video) {
+  return numberOrNull(video.season ?? video.season_number);
+}
+
+function episodeTitleOf(video) {
+  return text(video.episode_title ?? video.episodeTitle);
+}
+
+function specialDateOf(video) {
+  return text(video.special_date ?? video.specialDate);
+}
+
+function sourceFilenameOf(video) {
+  return text(video.source_filename ?? video.sourceFilename ?? video.filename);
+}
+
+function mediaGroupKey(video) {
+  return `${categoryOf(video)}:${seasonOf(video) ?? "none"}`;
+}
+
+function normalizeVideo(video) {
+  return {
+    ...video,
+    id: text(video.id),
+    type: typeOf(video),
+    category: categoryOf(video),
+    series: seriesOf(video)
+  };
+}
+
+
 function episodeOf(video) {
   return numberOrNull(
     video.episode ??
@@ -285,14 +330,15 @@ function embedOf(video) {
 
 function episodeLabel(video) {
   const number = episodeOf(video);
+  const specialDate = specialDateOf(video);
+  const episodeTitle = episodeTitleOf(video);
 
-  if (number === null) {
-    return "Special";
-  }
+  if (specialDate) return specialDate;
+  if (number === null) return episodeTitle || categoryOf(video).toUpperCase();
 
   return Number.isInteger(number)
-    ? String(number).padStart(3, "0")
-    : String(number);
+    ? `E${String(number).padStart(3, "0")}`
+    : `E${number}`;
 }
 
 
@@ -524,10 +570,7 @@ async function load() {
             text(video.id) &&
             embedOf(video)
         )
-        .map(video => ({
-          ...video,
-          id: text(video.id)
-        }));
+        .map(normalizeVideo);
 
 
     if (!state.videos.length) {
@@ -840,6 +883,23 @@ function buildSeries() {
         ];
 
 
+      const buckets = {
+        episodes: episodes.filter(video => categoryOf(video) === "main" && typeOf(video) === "episode"),
+        seasons: new Map(),
+        specials: episodes.filter(video => categoryOf(video) === "special"),
+        movies: episodes.filter(video => categoryOf(video) === "movie" || typeOf(video) === "movie"),
+        ovas: episodes.filter(video => categoryOf(video) === "ova" || typeOf(video) === "ova"),
+        onas: episodes.filter(video => categoryOf(video) === "ona" || typeOf(video) === "ona"),
+        extras: episodes.filter(video => categoryOf(video) === "extra" || typeOf(video) === "extra"),
+        other: episodes.filter(video => categoryOf(video) === "other" || typeOf(video) === "other")
+      };
+      episodes.filter(video => categoryOf(video) === "main" && typeOf(video) === "episode" && seasonOf(video) !== null)
+        .forEach(video => {
+          const season = seasonOf(video);
+          if (!buckets.seasons.has(season)) buckets.seasons.set(season, []);
+          buckets.seasons.get(season).push(video);
+        });
+
       return {
 
         key,
@@ -853,6 +913,7 @@ function buildSeries() {
           ),
 
         episodes,
+        groups: buckets,
 
         thumbnail,
 
@@ -1237,12 +1298,13 @@ function seriesMatches(
             episode
           ),
 
-          String(
-            episodeOf(
-              episode
-            ) ??
-            ""
-          )
+          episodeTitleOf(episode),
+          String(episodeOf(episode) ?? ""),
+          String(seasonOf(episode) ?? ""),
+          typeOf(episode),
+          categoryOf(episode),
+          specialDateOf(episode),
+          sourceFilenameOf(episode)
         ]
       )
     ].join(" ");
@@ -1680,9 +1742,10 @@ function episodeCard(
         </strong>
 
         <small>
-          ${escapeHtml(
-            seriesOf(video)
-          )}
+          ${escapeHtml(seriesOf(video))}
+          · ${escapeHtml(episodeLabel(video))}
+          ${seasonOf(video) ? ` · S${seasonOf(video)}` : ""}
+          ${categoryOf(video) !== "main" ? ` · ${escapeHtml(categoryOf(video))}` : ""}
         </small>
 
       </div>
@@ -1751,10 +1814,13 @@ function renderEpisodes() {
               video
             ),
 
-            String(
-              episodeOf(video) ??
-              ""
-            )
+            episodeTitleOf(video),
+            String(episodeOf(video) ?? ""),
+            String(seasonOf(video) ?? ""),
+            typeOf(video),
+            categoryOf(video),
+            specialDateOf(video),
+            sourceFilenameOf(video)
           ].join(" ");
 
 
@@ -2213,12 +2279,18 @@ function renderSeriesEpisodes(
     );
 
 
-  els.seriesEpisodeList.innerHTML =
-    list
-      .map(
-        episodeCard
-      )
-      .join("");
+  const groups = new Map();
+  list.forEach(video => {
+    const label = categoryOf(video) === "main"
+      ? (seasonOf(video) ? `Season ${seasonOf(video)}` : "Episodes")
+      : ({ special: "Specials", movie: "Movies", ova: "OVAs", ona: "ONAs", extra: "Extras", other: "Other" }[categoryOf(video)] || "Other");
+    if (!groups.has(label)) groups.set(label, []);
+    groups.get(label).push(video);
+  });
+
+  els.seriesEpisodeList.innerHTML = [...groups.entries()]
+    .map(([label, videos]) => `<section class="media-group"><h3>${escapeHtml(label)}</h3>${videos.map(episodeCard).join("")}</section>`)
+    .join("");
 
 
   bindEpisodeButtons(
@@ -2323,44 +2395,16 @@ function openPlayer(
       .join(" · ");
 
 
-  const index =
-    series
-      ? series.episodes.findIndex(
-          episode =>
-            episode.id ===
-            video.id
-        )
-      : -1;
+  const navigationEpisodes = series
+    ? series.episodes.filter(episode => mediaGroupKey(episode) === mediaGroupKey(video))
+    : [];
+  const index = navigationEpisodes.findIndex(episode => episode.id === video.id);
 
+  els.playerPrevButton.disabled = index <= 0;
+  els.playerNextButton.disabled = index < 0 || index >= navigationEpisodes.length - 1;
 
-  els.playerPrevButton.disabled =
-    !series ||
-    index <= 0;
-
-
-  els.playerNextButton.disabled =
-    !series ||
-    index < 0 ||
-    index >=
-      series.episodes.length - 1;
-
-
-  els.playerPrevButton.onclick =
-    () =>
-      openPlayer(
-        series.episodes[
-          index - 1
-        ]
-      );
-
-
-  els.playerNextButton.onclick =
-    () =>
-      openPlayer(
-        series.episodes[
-          index + 1
-        ]
-      );
+  els.playerPrevButton.onclick = () => openPlayer(navigationEpisodes[index - 1]);
+  els.playerNextButton.onclick = () => openPlayer(navigationEpisodes[index + 1]);
 
 
   els.playerFavoriteButton.textContent =
