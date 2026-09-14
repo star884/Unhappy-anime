@@ -1192,6 +1192,50 @@ p{
     transition:none!important
   }
 }
+/* SERIES DETAIL UPGRADE */
+.series-hero{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:390px;
+  grid-template-columns:230px minmax(0,1fr);
+  align-items:center;
+  gap:38px;
+  padding:42px;
+  border:1px solid #ffffff1a;
+  border-radius:30px;
+  background:linear-gradient(115deg,#171b25e8,#0d1017f2 62%,#111722e8);
+  box-shadow:0 30px 90px #0008, inset 0 1px #ffffff12
+}
+.series-hero-backdrop{position:absolute;inset:0;z-index:-3;background-position:center;background-size:cover;filter:blur(24px) saturate(.8);opacity:.25;transform:scale(1.12)}
+.series-hero-glow{position:absolute;inset:0;z-index:-2;background:radial-gradient(circle at 76% 20%,#65a5ff22,transparent 34%),linear-gradient(90deg,#11151fe8 0%,#11151fc7 47%,#11151fef 100%)}
+.series-poster-frame{position:relative;z-index:1;width:100%;max-width:230px;margin:auto}
+.series-poster-frame img{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:20px;border:1px solid #ffffff4a;box-shadow:0 26px 55px #000b}
+.series-poster-label{position:absolute;left:12px;bottom:12px;padding:6px 9px;border-radius:8px;background:#08090dcc;color:#fff;font-size:9px;font-weight:900;letter-spacing:.18em}
+.series-copy{position:relative;z-index:1;max-width:760px}
+.series-kicker{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.series-kicker .eyebrow{margin:0;color:var(--accent)}
+.series-live-dot{width:6px;height:6px;border-radius:50%;background:#63d58b;box-shadow:0 0 0 4px #63d58b22}
+.series-kicker-label{opacity:.65}
+.series-copy h1{margin:15px 0 18px;font-size:clamp(3rem,7vw,6rem);line-height:.9;letter-spacing:-.04em;text-wrap:balance}
+.series-copy .meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.series-copy .meta span{padding:7px 11px;border:1px solid #ffffff1c;border-radius:999px;background:#ffffff0a;color:#dce2ee;font-size:12px}
+.series-copy p{max-width:650px;color:#c2c9d6;line-height:1.7}
+.series-actions{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 40px}
+.series-actions .button{min-height:44px;padding-inline:18px}
+@media(max-width:700px){
+  .series-hero{min-height:420px;grid-template-columns:94px minmax(0,1fr);align-items:start;gap:16px;padding:18px;border-radius:24px}
+  .series-hero-backdrop{opacity:.2;filter:blur(18px)}
+  .series-poster-frame{max-width:none}
+  .series-poster-frame img{border-radius:14px}
+  .series-poster-label{left:7px;bottom:7px;padding:4px 5px;font-size:7px}
+  .series-copy h1{margin:11px 0 13px;font-size:clamp(2rem,10vw,3.5rem)}
+  .series-kicker{gap:6px;font-size:9px}
+  .series-kicker-label{display:none}
+  .series-copy p{grid-column:1/-1;margin-top:2px;font-size:13px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+  .series-actions{margin:18px 0 28px}
+}
+
 </style>
 </head>
 
@@ -1803,17 +1847,21 @@ p{
 
     <div class="series-hero">
 
-      <img
-        id="seriesImg"
-        alt=""
-      >
+      <div class="series-hero-backdrop" id="seriesHeroBackdrop" aria-hidden="true"></div>
+      <div class="series-hero-glow" aria-hidden="true"></div>
+
+      <div class="series-poster-frame">
+        <img
+          id="seriesImg"
+          alt=""
+        >
+        <span class="series-poster-label">UNHAPPY</span>
+      </div>
 
 
       <div class="series-copy">
 
-        <span class="eyebrow">
-          SERIES
-        </span>
+        <div class="series-kicker"><span class="eyebrow">SERIES</span><span class="series-live-dot" aria-hidden="true"></span><span class="series-kicker-label">Library title</span></div>
 
         <h1 id="seriesTitle"></h1>
 
@@ -3722,6 +3770,8 @@ function renderSeries(series){
 
   $("seriesImg").src =
     series.thumbnail;
+  $("seriesImg").alt = `${series.name} poster`;
+  $("seriesHeroBackdrop").style.backgroundImage = `url("${safe(series.thumbnail)}")`;
 
 
   $("seriesTitle").textContent =
