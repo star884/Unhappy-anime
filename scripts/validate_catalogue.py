@@ -56,11 +56,13 @@ def validate_record(record: dict, index: int) -> dict:
     episode = number(item, "episode")
     special_date = clean(item.get("special_date"))
     if special_date:
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", special_date): fail(f"Entry {index} has an invalid special_date")
         try: date.fromisoformat(special_date)
         except ValueError: fail(f"Entry {index} has an invalid special_date")
-    if typ == "episode" and cat == "main" and episode is None and not special_date: fail(f"Entry {index} needs episode or special_date")
+    if typ == "episode" and cat == "main" and episode is None and season is None: fail(f"Entry {index} needs episode or a special category")
     if typ != "episode" and episode is not None: fail(f"Entry {index} has episode on non-episode media")
-    if special_date and (typ != "episode" or cat != "special" or episode is not None): fail(f"Entry {index} has invalid date-special fields")
+    if typ != "episode" and cat == "main": fail(f"Entry {index} has main category on non-episode media")
+    if special_date and (typ != "episode" or cat != "special" or episode is not None or season is not None): fail(f"Entry {index} has invalid date-special fields")
     if season is not None and (typ != "episode" or cat != "main"): fail(f"Entry {index} has season on non-seasonal media")
     if not isinstance(item.get("genres", []), list): fail(f"Entry {index} genres must be an array")
     return item
@@ -120,7 +122,12 @@ def main() -> int:
     else:
         episode = int(args.episode)
     if episode is not None and episode in numbered: fail(f"Duplicate episode identity: {episode}")
-    if args.special_date and any(item.get("special_date") == args.special_date for item in selected): fail("Duplicate special date")
+    if args.special_date:
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.special_date): fail("special_date must use YYYY-MM-DD")
+        try: date.fromisoformat(args.special_date)
+        except ValueError: fail("special_date is not a valid ISO date")
+        if any(item.get("special_date") == args.special_date for item in selected): fail("Duplicate special date")
+    if typ != "episode" and any(item.get("type") == typ and item.get("category") == cat and key(item.get("title")) == key(args.title) and key(args.title) for item in selected): fail("Duplicate media identity")
     prefix = slug(meta.get("id") or meta.get("name")); suffix = f"-{episode:03d}" if episode is not None else (f"-{slug(args.special_date)}" if args.special_date else f"-{typ}")
     new_id = prefix + suffix
     if new_id in {item["id"] for item in normalized}: fail(f"Duplicate generated id: {new_id}")

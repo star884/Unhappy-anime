@@ -1803,8 +1803,8 @@ p{
     <div class="section-head">
 
       <h2>
-        Episodes
-      </h2>
+  Episodes & media
+  </h2>
 
       <span
         class="count"
@@ -2158,12 +2158,39 @@ const seriesName = video =>
 
 
 const ep = video =>
+
   num(
     video.episode ??
     video.episodeNumber ??
     video.episode_number
   );
 
+
+const season = video => num(video.season ?? video.season_number);
+
+const mediaType = video => {
+  const value = norm(video.type) || "episode";
+  return ["episode","movie","ova","ona","extra","other"].includes(value) ? value : "other";
+};
+
+const mediaCategory = video => {
+  const fallback = mediaType(video) === "episode" ? "main" : mediaType(video);
+  const value = norm(video.category) || fallback;
+  return ["main","special","movie","ova","ona","extra","other"].includes(value) ? value : "other";
+};
+
+const specialDate = video => text(video.special_date);
+
+const episodeTitle = video => text(video.episode_title);
+
+const sourceFilename = video => text(video.source_filename || video.filename);
+
+const mediaLabel = video => {
+  const category = mediaCategory(video);
+  if (specialDate(video)) return specialDate(video);
+  if (category !== "main" || mediaType(video) !== "episode") return category.toUpperCase();
+  return ep(video) == null ? "Special" : `EP ${label(video)}`;
+};
 
 const year = video =>
   num(video.year);
@@ -2426,18 +2453,19 @@ async function load(){
 
     S.videos =
       rawVideos
-        .filter(
-          video =>
-            video &&
-            text(video.id) &&
-            source(video)
-        )
-        .map(
-          video => ({
-            ...video,
-            id:text(video.id)
-          })
-        );
+        .filter(video => video && text(video.id) && source(video))
+        .map(video => ({
+          ...video,
+          id:text(video.id),
+          type:mediaType(video),
+          category:mediaCategory(video),
+          genres:genres(video),
+          episode_title:episodeTitle(video),
+          source_filename:sourceFilename(video),
+          season:season(video),
+          episode:ep(video),
+          special_date:specialDate(video)
+        }));
 
 
     const rawSeries =
@@ -2589,7 +2617,18 @@ async function load(){
 
               status:
                 text(meta.status) ||
-                "Library"
+                "Library",
+
+              groups: {
+                episodes: episodes.filter(video => mediaType(video) === "episode" && mediaCategory(video) === "main" && season(video) == null),
+                seasons: [...new Set(episodes.filter(video => season(video) != null).map(video => season(video)))].sort((a,b) => a - b).map(value => ({ name:`Season ${value}`, items:episodes.filter(video => season(video) === value) })),
+                specials: episodes.filter(video => mediaCategory(video) === "special"),
+                movies: episodes.filter(video => mediaType(video) === "movie" || mediaCategory(video) === "movie"),
+                ovas: episodes.filter(video => mediaType(video) === "ova" || mediaCategory(video) === "ova"),
+                onas: episodes.filter(video => mediaType(video) === "ona" || mediaCategory(video) === "ona"),
+                extras: episodes.filter(video => mediaType(video) === "extra" || mediaCategory(video) === "extra"),
+                other: episodes.filter(video => mediaType(video) === "other" || mediaCategory(video) === "other")
+              }
 
             };
 
@@ -2883,7 +2922,7 @@ function epCard(video){
         >
 
         <span class="badge">
-          ${esc(label(video))}
+          ${esc(mediaLabel(video))}
         </span>
 
       </div>
@@ -2896,7 +2935,7 @@ function epCard(video){
         </strong>
 
         <small>
-          ${esc(seriesName(video))}
+          ${esc(seriesName(video))} · ${esc(mediaCategory(video))}${season(video) != null ? ` · S${season(video)}` : ""}${episodeTitle(video) ? ` · ${esc(episodeTitle(video))}` : ""}
         </small>
 
       </div>
@@ -3310,10 +3349,16 @@ function renderSearch(query){
         norm(
           [
             title(video),
+            episodeTitle(video),
             seriesName(video),
             desc(video),
             ...genres(video),
-            ep(video) ?? ""
+            ep(video) ?? "",
+            season(video) ?? "",
+            mediaType(video),
+            mediaCategory(video),
+            specialDate(video),
+            sourceFilename(video)
           ].join(" ")
         ).includes(query)
     );
@@ -3689,17 +3734,12 @@ function renderSeriesEpisodes(){
 
 
   let list =
-    S.activeSeries.episodes.filter(
-      video =>
-        !query ||
-        norm(
-          title(video) +
-          " " +
-          (
-            ep(video) ??
-            ""
-          )
-        ).includes(query)
+    S.activeSeries.episodes.filter(video =>
+      !query ||
+      norm([
+        title(video), episodeTitle(video), ep(video) ?? "", season(video) ?? "",
+        mediaType(video), mediaCategory(video), specialDate(video), sourceFilename(video)
+      ].join(" ")).includes(query)
     );
 
 
@@ -3807,14 +3847,12 @@ function renderWatch(video){
     );
 
 
-  const index =
-    series
-      ? series.episodes.findIndex(
-          episode =>
-            episode.id ===
-            video.id
-        )
-      : -1;
+  const playable = series
+    ? series.episodes
+        .filter(item => mediaCategory(item) === mediaCategory(video) && season(item) === season(video))
+        .sort((a,b) => (ep(a) ?? Infinity) - (ep(b) ?? Infinity) || title(a).localeCompare(title(b), undefined, {numeric:true}))
+    : [];
+  const index = playable.findIndex(item => item.id === video.id);
 
 
   $("watchSeries").textContent =
@@ -3848,14 +3886,13 @@ function renderWatch(video){
   $("watchNext").disabled =
     !series ||
     index < 0 ||
-    index >=
-      series.episodes.length - 1;
+    index >= playable.length - 1;
 
 
   $("watchPrev").onclick =
     () =>
       openWatch(
-        series.episodes[
+        playable[
           index - 1
         ]
       );
@@ -3864,7 +3901,7 @@ function renderWatch(video){
   $("watchNext").onclick =
     () =>
       openWatch(
-        series.episodes[
+        playable[
           index + 1
         ]
       );
