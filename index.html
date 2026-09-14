@@ -2557,12 +2557,21 @@ function toast(message){
 
 async function getJSON(url, signal){
 
+  const requestUrl =
+    new URL(
+      url,
+      document.baseURI
+    ).href;
+
   const response =
     await fetch(
-      url,
+      requestUrl,
       {
         cache:"no-store",
-        signal
+        signal,
+        headers:{
+          Accept:"application/json"
+        }
       }
     );
 
@@ -2571,9 +2580,23 @@ async function getJSON(url, signal){
     throw Error(
       "Request failed (" +
       response.status +
-      ")"
+      ") for " +
+      requestUrl
     );
 
+  }
+
+  const contentType =
+    response.headers.get("content-type") || "";
+
+  if(
+    contentType &&
+    !/json/i.test(contentType)
+  ){
+    throw Error(
+      "Catalogue returned " +
+      contentType.split(";")[0]
+    );
   }
 
   return response.json();
@@ -3254,6 +3277,15 @@ function renderHome(){
 
 
   if(!series){
+    $("homeView").innerHTML = `
+      <div class="wrap">
+        <div class="state" role="status">
+          <strong>No catalogue items are available.</strong>
+          <p>The library loaded, but no playable series were found.</p>
+          <button class="button primary" type="button" onclick="location.reload()">Retry</button>
+        </div>
+      </div>
+    `;
     return;
   }
 
@@ -4748,9 +4780,13 @@ document.addEventListener("error", event => {
 
 loadStore();
 
-load().then(
-  route
-);
+load()
+  .catch(error => {
+    console.error("Library startup failed:", error);
+  })
+  .finally(() => {
+    route();
+  });
 
 </script>
 
