@@ -609,11 +609,31 @@ p{
   overflow:hidden
 }
 
-.progress i{
+  .progress i{
   display:block;
   height:100%;
   background:var(--accent)
-}
+  }
+
+  .resume-summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin:-4px 0 18px;
+  padding:14px 16px;
+  border:1px solid #f5b82e35;
+  border-radius:16px;
+  background:linear-gradient(100deg,#f5b82e18,#ffffff05);
+  color:var(--muted)
+  }
+
+  .resume-summary strong{display:block;color:var(--text);margin-bottom:4px}
+  .resume-summary p{margin:0;font-size:13px}
+  .resume-summary .button{flex:0 0 auto}
+  .episode .progress{margin-top:9px}
+  @media(max-width:600px){.resume-summary{align-items:flex-start;flex-direction:column}.resume-summary .button{width:100%}}
+
 
 
 /* TOOLBAR */
@@ -1403,6 +1423,8 @@ p{
 
       </div>
 
+
+      <div class="resume-summary" id="resumeSummary" aria-live="polite"></div>
 
       <div
         class="episode-grid"
@@ -2999,6 +3021,11 @@ function epCard(video){
           ${esc(seriesName(video))} · ${esc(mediaCategory(video))}${season(video) != null ? ` · S${season(video)}` : ""}${episodeTitle(video) ? ` · ${esc(episodeTitle(video))}` : ""}
         </small>
 
+        ${(() => {
+          const percent = progressPercent(historyEntry(video));
+          return percent > 0 ? `<div class="progress" aria-label="${percent}% watched"><i style="width:${percent}%"></i></div>` : "";
+        })()}
+
       </div>
 
     </button>
@@ -3247,15 +3274,26 @@ function renderContinue(){
     );
 
 
-  $("continueGrid").innerHTML =
-    videos
-      .map(epCard)
-      .join("");
+  const latest = videos[0];
+  const latestEntry = latest && historyEntry(latest);
+  const latestPercent = progressPercent(latestEntry);
 
+  $("resumeSummary").innerHTML = latest ? `
+    <div>
+      <strong>${latestPercent ? `Resume ${esc(title(latest))}` : `Start ${esc(title(latest))}`}</strong>
+      <p>${esc(seriesName(latest))}${latestPercent ? ` · ${latestPercent}% watched` : " · Your latest activity"}</p>
+    </div>
+    <button class="button primary" type="button" data-resume="${esc(latest.id)}">${latestPercent ? "Resume" : "Watch now"}</button>
+  ` : "";
 
-  bind(
-    $("continueGrid")
-  );
+  $("continueGrid").innerHTML = videos.map(epCard).join("");
+
+  bind($("continueGrid"));
+  const resumeButton = $("resumeSummary").querySelector("[data-resume]");
+  resumeButton?.addEventListener("click", () => {
+    const video = S.videos.find(item => item.id === resumeButton.dataset.resume);
+    if(video) openWatch(video);
+  });
 
 }
 
@@ -3872,34 +3910,40 @@ function renderSeries(series){
    WATCH HISTORY
 ================================================== */
 
-function markWatched(video){
-
-  S.history =
-    S.history.filter(
-      history =>
-        history.id !==
-        video.id
-    );
-
-
-  S.history.unshift({
-
-    id:video.id,
-
-    timestamp:Date.now()
-
-  });
-
-
-  S.history =
-    S.history.slice(0,50);
-
-
-  save();
-
-  renderContinue();
-
+function historyEntry(video){
+  return S.history.find(entry => entry.id === video?.id);
 }
+
+
+function progressPercent(entry){
+  if(!entry || !Number.isFinite(entry.duration) || entry.duration <= 0) return 0;
+  return Math.max(0, Math.min(100, Math.round((entry.position || 0) / entry.duration * 100)));
+}
+
+
+function markWatched(video, position, duration){
+  const previous = historyEntry(video);
+  S.history = S.history.filter(history => history.id !== video.id);
+
+  const next = {
+    id: video.id,
+    timestamp: Date.now(),
+    position: Number.isFinite(position) ? Math.max(0, Math.round(position)) : (previous?.position || 0),
+    duration: Number.isFinite(duration) && duration > 0 ? Math.round(duration) : (previous?.duration || 0)
+  };
+
+  S.history.unshift(next);
+  S.history = S.history.slice(0,50);
+  save();
+  renderContinue();
+}
+
+
+function savePlaybackProgress(video, media){
+  if(!video || !media || !Number.isFinite(media.currentTime)) return;
+  markWatched(video, media.currentTime, media.duration);
+}
+
 
 
 /* ==================================================
@@ -3939,6 +3983,18 @@ function showDirectPlayer(payload){
     showFallbackPlayer(S.video ? safe(source(S.video)) : "");
   };
   video.src = payload.source;
+  video.onloadedmetadata = () => {
+    const entry = historyEntry(S.video);
+    if(entry?.position && entry.position < video.duration - 5){
+      video.currentTime = entry.position;
+    }
+  };
+  video.ontimeupdate = () => {
+    if(video.currentTime > 0 && Math.floor(video.currentTime) % 10 === 0){
+      savePlaybackProgress(S.video, video);
+    }
+  };
+  video.onended = () => savePlaybackProgress(S.video, video);
   video.load();
   $("watchLoading").classList.add("hidden");
 }
