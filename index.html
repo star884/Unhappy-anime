@@ -779,14 +779,43 @@ p{
   margin:20px 0 38px
 }
 
-.episode-tools{
+  .series-media-tabs{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:3px 2px 12px;
+  margin:0 0 14px;
+  scrollbar-width:none;
+  scroll-snap-type:x proximity
+  }
+
+  .series-media-tabs::-webkit-scrollbar{display:none}
+
+  .series-media-tab{
+  flex:0 0 auto;
+  scroll-snap-align:start;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--muted);
+  border-radius:999px;
+  padding:9px 15px;
+  font-weight:700;
+  font-size:13px;
+  transition:transform .2s,background .2s,color .2s,border-color .2s
+  }
+
+  .series-media-tab:hover{transform:translateY(-1px);color:var(--text);border-color:var(--line-strong)}
+  .series-media-tab.active{background:var(--accent);border-color:var(--accent);color:#161200}
+  .series-media-tab span{opacity:.7;margin-left:5px;font-size:11px}
+
+  .episode-tools{
   display:flex;
   gap:9px;
   flex-wrap:wrap;
   margin-bottom:15px
-}
+  }
 
-.episode-tools input,
+  .episode-tools input,
 .episode-tools select{
   flex:1;
   min-width:210px;
@@ -1802,9 +1831,10 @@ p{
 
     <div class="section-head">
 
-      <h2>
-  Episodes & media
-  </h2>
+      <div>
+        <span class="kicker">LIBRARY</span>
+        <h2 id="seriesGroupTitle">Episodes</h2>
+      </div>
 
       <span
         class="count"
@@ -1815,6 +1845,12 @@ p{
 
     </div>
 
+    <div
+      class="series-media-tabs"
+      id="seriesMediaTabs"
+      role="tablist"
+      aria-label="Series content"
+    ></div>
 
     <div class="episode-tools">
 
@@ -2078,6 +2114,8 @@ const S = {
   view: "home",
 
   activeSeries: null,
+
+  activeSeriesGroup: "episodes",
 
   video: null,
 
@@ -3605,7 +3643,9 @@ function openSeries(series){
 
 
   S.activeSeries =
-    series;
+  series;
+
+  S.activeSeriesGroup = series.groups.episodes.length ? "episodes" : seriesGroups(series)[0]?.key || "episodes";
 
 
   location.hash =
@@ -3715,62 +3755,94 @@ function renderSeries(series){
       toggleSeries(series);
 
 
+  renderSeriesTabs();
   renderSeriesEpisodes();
 
 }
 
 
-function renderSeriesEpisodes(){
+  function seriesGroups(series){
+
+  const groups = [
+    { key:"episodes", label:"Episodes", items:series.groups.episodes },
+    ...series.groups.seasons.map((group, index) => ({ key:`season-${group.items[0]?.season ?? index + 1}`, label:group.name, items:group.items })),
+    { key:"specials", label:"Special Episodes", items:series.groups.specials },
+    { key:"movies", label:"Movies", items:series.groups.movies },
+    { key:"ovas", label:"OVAs", items:series.groups.ovas },
+    { key:"onas", label:"ONAs", items:series.groups.onas },
+    { key:"extras", label:"Extras", items:series.groups.extras },
+    { key:"other", label:"Other", items:series.groups.other }
+  ];
+
+  return groups.filter(group => group.items.length);
+
+  }
+
+
+  function renderSeriesTabs(){
+
+  const tabs = $("seriesMediaTabs");
+  const groups = seriesGroups(S.activeSeries);
+  const selected = groups.some(group => group.key === S.activeSeriesGroup)
+    ? S.activeSeriesGroup
+    : groups[0]?.key;
+
+  S.activeSeriesGroup = selected || "episodes";
+
+  tabs.innerHTML = groups.map(group => `
+    <button class="series-media-tab ${group.key === S.activeSeriesGroup ? "active" : ""}"
+      type="button" role="tab" aria-selected="${group.key === S.activeSeriesGroup}"
+      data-series-group="${esc(group.key)}">
+      ${esc(group.label)}<span>${group.items.length}</span>
+    </button>
+  `).join("");
+
+  tabs.querySelectorAll("[data-series-group]").forEach(button => {
+    button.onclick = () => {
+      S.activeSeriesGroup = button.dataset.seriesGroup;
+      renderSeriesTabs();
+      renderSeriesEpisodes();
+    };
+  });
+
+  }
+
+
+  function renderSeriesEpisodes(){
 
   if(!S.activeSeries){
     return;
   }
 
-
-  const query =
-    norm(
-      $("seriesEpSearch").value
-    );
-
-
-  let list =
-    S.activeSeries.episodes.filter(video =>
-      !query ||
-      norm([
-        title(video), episodeTitle(video), ep(video) ?? "", season(video) ?? "",
-        mediaType(video), mediaCategory(video), specialDate(video), sourceFilename(video)
-      ].join(" ")).includes(query)
-    );
-
-
-  if(
-    $("seriesEpSort").value ===
-    "desc"
-  ){
-
-    list =
-      list
-        .slice()
-        .reverse();
-
-  }
-
-
-  $("seriesEpCount").textContent =
-    list.length;
-
-
-  $("seriesEpGrid").innerHTML =
-    list
-      .map(epCard)
-      .join("");
-
-
-  bind(
-    $("seriesEpGrid")
+  const group = seriesGroups(S.activeSeries).find(item => item.key === S.activeSeriesGroup);
+  const query = norm($("seriesEpSearch").value);
+  const sortDirection = $("seriesEpSort").value === "desc" ? -1 : 1;
+  let list = (group?.items || []).filter(video =>
+    !query || norm([
+      title(video), episodeTitle(video), ep(video) ?? "", season(video) ?? "",
+      mediaType(video), mediaCategory(video), specialDate(video), sourceFilename(video)
+    ].join(" ")).includes(query)
   );
 
-}
+  list = list.slice().sort((a, b) => {
+    const aEpisode = ep(a);
+    const bEpisode = ep(b);
+    if (aEpisode != null || bEpisode != null) return ((aEpisode ?? Infinity) - (bEpisode ?? Infinity)) * sortDirection;
+    const aDate = specialDate(a) || "";
+    const bDate = specialDate(b) || "";
+    return (aDate.localeCompare(bDate) || title(a).localeCompare(title(b), undefined, {numeric:true, sensitivity:"base"})) * sortDirection;
+  });
+
+  $("seriesGroupTitle").textContent = group?.label || "Episodes";
+  $("seriesEpSearch").placeholder = group?.key === "episodes" || group?.key?.startsWith("season-") ? "Episode number or title…" : "Search this collection…";
+  $("seriesEpCount").textContent = list.length;
+  $("seriesEpGrid").innerHTML = list.length
+    ? list.map(epCard).join("")
+    : `<div class="empty">No ${esc(group?.label || "media").toLowerCase()} found.</div>`;
+
+  bind($("seriesEpGrid"));
+
+  }
 
 
 /* ==================================================
