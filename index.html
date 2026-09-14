@@ -2253,8 +2253,15 @@ const S = {
   activeSeriesGroup: "episodes",
 
   video: null,
+  
+  timer: null,
 
-  timer: null
+  catalogueController: null,
+
+  playerController: null,
+
+  featuredPaused: false
+
 
 };
 
@@ -2446,8 +2453,7 @@ function safe(value){
     return [
       "http:",
       "https:",
-      "blob:",
-      "data:"
+      "blob:"
     ].includes(u.protocol)
       ? u.href
       : "";
@@ -2471,7 +2477,9 @@ function parseStoredArray(storageKey){
     const value = JSON.parse(localStorage.getItem(storageKey) || "[]");
     return Array.isArray(value) ? value : [];
   }catch{
-    localStorage.removeItem(storageKey);
+    try{
+      localStorage.removeItem(storageKey);
+    }catch{}
     return [];
   }
 }
@@ -2547,13 +2555,14 @@ function toast(message){
    DATA
 ================================================== */
 
-async function getJSON(url){
+async function getJSON(url, signal){
 
   const response =
     await fetch(
       url,
       {
-        cache:"no-store"
+        cache:"no-store",
+        signal
       }
     );
 
@@ -2574,6 +2583,9 @@ async function getJSON(url){
 
 async function load(){
 
+  S.catalogueController?.abort();
+  S.catalogueController = new AbortController();
+
   try{
 
     const [
@@ -2583,11 +2595,13 @@ async function load(){
       await Promise.all([
 
         getJSON(
-          "./data/videos.json"
+          "./data/videos.json",
+          S.catalogueController.signal
         ),
 
         getJSON(
-          "./data/series.json"
+          "./data/series.json",
+          S.catalogueController.signal
         ).catch(
           () => ({
             series:[]
@@ -3210,20 +3224,33 @@ function renderFeatured(){
   $("heroSlideStatus").textContent = `${String(featuredIndex + 1).padStart(2,"0")} / ${String(S.series.length).padStart(2,"0")}`;
   $("heroDots").innerHTML = S.series.slice(0,8).map((_,index) => `<button type="button" class="${index === featuredIndex ? "active" : ""}" aria-label="Show featured series ${index + 1}" data-featured="${index}"></button>`).join("");
   $("heroDots").querySelectorAll("[data-featured]").forEach(button => button.onclick = () => { featuredIndex = Number(button.dataset.featured); renderFeatured(); resetFeaturedTimer(); });
-  $("heroPlay").onclick = () => openWatch(series.episodes[0]);
+  const firstPlayable = series.episodes.find(video => source(video));
+  $("heroPlay").disabled = !firstPlayable;
+  $("heroPlay").onclick = () => firstPlayable && openWatch(firstPlayable);
   $("heroSeries").onclick = () => openSeries(series);
   $("heroFav").onclick = () => toggleSeries(series);
 }
 
 function resetFeaturedTimer(){
   clearInterval(featuredTimer);
-  featuredTimer = setInterval(() => { if(document.hidden) return; featuredIndex = (featuredIndex + 1) % Math.min(S.series.length,8); renderFeatured(); }, 7000);
+  const limit = Math.min(S.series.length, 8);
+  if(limit < 2 || S.featuredPaused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  featuredTimer = setInterval(() => {
+    if(document.hidden || S.featuredPaused) return;
+    featuredIndex = (featuredIndex + 1) % limit;
+    renderFeatured();
+  }, 7000);
+}
+
+function setFeaturedPaused(paused){
+  S.featuredPaused = paused;
+  resetFeaturedTimer();
 }
 
 function renderHome(){
 
   const series =
-  S.series[0];
+  S.series[featuredIndex] || S.series[0];
 
 
   if(!series){
@@ -3828,11 +3855,10 @@ function renderSeries(series){
       : "♡ My List";
 
 
+  const firstPlayable = series.episodes.find(video => source(video));
+  $("seriesPlay").disabled = !firstPlayable;
   $("seriesPlay").onclick =
-    () =>
-      openWatch(
-        series.episodes[0]
-      );
+    () => firstPlayable && openWatch(firstPlayable);
 
 
   const last =
@@ -3999,34 +4025,32 @@ function persistMediaSelection(groupKey){
    WATCH HISTORY
 ================================================== */
 
-function markWatched(video){
+function markWatched(video, position = 0, duration = 0){
 
-  S.history =
-    S.history.filter(
-      history =>
-        history.id !==
-        video.id
-    );
+  S.history = S.history.filter(history => history.id !== video.id);
 
+  const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 0;
+  const safePosition = Number.isFinite(position) && position >= 0 ? Math.min(position, safeDuration || position) : 0;
 
   S.history.unshift({
-
-    id:video.id,
-
-    timestamp:Date.now()
-
+    id: video.id,
+    timestamp: Date.now(),
+    position: Math.round(safePosition),
+    duration: Math.round(safeDuration),
+    completed: Boolean(safeDuration && safePosition / safeDuration >= 0.9)
   });
 
-
-  S.history =
-    S.history.slice(0,50);
-
-
+  S.history = S.history.slice(0, 50);
   save();
-
   renderContinue();
 
 }
+
+function savePlaybackProgress(video, media){
+  if(!video || !media || !Number.isFinite(media.currentTime)) return;
+  markWatched(video, media.currentTime, media.duration);
+}
+
 
 
 /* ==================================================
@@ -4038,13 +4062,21 @@ function isDirectMediaSource(value){
 }
 
 async function resolveDirectSource(embedUrl){
-  const response = await fetch(`/api/extract-vidmoly?url=${encodeURIComponent(embedUrl)}`, {
-    headers: { Accept: "application/json" },
-    cache: "no-store"
-  });
-  const payload = await response.json().catch(() => ({}));
-  if(!response.ok || !isDirectMediaSource(payload.source)) throw Error(payload.error || "No direct media source available.");
-  return payload;
+  S.playerController?.abort();
+  S.playerController = new AbortController();
+  const timeout = setTimeout(() => S.playerController.abort(), 12000);
+  try{
+    const response = await fetch(`/api/extract-vidmoly?url=${encodeURIComponent(embedUrl)}`, {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+      signal: S.playerController.signal
+    });
+    const payload = await response.json().catch(() => ({}));
+    if(!response.ok || !isDirectMediaSource(payload.source)) throw Error(payload.error || "No direct media source available.");
+    return payload;
+  }finally{
+    clearTimeout(timeout);
+  }
 }
 
 function showFallbackPlayer(src){
@@ -4068,6 +4100,18 @@ function showDirectPlayer(payload){
     showFallbackPlayer(S.video ? safe(source(S.video)) : "");
   };
   video.src = payload.source;
+  video.onloadedmetadata = () => {
+    const saved = S.history.find(item => item.id === S.video?.id);
+    if(saved?.position && saved.position < video.duration - 5){
+      video.currentTime = saved.position;
+    }
+  };
+  video.ontimeupdate = () => {
+    if(video.currentTime > 0 && Math.floor(video.currentTime) % 10 === 0){
+      savePlaybackProgress(S.video, video);
+    }
+  };
+  video.onended = () => savePlaybackProgress(S.video, video);
   video.load();
   $("watchLoading").classList.add("hidden");
 }
@@ -4525,8 +4569,26 @@ $("historyMobile").onclick =
     $("heroExpand").setAttribute("aria-expanded", String(expanded));
     $("heroExpand").firstChild.textContent = expanded ? "Show less " : "Read more ";
   };
-  $("heroPrev").onclick = () => { featuredIndex = (featuredIndex - 1 + Math.min(S.series.length,8)) % Math.min(S.series.length,8); renderFeatured(); resetFeaturedTimer(); };
-  $("heroNext").onclick = () => { featuredIndex = (featuredIndex + 1) % Math.min(S.series.length,8); renderFeatured(); resetFeaturedTimer(); };
+  $("heroPrev").onclick = () => {
+    const limit = Math.min(S.series.length, 8);
+    if(!limit) return;
+    featuredIndex = (featuredIndex - 1 + limit) % limit;
+    renderFeatured();
+    resetFeaturedTimer();
+  };
+  $("heroNext").onclick = () => {
+    const limit = Math.min(S.series.length, 8);
+    if(!limit) return;
+    featuredIndex = (featuredIndex + 1) % limit;
+    renderFeatured();
+    resetFeaturedTimer();
+  };
+  $("hero").addEventListener("mouseenter", () => setFeaturedPaused(true));
+  $("hero").addEventListener("mouseleave", () => setFeaturedPaused(false));
+  $("hero").addEventListener("focusin", () => setFeaturedPaused(true));
+  $("hero").addEventListener("focusout", event => {
+    if(!event.relatedTarget || !$("hero").contains(event.relatedTarget)) setFeaturedPaused(false);
+  });
 
 
 $("historyClose").onclick =
