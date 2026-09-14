@@ -3,17 +3,69 @@ name: Add VidMoly media
 on:
   workflow_dispatch:
     inputs:
-      series: { description: "Exact series name from data/series.json", required: true, type: string }
-      type: { description: "episode, movie, ova, ona, extra, or other", required: false, default: episode, type: string }
-      category: { description: "main, special, movie, ova, ona, extra, or other", required: false, type: string }
-      season: { description: "Season number for seasonal episodes", required: false, type: number }
-      episode: { description: "Episode number or AUTO", required: false, default: AUTO, type: string }
-      episode_title: { description: "Episode title", required: false, type: string }
-      special_date: { description: "Date special in YYYY-MM-DD", required: false, type: string }
-      title: { description: "Display title", required: false, type: string }
-      quality: { description: "Quality", required: false, default: 1080p, type: string }
-      source_filename: { description: "Original source filename", required: false, type: string }
-      vidmoly_url: { description: "VidMoly embed URL", required: true, type: string }
+      series:
+        description: Exact series name from data/series.json
+        required: true
+        type: string
+      type:
+        description: What the media is
+        required: false
+        default: episode
+        type: choice
+        options:
+          - episode
+          - movie
+          - ova
+          - ona
+          - extra
+          - other
+      category:
+        description: How the media is grouped
+        required: false
+        default: main
+        type: choice
+        options:
+          - main
+          - special
+          - movie
+          - ova
+          - ona
+          - extra
+          - other
+      season:
+        description: Positive season number for seasonal episodes; leave blank otherwise
+        required: false
+        type: number
+      episode:
+        description: Positive episode number, or AUTO when supported
+        required: false
+        default: AUTO
+        type: string
+      episode_title:
+        description: Episode or special title
+        required: false
+        type: string
+      special_date:
+        description: Date-based special date in YYYY-MM-DD format
+        required: false
+        type: string
+      title:
+        description: Display title; generated when blank
+        required: false
+        type: string
+      quality:
+        description: Media quality label
+        required: false
+        default: 1080p
+        type: string
+      source_filename:
+        description: Original source filename, when available
+        required: false
+        type: string
+      vidmoly_url:
+        description: Full VidMoly embed URL, such as https://vidmoly.org/embed-....html
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -22,15 +74,53 @@ concurrency:
   group: add-vidmoly-media
   cancel-in-progress: false
 
+env:
+  PYTHONUNBUFFERED: "1"
+
 jobs:
   add-media:
+    name: Add and validate catalogue record
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
-      - name: Add and validate media
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate workflow inputs
+        env:
+          SERIES: ${{ inputs.series }}
+          TYPE: ${{ inputs.type }}
+          CATEGORY: ${{ inputs.category }}
+          SEASON: ${{ inputs.season }}
+          EPISODE: ${{ inputs.episode }}
+          SPECIAL_DATE: ${{ inputs.special_date }}
+          VIDMOLY_URL: ${{ inputs.vidmoly_url }}
+        run: |
+          set -euo pipefail
+          [ -n "${SERIES//[[:space:]]/}" ] || { echo "::error::Series is required"; exit 1; }
+          [ -n "${VIDMOLY_URL//[[:space:]]/}" ] || { echo "::error::VidMoly URL is required"; exit 1; }
+          if [ -n "${SPECIAL_DATE}" ] && { [ -n "${SEASON}" ] || [ "${EPISODE^^}" != "AUTO" ] && [ -n "${EPISODE}" ]; }; then
+            echo "::error::Date-based specials cannot have season or episode values"
+            exit 1
+          fi
+          if [ -n "${SEASON}" ] && [ "${TYPE}" != "episode" ]; then
+            echo "::error::Only episode media can have a season"
+            exit 1
+          fi
+          if [ "${CATEGORY}" = "special" ] && [ "${TYPE}" != "episode" ]; then
+            echo "::error::Only episode media can use the special category"
+            exit 1
+          fi
+
+      - name: Add record and validate complete catalogue
         env:
           SERIES: ${{ inputs.series }}
           TYPE: ${{ inputs.type }}
@@ -45,21 +135,50 @@ jobs:
           VIDMOLY_URL: ${{ inputs.vidmoly_url }}
         run: |
           set -euo pipefail
-          args=(--series "$SERIES" --type "$TYPE" --episode "$EPISODE" --episode-title "$EPISODE_TITLE" --special-date "$SPECIAL_DATE" --title "$TITLE" --quality "$QUALITY" --source-filename "$SOURCE_FILENAME" --vidmoly-url "$VIDMOLY_URL")
-          [ -n "$CATEGORY" ] && args+=(--category "$CATEGORY")
-          [ -n "$SEASON" ] && args+=(--season "$SEASON")
+          args=(
+            --series "$SERIES"
+            --type "$TYPE"
+            --category "$CATEGORY"
+            --episode "$EPISODE"
+            --episode-title "$EPISODE_TITLE"
+            --special-date "$SPECIAL_DATE"
+            --title "$TITLE"
+            --quality "$QUALITY"
+            --source-filename "$SOURCE_FILENAME"
+            --vidmoly-url "$VIDMOLY_URL"
+          )
+          if [ -n "$SEASON" ]; then
+            args+=(--season "$SEASON")
+          fi
           python scripts/validate_catalogue.py "${args[@]}"
           python scripts/validate_catalogue.py --validate-only
+
+      - name: Run repository checks before commit
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/validate_catalogue.py scripts/generate_thumbnails.py
+          python -m json.tool data/videos.json >/dev/null
           git diff --check
-      - name: Commit and push
-        env: { SERIES: ${{ inputs.series }} }
+          git diff --stat
+          git diff -- data/videos.json
+
+      - name: Commit and push to main
+        env:
+          SERIES: ${{ inputs.series }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/videos.json
-          git diff --cached --quiet && { echo "No changes detected"; exit 1; }
+          if git diff --cached --quiet; then
+            echo "::error::No catalogue changes were produced"
+            exit 1
+          fi
           git commit -m "Add ${SERIES} media"
           git push origin HEAD:main
-      - name: Validate thumbnail workflow compatibility
-        run: python -m py_compile scripts/generate_thumbnails.py
+
+      - name: Confirm generated commit
+        run: git status --short
+
+      - name: Confirm thumbnail workflow handoff
+        run: echo "New catalogue record committed; the thumbnail workflow can fill its empty thumbnail."
