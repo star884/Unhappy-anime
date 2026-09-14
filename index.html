@@ -875,11 +875,23 @@ p{
   box-shadow:0 25px 100px #000
 }
 
-.stage iframe{
+  .stage iframe,
+  .stage video{
   width:100%;
   height:100%;
   border:0
-}
+  }
+
+  .stage video{
+  display:block;
+  background:#000;
+  object-fit:contain
+  }
+
+  .direct-video:not(.hidden),
+  .embed-fallback:not(.hidden){
+  display:block
+  }
 
 .loading{
   position:absolute;
@@ -1947,12 +1959,23 @@ p{
       </div>
 
 
-      <iframe
-        id="frame"
-        allow="autoplay;fullscreen;picture-in-picture"
-        allowfullscreen
-        referrerpolicy="no-referrer"
-      ></iframe>
+  <video
+  id="directVideo"
+  class="direct-video hidden"
+  controls
+  playsinline
+  preload="metadata"
+  aria-label="Custom video player"
+  ></video>
+
+  <iframe
+  id="frame"
+  class="embed-fallback hidden"
+  allow="autoplay;fullscreen;picture-in-picture"
+  allowfullscreen
+  referrerpolicy="no-referrer"
+  title="Embedded VidMoly player"
+  ></iframe>
 
     </div>
 
@@ -3883,6 +3906,43 @@ function markWatched(video){
    WATCH VIEW
 ================================================== */
 
+function isDirectMediaSource(value){
+  return /^(https?:)\/\/[^\s]+\.(?:m3u8|mp4)(?:[?#].*)?$/i.test(text(value));
+}
+
+async function resolveDirectSource(embedUrl){
+  const response = await fetch(`/api/extract-vidmoly?url=${encodeURIComponent(embedUrl)}`, {
+    headers: { Accept: "application/json" },
+    cache: "no-store"
+  });
+  const payload = await response.json().catch(() => ({}));
+  if(!response.ok || !isDirectMediaSource(payload.source)) throw Error(payload.error || "No direct media source available.");
+  return payload;
+}
+
+function showFallbackPlayer(src){
+  $("directVideo").pause();
+  $("directVideo").removeAttribute("src");
+  $("directVideo").classList.add("hidden");
+  $("frame").classList.remove("hidden");
+  $("frame").src = src;
+  $("frame").onload = () => $("watchLoading").classList.add("hidden");
+}
+
+function showDirectPlayer(payload){
+  const video = $("directVideo");
+  $("frame").src = "about:blank";
+  $("frame").classList.add("hidden");
+  video.classList.remove("hidden");
+  video.onerror = () => {
+    video.classList.add("hidden");
+    showFallbackPlayer(S.video ? safe(source(S.video)) : "");
+  };
+  video.src = payload.source;
+  video.load();
+  $("watchLoading").classList.add("hidden");
+}
+
 function openWatch(video){
 
   if(!video){
@@ -4013,51 +4073,30 @@ function renderWatch(video){
   );
 
 
-  const src =
-    safe(
-      source(video)
-    );
+  const src = safe(source(video));
+  const directVideo = $("directVideo");
+  const frame = $("frame");
 
+  directVideo.pause();
+  directVideo.removeAttribute("src");
+  directVideo.classList.add("hidden");
+  frame.classList.add("hidden");
+  frame.src = "about:blank";
+  $("watchLoading").classList.remove("hidden");
+  $("watchLoading").textContent = "Preparing custom player…";
 
-  $("watchLoading")
-    .classList
-    .remove("hidden");
+  if(!src){
+    $("watchLoading").textContent = "No playable source.";
+    return;
+  }
 
-
-  $("watchLoading").textContent =
-    "Loading player…";
-
-
-  $("frame").src =
-    "about:blank";
-
-
-  requestAnimationFrame(
-    () => {
-
-      if(!src){
-
-        $("watchLoading")
-          .textContent =
-            "No playable source.";
-
-        return;
-
-      }
-
-
-      $("frame").src =
-        src;
-
-
-      $("frame").onload =
-        () =>
-          $("watchLoading")
-            .classList
-            .add("hidden");
-
-    }
-  );
+  resolveDirectSource(src)
+    .then(showDirectPlayer)
+    .catch(error => {
+      console.warn("Custom player unavailable; using VidMoly embed.", error.message);
+      $("watchLoading").textContent = "Opening embedded player…";
+      showFallbackPlayer(src);
+    });
 
 }
 
