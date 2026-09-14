@@ -1172,120 +1172,9 @@ p{
     transition:none!important
   }
 }
-/* AUDIT POLISH */
-[data-image-fallback] { object-fit: cover; }
-.series-media-tab[aria-selected="true"] { box-shadow: 0 8px 24px #0004; }
-.series-media-tabs:focus-within { scroll-behavior: smooth; }
-.media-announcer { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; }
-}
-
-/* VISUAL REDESIGN */
-:root{
-  --bg:#08090d;
-  --surface:#12151d;
-  --surface2:#1a1f2a;
-  --line:#ffffff14;
-  --line-strong:#ffffff2e;
-  --text:#f7f8fb;
-  --muted:#9aa3b4;
-  --accent:#f5b82e;
-  --accent-dim:#f5b82e24;
-  --blue:#65a5ff;
-  --max:1480px;
-  --r:20px
-}
-
-body{
-  background:
-    radial-gradient(900px 500px at 86% -12%,#20304a55,transparent 68%),
-    radial-gradient(760px 480px at 8% 0%,#3d2d1250,transparent 65%),
-    var(--bg)
-}
-
-.header{
-  height:76px;
-  background:#08090dd9;
-  border-bottom-color:#ffffff1c;
-  box-shadow:0 8px 30px #0005
-}
-
-.head,.wrap,.hero-inner{width:min(var(--max),calc(100% - 40px))}
-.logo{border-radius:13px;box-shadow:0 8px 22px #f5b82e33}
-.brand strong{letter-spacing:.14em}
-.nav button,.mobile-nav button{border-radius:999px;padding:10px 15px}
-.nav button.active{background:var(--accent-dim);color:var(--accent)}
-.search{border-radius:999px;background:#ffffff0a;padding:10px 15px}
-.icon,.button{border-radius:999px;background:#ffffff0b;border-color:#ffffff19}
-.button.primary{box-shadow:0 10px 24px #f5b82e2e}
-
-.hero{min-height:680px;border-bottom:0}
-.hero:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,#08090d00 48%,var(--bg) 100%);pointer-events:none}
-.hero:after{background:linear-gradient(90deg,#08090d 0%,#08090dcc 35%,#08090d38 72%,#08090d 100%),linear-gradient(0deg,#08090d,transparent 52%)}
-.hero-inner{min-height:680px;padding:92px 0 82px;grid-template-columns:minmax(0,1fr) 270px;gap:64px}
-.hero-copy{max-width:780px}
-.hero h1{font-size:clamp(4rem,9vw,8.8rem);text-shadow:0 12px 40px #0008}
-.hero p{color:#d0d6e0;max-width:690px}
-.poster{border-radius:20px;box-shadow:0 28px 90px #000b;border-color:#ffffff38}
-
-.section{padding:52px 0}
-.section-head{margin-bottom:22px}
-.section-head h2{font-size:2.25rem}
-.heading{margin-bottom:32px}
-.heading h1{font-size:clamp(3rem,6vw,5.2rem)}
-
-.grid{gap:18px;grid-template-columns:repeat(auto-fill,minmax(205px,1fr))}
-.card,.episode{border-radius:18px;background:linear-gradient(145deg,#171b25,#10131a);border-color:#ffffff16;box-shadow:0 12px 35px #0003}
-.card:hover,.episode:hover{border-color:#ffffff42;box-shadow:0 20px 50px #0008}
-.thumb,.ep-img{background:#0d1016}
-.card-body{padding:14px 14px 15px}
-.card-title{font-size:14px}
-.badge{border-radius:999px;background:#07090dcc;padding:5px 9px}
-.fav{box-shadow:0 6px 18px #0006}
-.progress{height:4px}
-
-.series-hero{position:relative;padding:28px;border:1px solid #ffffff12;border-radius:26px;background:linear-gradient(135deg,#ffffff0b,#ffffff03);box-shadow:0 25px 70px #0005}
-.series-hero img{border-radius:18px;box-shadow:0 20px 50px #0008}
-.series-copy h1{font-size:clamp(3rem,7vw,6.5rem)}
-.series-actions{margin:25px 0 42px}
-.series-media-tabs{gap:10px;padding:8px 2px 16px;margin-bottom:18px}
-.series-media-tab{border-radius:999px;padding:11px 17px;background:#ffffff08;border-color:#ffffff18}
-.series-media-tab.active{background:var(--blue);border-color:var(--blue);color:#06101f;box-shadow:0 8px 22px #65a5ff33}
-.episode-tools input,.episode-tools select{border-radius:999px;background:#ffffff08;padding:12px 16px}
-
-.watch{background:radial-gradient(900px 500px at 50% -20%,#182438,#050506 70%)}
-.watch-wrap{padding:22px 20px 70px}
-.stage{border-radius:20px;border-color:#ffffff24;box-shadow:0 30px 120px #000}
-.watch-bar{padding:16px 0}
-.watch-info{padding:12px 0 26px;border-bottom:1px solid var(--line)}
-
-.modal-box{border:1px solid #ffffff22;background:linear-gradient(145deg,#1b202b,#10131a);box-shadow:0 30px 100px #000b;border-radius:24px}
-.toast{border:1px solid #ffffff24;background:#171c27dd;backdrop-filter:blur(18px);border-radius:999px;box-shadow:0 15px 45px #0008}
-.footer{border-top-color:#ffffff14;color:#8f98aa}
-
-@media(max-width:760px){
-  .head,.wrap,.hero-inner{width:min(100% - 28px, var(--max))}
-  .header{height:64px}
-  .brand small{display:none}
-  .hero,.hero-inner{min-height:600px}
-  .hero-inner{display:flex;align-items:end;padding:90px 0 58px}
-  .hero-inner>.poster{display:none}
-  .hero h1{font-size:clamp(3.3rem,18vw,6rem)}
-  .hero p{font-size:.94rem;line-height:1.55}
-  .series-hero{grid-template-columns:104px 1fr;gap:17px;padding:17px}
-  .series-copy h1{font-size:clamp(2rem,10vw,3.6rem)}
-  .series-copy p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-  .series-actions{margin:18px 0 30px}
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-  .episode-grid{grid-template-columns:1fr;gap:12px}
-  .card-body{padding:10px}
-  .section{padding:34px 0}
-}
-
 </style>
-
 </head>
+
 <body>
 
 <a href="#main" class="sr-only-link">Skip to content</a>
@@ -1968,13 +1857,12 @@ body{
 
     </div>
 
-  <div
-  class="series-media-tabs"
-  id="seriesMediaTabs"
-  role="tablist"
-  aria-label="Series content"
-  ></div>
-  <div class="media-announcer" id="mediaAnnouncer" role="status" aria-live="polite"></div>
+    <div
+      class="series-media-tabs"
+      id="seriesMediaTabs"
+      role="tablist"
+      aria-label="Series content"
+    ></div>
 
     <div class="episode-tools">
 
@@ -2253,15 +2141,8 @@ const S = {
   activeSeriesGroup: "episodes",
 
   video: null,
-  
-  timer: null,
 
-  catalogueController: null,
-
-  playerController: null,
-
-  featuredPaused: false
-
+  timer: null
 
 };
 
@@ -2453,7 +2334,8 @@ function safe(value){
     return [
       "http:",
       "https:",
-      "blob:"
+      "blob:",
+      "data:"
     ].includes(u.protocol)
       ? u.href
       : "";
@@ -2471,29 +2353,44 @@ function safe(value){
    STORAGE
 ================================================== */
 
-function parseStoredArray(storageKey){
-
-  try{
-    const value = JSON.parse(localStorage.getItem(storageKey) || "[]");
-    return Array.isArray(value) ? value : [];
-  }catch{
-    try{
-      localStorage.removeItem(storageKey);
-    }catch{}
-    return [];
-  }
-}
-
-
 function loadStore(){
 
-  S.favorites = new Set(
-    parseStoredArray(KEYS.fav).filter(value => typeof value === "string")
-  );
+  try{
 
-  S.history = parseStoredArray(KEYS.hist)
-    .filter(value => value && typeof value.id === "string")
-    .slice(0,50);
+    S.favorites =
+      new Set(
+        JSON.parse(
+          localStorage.getItem(
+            KEYS.fav
+          ) || "[]"
+        ).filter(
+          x =>
+            typeof x === "string"
+        )
+      );
+
+
+    S.history =
+      JSON.parse(
+        localStorage.getItem(
+          KEYS.hist
+        ) || "[]"
+      )
+      .filter(
+        x =>
+          x &&
+          typeof x.id === "string"
+      )
+      .slice(0,50);
+
+  }catch{
+
+    S.favorites =
+      new Set();
+
+    S.history = [];
+
+  }
 
 }
 
@@ -2555,23 +2452,13 @@ function toast(message){
    DATA
 ================================================== */
 
-async function getJSON(url, signal){
-
-  const requestUrl =
-    new URL(
-      url,
-      document.baseURI
-    ).href;
+async function getJSON(url){
 
   const response =
     await fetch(
-      requestUrl,
+      url,
       {
-        cache:"no-store",
-        signal,
-        headers:{
-          Accept:"application/json"
-        }
+        cache:"no-store"
       }
     );
 
@@ -2580,23 +2467,9 @@ async function getJSON(url, signal){
     throw Error(
       "Request failed (" +
       response.status +
-      ") for " +
-      requestUrl
+      ")"
     );
 
-  }
-
-  const contentType =
-    response.headers.get("content-type") || "";
-
-  if(
-    contentType &&
-    !/json/i.test(contentType)
-  ){
-    throw Error(
-      "Catalogue returned " +
-      contentType.split(";")[0]
-    );
   }
 
   return response.json();
@@ -2605,9 +2478,6 @@ async function getJSON(url, signal){
 
 
 async function load(){
-
-  S.catalogueController?.abort();
-  S.catalogueController = new AbortController();
 
   try{
 
@@ -2618,13 +2488,11 @@ async function load(){
       await Promise.all([
 
         getJSON(
-          "./data/videos.json",
-          S.catalogueController.signal
+          "./data/videos.json"
         ),
 
         getJSON(
-          "./data/series.json",
-          S.catalogueController.signal
+          "./data/series.json"
         ).catch(
           () => ({
             series:[]
@@ -3247,45 +3115,23 @@ function renderFeatured(){
   $("heroSlideStatus").textContent = `${String(featuredIndex + 1).padStart(2,"0")} / ${String(S.series.length).padStart(2,"0")}`;
   $("heroDots").innerHTML = S.series.slice(0,8).map((_,index) => `<button type="button" class="${index === featuredIndex ? "active" : ""}" aria-label="Show featured series ${index + 1}" data-featured="${index}"></button>`).join("");
   $("heroDots").querySelectorAll("[data-featured]").forEach(button => button.onclick = () => { featuredIndex = Number(button.dataset.featured); renderFeatured(); resetFeaturedTimer(); });
-  const firstPlayable = series.episodes.find(video => source(video));
-  $("heroPlay").disabled = !firstPlayable;
-  $("heroPlay").onclick = () => firstPlayable && openWatch(firstPlayable);
+  $("heroPlay").onclick = () => openWatch(series.episodes[0]);
   $("heroSeries").onclick = () => openSeries(series);
   $("heroFav").onclick = () => toggleSeries(series);
 }
 
 function resetFeaturedTimer(){
   clearInterval(featuredTimer);
-  const limit = Math.min(S.series.length, 8);
-  if(limit < 2 || S.featuredPaused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  featuredTimer = setInterval(() => {
-    if(document.hidden || S.featuredPaused) return;
-    featuredIndex = (featuredIndex + 1) % limit;
-    renderFeatured();
-  }, 7000);
-}
-
-function setFeaturedPaused(paused){
-  S.featuredPaused = paused;
-  resetFeaturedTimer();
+  featuredTimer = setInterval(() => { if(document.hidden) return; featuredIndex = (featuredIndex + 1) % Math.min(S.series.length,8); renderFeatured(); }, 7000);
 }
 
 function renderHome(){
 
   const series =
-  S.series[featuredIndex] || S.series[0];
+  S.series[0];
 
 
   if(!series){
-    $("homeView").innerHTML = `
-      <div class="wrap">
-        <div class="state" role="status">
-          <strong>No catalogue items are available.</strong>
-          <p>The library loaded, but no playable series were found.</p>
-          <button class="button primary" type="button" onclick="location.reload()">Retry</button>
-        </div>
-      </div>
-    `;
     return;
   }
 
@@ -3887,10 +3733,11 @@ function renderSeries(series){
       : "♡ My List";
 
 
-  const firstPlayable = series.episodes.find(video => source(video));
-  $("seriesPlay").disabled = !firstPlayable;
   $("seriesPlay").onclick =
-    () => firstPlayable && openWatch(firstPlayable);
+    () =>
+      openWatch(
+        series.episodes[0]
+      );
 
 
   const last =
@@ -3955,36 +3802,15 @@ function renderSeries(series){
   }
 
 
-  function selectedMediaFromUrl(){
-  try{
-    return new URLSearchParams(location.search).get("media") || "";
-  }catch{
-    return "";
-  }
-}
-
-
-function persistMediaSelection(groupKey){
-  try{
-    const url = new URL(location.href);
-    url.searchParams.set("media", groupKey);
-    history.replaceState(null, "", url.href);
-  }catch{}
-}
-
-
   function renderSeriesTabs(){
 
   const tabs = $("seriesMediaTabs");
   const groups = seriesGroups(S.activeSeries);
-  const requested = selectedMediaFromUrl();
-  const preferred = S.activeSeriesGroup || requested;
-  const selected = groups.some(group => group.key === preferred)
-    ? preferred
+  const selected = groups.some(group => group.key === S.activeSeriesGroup)
+    ? S.activeSeriesGroup
     : groups[0]?.key;
 
   S.activeSeriesGroup = selected || "episodes";
-  persistMediaSelection(S.activeSeriesGroup);
 
   tabs.innerHTML = groups.map(group => `
     <button class="series-media-tab ${group.key === S.activeSeriesGroup ? "active" : ""}"
@@ -3994,22 +3820,11 @@ function persistMediaSelection(groupKey){
     </button>
   `).join("");
 
-  tabs.querySelectorAll("[data-series-group]").forEach((button, index, buttons) => {
-  button.tabIndex = button.getAttribute("aria-selected") === "true" ? 0 : -1;
-  button.onkeydown = event => {
-    if(!["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp", "Home", "End"].includes(event.key)) return;
-    event.preventDefault();
-    const nextIndex = event.key === "Home" ? 0 : event.key === "End" ? buttons.length - 1 : (index + (event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 1) + buttons.length) % buttons.length;
-    buttons[nextIndex].focus();
-    buttons[nextIndex].click();
-  };
-  button.onclick = () => {
+  tabs.querySelectorAll("[data-series-group]").forEach(button => {
+    button.onclick = () => {
       S.activeSeriesGroup = button.dataset.seriesGroup;
-      persistMediaSelection(S.activeSeriesGroup);
       renderSeriesTabs();
       renderSeriesEpisodes();
-      $("mediaAnnouncer").textContent = `${button.textContent.trim()} selected`;
-      button.focus();
     };
   });
 
@@ -4057,32 +3872,34 @@ function persistMediaSelection(groupKey){
    WATCH HISTORY
 ================================================== */
 
-function markWatched(video, position = 0, duration = 0){
+function markWatched(video){
 
-  S.history = S.history.filter(history => history.id !== video.id);
+  S.history =
+    S.history.filter(
+      history =>
+        history.id !==
+        video.id
+    );
 
-  const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 0;
-  const safePosition = Number.isFinite(position) && position >= 0 ? Math.min(position, safeDuration || position) : 0;
 
   S.history.unshift({
-    id: video.id,
-    timestamp: Date.now(),
-    position: Math.round(safePosition),
-    duration: Math.round(safeDuration),
-    completed: Boolean(safeDuration && safePosition / safeDuration >= 0.9)
+
+    id:video.id,
+
+    timestamp:Date.now()
+
   });
 
-  S.history = S.history.slice(0, 50);
+
+  S.history =
+    S.history.slice(0,50);
+
+
   save();
+
   renderContinue();
 
 }
-
-function savePlaybackProgress(video, media){
-  if(!video || !media || !Number.isFinite(media.currentTime)) return;
-  markWatched(video, media.currentTime, media.duration);
-}
-
 
 
 /* ==================================================
@@ -4094,21 +3911,13 @@ function isDirectMediaSource(value){
 }
 
 async function resolveDirectSource(embedUrl){
-  S.playerController?.abort();
-  S.playerController = new AbortController();
-  const timeout = setTimeout(() => S.playerController.abort(), 12000);
-  try{
-    const response = await fetch(`/api/extract-vidmoly?url=${encodeURIComponent(embedUrl)}`, {
-      headers: { Accept: "application/json" },
-      cache: "no-store",
-      signal: S.playerController.signal
-    });
-    const payload = await response.json().catch(() => ({}));
-    if(!response.ok || !isDirectMediaSource(payload.source)) throw Error(payload.error || "No direct media source available.");
-    return payload;
-  }finally{
-    clearTimeout(timeout);
-  }
+  const response = await fetch(`/api/extract-vidmoly?url=${encodeURIComponent(embedUrl)}`, {
+    headers: { Accept: "application/json" },
+    cache: "no-store"
+  });
+  const payload = await response.json().catch(() => ({}));
+  if(!response.ok || !isDirectMediaSource(payload.source)) throw Error(payload.error || "No direct media source available.");
+  return payload;
 }
 
 function showFallbackPlayer(src){
@@ -4117,9 +3926,7 @@ function showFallbackPlayer(src){
   $("directVideo").classList.add("hidden");
   $("frame").classList.remove("hidden");
   $("frame").src = src;
-  $("watchLoading").textContent = "Opening embedded VidMoly player…";
   $("frame").onload = () => $("watchLoading").classList.add("hidden");
-  $("frame").onerror = () => { $("watchLoading").textContent = "The embedded player could not be loaded. Try again."; };
 }
 
 function showDirectPlayer(payload){
@@ -4132,18 +3939,6 @@ function showDirectPlayer(payload){
     showFallbackPlayer(S.video ? safe(source(S.video)) : "");
   };
   video.src = payload.source;
-  video.onloadedmetadata = () => {
-    const saved = S.history.find(item => item.id === S.video?.id);
-    if(saved?.position && saved.position < video.duration - 5){
-      video.currentTime = saved.position;
-    }
-  };
-  video.ontimeupdate = () => {
-    if(video.currentTime > 0 && Math.floor(video.currentTime) % 10 === 0){
-      savePlaybackProgress(S.video, video);
-    }
-  };
-  video.onended = () => savePlaybackProgress(S.video, video);
   video.load();
   $("watchLoading").classList.add("hidden");
 }
@@ -4601,26 +4396,8 @@ $("historyMobile").onclick =
     $("heroExpand").setAttribute("aria-expanded", String(expanded));
     $("heroExpand").firstChild.textContent = expanded ? "Show less " : "Read more ";
   };
-  $("heroPrev").onclick = () => {
-    const limit = Math.min(S.series.length, 8);
-    if(!limit) return;
-    featuredIndex = (featuredIndex - 1 + limit) % limit;
-    renderFeatured();
-    resetFeaturedTimer();
-  };
-  $("heroNext").onclick = () => {
-    const limit = Math.min(S.series.length, 8);
-    if(!limit) return;
-    featuredIndex = (featuredIndex + 1) % limit;
-    renderFeatured();
-    resetFeaturedTimer();
-  };
-  $("hero").addEventListener("mouseenter", () => setFeaturedPaused(true));
-  $("hero").addEventListener("mouseleave", () => setFeaturedPaused(false));
-  $("hero").addEventListener("focusin", () => setFeaturedPaused(true));
-  $("hero").addEventListener("focusout", event => {
-    if(!event.relatedTarget || !$("hero").contains(event.relatedTarget)) setFeaturedPaused(false);
-  });
+  $("heroPrev").onclick = () => { featuredIndex = (featuredIndex - 1 + Math.min(S.series.length,8)) % Math.min(S.series.length,8); renderFeatured(); resetFeaturedTimer(); };
+  $("heroNext").onclick = () => { featuredIndex = (featuredIndex + 1) % Math.min(S.series.length,8); renderFeatured(); resetFeaturedTimer(); };
 
 
 $("historyClose").onclick =
@@ -4764,29 +4541,15 @@ window.addEventListener(
 );
 
 
-document.addEventListener("error", event => {
-  const image = event.target;
-  if(!(image instanceof HTMLImageElement) || image.dataset.fallbackApplied) return;
-  image.dataset.fallbackApplied = "true";
-  image.removeAttribute("srcset");
-  image.removeAttribute("src");
-  image.closest(".poster-wrap, .episode-thumb, .hero-poster, .poster")?.classList.add("image-failed");
-}, true);
-
-
 /* ==================================================
    START
 ================================================== */
 
 loadStore();
 
-load()
-  .catch(error => {
-    console.error("Library startup failed:", error);
-  })
-  .finally(() => {
-    route();
-  });
+load().then(
+  route
+);
 
 </script>
 
