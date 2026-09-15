@@ -4520,6 +4520,22 @@ $("brand").onclick =
       "#home";
 
 
+$("seriesBack").onclick =
+  () =>
+
+    history.length > 1
+      ? history.back()
+      : location.hash = "#browse";
+
+
+$("watchBack").onclick =
+  () =>
+
+    history.length > 1
+      ? history.back()
+      : location.hash = "#home";
+
+
 $("menuBtn").onclick =
   () =>
     $("mobileNav")
