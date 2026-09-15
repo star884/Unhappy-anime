@@ -2063,11 +2063,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 109.",
+    "description": "Kiteretsu Daihyakka - Episode 109 — 世にも奇妙な! おしゃべりな野菜たち.",
     "embed": "https://vidmoly.org/embed-f0pn658kjygt.html",
     "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02917/f0pn658kjygt.jpg?gha_thumb=422a58d068567f79",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "世にも奇妙な! おしゃべりな野菜たち"
   },
   {
     "id": "kiteretsu-110",
