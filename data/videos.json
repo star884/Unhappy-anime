@@ -2633,11 +2633,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 139.",
+    "description": "Kiteretsu Daihyakka - Episode 139 — のぞかないで!! トンガリの夢の新婚生活.",
     "embed": "https://vidmoly.org/embed-6b5i6uhh5g64.html",
     "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/6b5i6uhh5g64.jpg?gha_thumb=035465cc0c6eeebf",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "のぞかないで!! トンガリの夢の新婚生活"
   },
   {
     "id": "kiteretsu-140",
