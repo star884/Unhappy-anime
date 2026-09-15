@@ -2348,11 +2348,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 124.",
+    "description": "Kiteretsu Daihyakka - Episode 124 — 嫌信丸でズバリ! いい人 悪い人.",
     "embed": "https://vidmoly.org/embed-lubqdmf43ddn.html",
     "thumbnail": "https://transit-1478-v1.vmwesa.online/i/01/02914/lubqdmf43ddn.jpg?gha_thumb=27afa1db2ca6895c",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "嫌信丸でズバリ! いい人 悪い人"
   },
   {
     "id": "kiteretsu-125",
