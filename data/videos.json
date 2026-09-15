@@ -2576,11 +2576,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 136.",
+    "description": "Kiteretsu Daihyakka - Episode 136 — 遊んでくれないパパたちへ! 道楽つづら.",
     "embed": "https://vidmoly.org/embed-ihudtecle299.html",
     "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/ihudtecle299.jpg?gha_thumb=fc155ba7d60ff3af",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "遊んでくれないパパたちへ! 道楽つづら"
   },
   {
     "id": "kiteretsu-137",
