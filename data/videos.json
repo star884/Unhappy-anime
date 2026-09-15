@@ -1930,11 +1930,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 102.",
+    "description": "Kiteretsu Daihyakka - Episode 102 — 夏の海でかわいそうな バナナがSOS!.",
     "embed": "https://vidmoly.org/embed-rr5ixlu6o9pz.html",
     "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02917/rr5ixlu6o9pz.jpg?gha_thumb=b2482c84b97254eb",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "夏の海でかわいそうな バナナがSOS!"
   },
   {
     "id": "kiteretsu-103",
