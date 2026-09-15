@@ -2747,11 +2747,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 145.",
+    "description": "Kiteretsu Daihyakka - Episode 145 — 警察不要? 土下座ぶとんでゴメーン!.",
     "embed": "https://vidmoly.org/embed-5ts35oqmysij.html",
     "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/5ts35oqmysij.jpg?gha_thumb=34ade80519ac30b0",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "警察不要? 土下座ぶとんでゴメーン!"
   },
   {
     "id": "kiteretsu-146",
