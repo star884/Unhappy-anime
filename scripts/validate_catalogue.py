@@ -81,11 +81,32 @@ def validate_catalogue(videos: list[dict]) -> list[dict]:
 def slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.casefold()).strip("-") or "media"
 
+def update_episode_title(videos: list[dict], series_name: str, season: int | None, episode: int, episode_title: str) -> list[dict]:
+    if not clean(episode_title):
+        fail("--episode-title is required when updating a title")
+    matches = [
+        item for item in videos
+        if key(item.get("series")) == key(series_name)
+        and media_type(item) == "episode"
+        and (season is None or item.get("season") == season)
+        and item.get("episode") == episode
+    ]
+    if len(matches) != 1:
+        fail(f"Expected exactly one matching episode, found {len(matches)}")
+    updated = copy.deepcopy(videos)
+    for item in updated:
+        if item["id"] == matches[0]["id"]:
+            item["episode_title"] = clean(episode_title)
+            if not clean(item.get("description")) or item["description"].endswith("."):
+                item["description"] = f"{item.get('title') or item['id']} — {clean(episode_title)}."
+    return validate_catalogue(updated)
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--catalogue", default="data/videos.json")
     parser.add_argument("--series-file", default="data/series.json")
     parser.add_argument("--series")
+    parser.add_argument("--update-episode-title", action="store_true")
     parser.add_argument("--type", default="episode")
     parser.add_argument("--category")
     parser.add_argument("--season", type=int)
@@ -101,7 +122,17 @@ def main() -> int:
     catalogue_path = Path(args.catalogue)
     videos = json.loads(catalogue_path.read_text(encoding="utf-8"))
     normalized = validate_catalogue(videos)
-    if args.validate_only: print(f"Validated {len(normalized)} catalogue records."); return 0
+    if args.validate_only:
+        print(f"Validated {len(normalized)} catalogue records.")
+        return 0
+    if args.update_episode_title:
+        if not args.series or args.episode in (None, "AUTO"):
+            fail("Title updates require --series and a numeric --episode")
+        updated = update_episode_title(normalized, args.series, args.season, int(args.episode), args.episode_title)
+        catalogue_path.write_text(json.dumps(updated, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        season_label = f"S{args.season:02d}" if args.season is not None else ""
+        print(f"Updated episode title for {args.series} {season_label}E{int(args.episode):03d}".strip())
+        return 0
     if not args.series or not args.vidmoly_url: fail("--series and --vidmoly-url are required")
     series_data = json.loads(Path(args.series_file).read_text(encoding="utf-8"))
     series_list = series_data.get("series", []) if isinstance(series_data, dict) else series_data

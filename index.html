@@ -632,6 +632,7 @@ p{
   .resume-summary p{margin:0;font-size:13px}
   .resume-summary .button{flex:0 0 auto}
   .episode .progress{margin-top:9px}
+  .episode-display-title{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;line-height:1.25;min-height:2.5em}
   @media(max-width:600px){.resume-summary{align-items:flex-start;flex-direction:column}.resume-summary .button{width:100%}}
 
 
@@ -2306,11 +2307,19 @@ const num = value => {
 };
 
 
-const title = video =>
+const baseTitle = video =>
   text(
-    video.title ??
-    video.name
+  video.title ??
+  video.name
   ) || "Untitled";
+
+
+const title = video =>
+  episodeTitle(video) || baseTitle(video);
+
+
+const episodeDisplayTitle = video =>
+  episodeTitle(video) || baseTitle(video);
 
 
 const seriesName = video =>
@@ -3094,13 +3103,13 @@ function epCard(video){
 
       <div class="ep-body">
 
-        <strong>
-          ${esc(title(video))}
-        </strong>
+  <strong class="episode-display-title" title="${esc(episodeDisplayTitle(video))}">
+  ${esc(episodeDisplayTitle(video))}
+  </strong>
 
-        <small>
-          ${esc(seriesName(video))} · ${esc(mediaCategory(video))}${season(video) != null ? ` · S${season(video)}` : ""}${episodeTitle(video) ? ` · ${esc(episodeTitle(video))}` : ""}
-        </small>
+  <small>
+  ${esc(seriesName(video))} · ${esc(mediaCategory(video))}${season(video) != null ? ` · S${season(video)}` : ""}${ep(video) != null ? ` · EP ${esc(label(video))}` : ""}
+  </small>
 
         ${(() => {
           const percent = progressPercent(historyEntry(video));
