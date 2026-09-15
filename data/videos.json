@@ -2804,11 +2804,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 148.",
+    "description": "Kiteretsu Daihyakka - Episode 148 — ビックリ仰天! スカートをはいたコロ助.",
     "embed": "https://vidmoly.org/embed-7t6v698ex454.html",
     "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/7t6v698ex454.jpg?gha_thumb=61ee5dfd36bdee4c",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "ビックリ仰天! スカートをはいたコロ助"
   },
   {
     "id": "kiteretsu-149",
