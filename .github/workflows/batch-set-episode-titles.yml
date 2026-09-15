@@ -1,0 +1,542 @@
+name: Batch Set Episode Titles from CSV
+
+on:
+  workflow_dispatch:
+    inputs:
+      csv_file:
+        description: Path to the CSV file
+        required: true
+        default: data/episode_titles.csv
+        type: string
+
+      series:
+        description: Exact series name from data/series.json
+        required: true
+        default: Kiteretsu Daihyakka
+        type: string
+
+  push:
+    paths:
+      - data/episode_titles.csv
+
+permissions:
+  contents: write
+
+concurrency:
+  group: batch-set-episode-titles
+  cancel-in-progress: false
+
+env:
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  update:
+    name: Batch update episode titles
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Process CSV
+        id: process
+        env:
+          CSV_FILE: ${{ inputs.csv_file || 'data/episode_titles.csv' }}
+          SERIES: ${{ inputs.series || 'Kiteretsu Daihyakka' }}
+        run: |
+          set -euo pipefail
+
+          python - <<'PY'
+          import csv
+          import json
+          import os
+          import re
+          import subprocess
+          import sys
+          import tempfile
+          from pathlib import Path
+
+          CSV_FILE = Path(os.environ["CSV_FILE"])
+          SERIES = os.environ["SERIES"].strip()
+
+          VIDEOS_FILE = Path("data/videos.json")
+          SERIES_FILE = Path("data/series.json")
+          VALIDATOR = Path("scripts/validate_catalogue.py")
+
+          def error(message):
+              print(f"::error::{message}")
+              raise SystemExit(1)
+
+          def normalise(value):
+              return " ".join(str(value or "").split()).casefold()
+
+          # ----------------------------------------------------------
+          # Check required files
+          # ----------------------------------------------------------
+
+          if not SERIES:
+              error("Series name cannot be empty")
+
+          if not CSV_FILE.is_file():
+              error(f"CSV file not found: {CSV_FILE}")
+
+          if not VIDEOS_FILE.is_file():
+              error("data/videos.json was not found")
+
+          if not SERIES_FILE.is_file():
+              error("data/series.json was not found")
+
+          if not VALIDATOR.is_file():
+              error("scripts/validate_catalogue.py was not found")
+
+          # ----------------------------------------------------------
+          # Validate the requested series against series.json
+          # ----------------------------------------------------------
+
+          try:
+              series_data = json.loads(
+                  SERIES_FILE.read_text(encoding="utf-8")
+              )
+          except json.JSONDecodeError as exc:
+              error(f"Invalid data/series.json: {exc}")
+
+          if isinstance(series_data, dict):
+              series_list = series_data.get("series", [])
+          elif isinstance(series_data, list):
+              series_list = series_data
+          else:
+              error("data/series.json must contain an object or array")
+
+          matching_series = [
+              item
+              for item in series_list
+              if isinstance(item, dict)
+              and normalise(item.get("name")) == normalise(SERIES)
+          ]
+
+          if len(matching_series) != 1:
+              error(
+                  f"Expected exactly one series named {SERIES!r}; "
+                  f"found {len(matching_series)}"
+              )
+
+          canonical_series = str(
+              matching_series[0].get("name")
+          ).strip()
+
+          # ----------------------------------------------------------
+          # Read CSV
+          # ----------------------------------------------------------
+
+          try:
+              with CSV_FILE.open(
+                  "r",
+                  encoding="utf-8-sig",
+                  newline=""
+              ) as handle:
+                  reader = csv.DictReader(handle)
+
+                  if not reader.fieldnames:
+                      error("CSV has no header")
+
+                  headers = [
+                      str(value).strip()
+                      if value is not None
+                      else ""
+                      for value in reader.fieldnames
+                  ]
+
+                  if headers != ["episode_number", "title"]:
+                      error(
+                          "CSV header must be exactly: "
+                          "episode_number,title"
+                      )
+
+                  rows = list(reader)
+
+          except UnicodeDecodeError as exc:
+              error(f"CSV must be UTF-8 encoded: {exc}")
+          except csv.Error as exc:
+              error(f"CSV parsing failed: {exc}")
+
+          if not rows:
+              error("CSV contains no episode rows")
+
+          # ----------------------------------------------------------
+          # Validate every CSV row before modifying videos.json
+          # ----------------------------------------------------------
+
+          csv_titles = {}
+          csv_errors = []
+
+          for line_number, row in enumerate(rows, start=2):
+              episode_raw = str(
+                  row.get("episode_number") or ""
+              ).strip()
+
+              title = str(
+                  row.get("title") or ""
+              ).strip()
+
+              if not re.fullmatch(r"[1-9][0-9]*", episode_raw):
+                  csv_errors.append(
+                      f"line {line_number}: invalid episode number "
+                      f"{episode_raw!r}"
+                  )
+                  continue
+
+              if not title:
+                  csv_errors.append(
+                      f"line {line_number}: episode title is empty"
+                  )
+                  continue
+
+              episode = int(episode_raw)
+
+              if episode in csv_titles:
+                  csv_errors.append(
+                      f"line {line_number}: duplicate episode "
+                      f"{episode}"
+                  )
+                  continue
+
+              csv_titles[episode] = title
+
+          if csv_errors:
+              for message in csv_errors:
+                  print(f"::error::{message}")
+              raise SystemExit(1)
+
+          print(
+              f"CSV contains {len(csv_titles)} valid episode titles "
+              f"for {canonical_series}."
+          )
+
+          # ----------------------------------------------------------
+          # Load videos.json
+          # ----------------------------------------------------------
+
+          try:
+              videos = json.loads(
+                  VIDEOS_FILE.read_text(encoding="utf-8")
+              )
+          except json.JSONDecodeError as exc:
+              error(f"Invalid data/videos.json: {exc}")
+
+          if not isinstance(videos, list):
+              error("data/videos.json must contain an array")
+
+          # ----------------------------------------------------------
+          # Find pure episode records.
+          #
+          # Missing type = episode, matching the existing validator.
+          #
+          # Missing category = main.
+          #
+          # Seasonal records are deliberately excluded because this
+          # CSV has no season column. This prevents E001 from one
+          # season being confused with E001 from another season.
+          # ----------------------------------------------------------
+
+          episode_records = {}
+
+          for index, record in enumerate(videos):
+
+              if not isinstance(record, dict):
+                  error(
+                      f"videos.json entry {index} is not an object"
+                  )
+
+              if normalise(record.get("series")) != normalise(
+                  canonical_series
+              ):
+                  continue
+
+              record_type = str(
+                  record.get("type") or "episode"
+              ).strip().casefold()
+
+              if record_type != "episode":
+                  continue
+
+              record_category = str(
+                  record.get("category") or "main"
+              ).strip().casefold()
+
+              # Never treat specials as regular episodes.
+              if record_category != "main":
+                  continue
+
+              # CSV has no season information.
+              if record.get("season") not in (None, ""):
+                  continue
+
+              episode = record.get("episode")
+
+              if (
+                  isinstance(episode, bool)
+                  or not isinstance(episode, int)
+                  or episode < 1
+              ):
+                  continue
+
+              episode_records.setdefault(
+                  episode,
+                  []
+              ).append(index)
+
+          # ----------------------------------------------------------
+          # Every CSV episode must map to exactly one existing record.
+          #
+          # Nothing is changed until this entire check passes.
+          # ----------------------------------------------------------
+
+          missing = []
+          ambiguous = []
+
+          for episode in sorted(csv_titles):
+              matches = episode_records.get(episode, [])
+
+              if not matches:
+                  missing.append(episode)
+
+              elif len(matches) > 1:
+                  ambiguous.append(
+                      (episode, matches)
+                  )
+
+          if missing:
+              error(
+                  "These CSV episodes do not exist in videos.json: "
+                  + ", ".join(map(str, missing))
+              )
+
+          if ambiguous:
+              for episode, indexes in ambiguous:
+                  print(
+                      "::error::Episode "
+                      f"{episode} has multiple matching records: "
+                      + ", ".join(map(str, indexes))
+                  )
+              raise SystemExit(1)
+
+          # ----------------------------------------------------------
+          # Update ONLY episode_title.
+          #
+          # Important:
+          # - ID unchanged
+          # - title unchanged
+          # - description unchanged
+          # - embed unchanged
+          # - thumbnail unchanged
+          # - season unchanged
+          # - type unchanged
+          # - category unchanged
+          # ----------------------------------------------------------
+
+          changed = []
+          unchanged = []
+
+          for episode in sorted(csv_titles):
+              index = episode_records[episode][0]
+              record = videos[index]
+
+              new_title = csv_titles[episode]
+              old_title = str(
+                  record.get("episode_title") or ""
+              ).strip()
+
+              if old_title == new_title:
+                  unchanged.append(episode)
+                  continue
+
+              record["episode_title"] = new_title
+              changed.append(episode)
+
+          # ----------------------------------------------------------
+          # Atomically write videos.json.
+          # ----------------------------------------------------------
+
+          if changed:
+              directory = VIDEOS_FILE.parent
+
+              with tempfile.NamedTemporaryFile(
+                  mode="w",
+                  encoding="utf-8",
+                  newline="\n",
+                  dir=directory,
+                  prefix=".videos-",
+                  suffix=".json",
+                  delete=False,
+              ) as temporary:
+                  temporary_path = Path(temporary.name)
+
+                  json.dump(
+                      videos,
+                      temporary,
+                      ensure_ascii=False,
+                      indent=2,
+                  )
+
+                  temporary.write("\n")
+                  temporary.flush()
+                  os.fsync(temporary.fileno())
+
+              os.replace(
+                  temporary_path,
+                  VIDEOS_FILE,
+              )
+
+          # ----------------------------------------------------------
+          # Summary
+          # ----------------------------------------------------------
+
+          print("")
+          print("========================================")
+          print("BATCH UPDATE")
+          print("========================================")
+          print(f"Series:       {canonical_series}")
+          print(f"CSV rows:     {len(csv_titles)}")
+          print(f"Changed:      {len(changed)}")
+          print(f"Unchanged:    {len(unchanged)}")
+
+          if changed:
+              print(
+                  "Changed episodes: "
+                  + ", ".join(map(str, changed))
+              )
+
+          # ----------------------------------------------------------
+          # Make sure ONLY videos.json changed.
+          # ----------------------------------------------------------
+
+          status = subprocess.run(
+              ["git", "status", "--short"],
+              check=True,
+              capture_output=True,
+              text=True,
+          ).stdout.strip()
+
+          if status:
+              print("")
+              print("Working tree:")
+              print(status)
+
+          unexpected = []
+
+          for line in status.splitlines():
+              if not line:
+                  continue
+
+              path = line[3:].strip()
+
+              if path != "data/videos.json":
+                  unexpected.append(path)
+
+          if unexpected:
+              error(
+                  "Unexpected files changed: "
+                  + ", ".join(unexpected)
+              )
+
+          # ----------------------------------------------------------
+          # Expose whether a commit is required.
+          # ----------------------------------------------------------
+
+          diff_result = subprocess.run(
+              [
+                  "git",
+                  "diff",
+                  "--quiet",
+                  "--",
+                  "data/videos.json",
+              ],
+              check=False,
+          )
+
+          needs_commit = diff_result.returncode != 0
+
+          with open(
+              os.environ["GITHUB_OUTPUT"],
+              "a",
+              encoding="utf-8",
+          ) as output:
+              output.write(
+                  "changed="
+                  + ("true" if needs_commit else "false")
+                  + "\n"
+              )
+          PY
+
+      - name: Run existing catalogue validator
+        run: |
+          set -euo pipefail
+
+          python scripts/validate_catalogue.py --validate-only
+
+      - name: Run repository validation
+        run: |
+          set -euo pipefail
+
+          python -m compileall -q scripts
+
+          python -m json.tool data/videos.json >/dev/null
+          python -m json.tool data/series.json >/dev/null
+
+          git diff --check
+
+      - name: Display changes
+        if: steps.process.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+
+          echo "Changed files:"
+          git status --short
+
+          echo
+          echo "Diff statistics:"
+          git diff --stat -- data/videos.json
+
+          echo
+          echo "Episode-title changes:"
+          git diff -- data/videos.json
+
+      - name: Commit one batch update
+        if: steps.process.outputs.changed == 'true'
+        env:
+          SERIES: ${{ inputs.series || 'Kiteretsu Daihyakka' }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/videos.json
+
+          if git diff --cached --quiet; then
+            echo "::error::Expected changes but nothing was staged"
+            exit 1
+          fi
+
+          git commit -m "Batch update episode titles: ${SERIES}"
+
+          git push origin HEAD:main
+
+      - name: Confirm final state
+        run: |
+          set -euo pipefail
+
+          echo "Final repository status:"
+          git status --short
+
+          echo
+          echo "Batch episode-title update completed successfully."
