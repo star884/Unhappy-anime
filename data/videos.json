@@ -2538,11 +2538,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 134.",
+    "description": "Kiteretsu Daihyakka - Episode 134 — アウトドアライフ! ブタゴリラ修行の旅.",
     "embed": "https://vidmoly.org/embed-ys7xc4ngb4us.html",
     "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/ys7xc4ngb4us.jpg?gha_thumb=b82484660f740d8c",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "アウトドアライフ! ブタゴリラ修行の旅"
   },
   {
     "id": "kiteretsu-135",
