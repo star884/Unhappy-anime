@@ -1949,11 +1949,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 103.",
+    "description": "Kiteretsu Daihyakka - Episode 103 — 宿題が危ない! 8月32日を作ろう!!.",
     "embed": "https://vidmoly.org/embed-l83tq3yo7vct.html",
     "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/l83tq3yo7vct.jpg?gha_thumb=5ce69f373af6c61b",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "宿題が危ない! 8月32日を作ろう!!"
   },
   {
     "id": "kiteretsu-104",
