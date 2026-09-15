@@ -2443,11 +2443,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 129.",
+    "description": "Kiteretsu Daihyakka - Episode 129 — キャッシュカードで コロ助指名手配!?.",
     "embed": "https://vidmoly.org/embed-1pfeu2hqav0b.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/1pfeu2hqav0b.jpg?gha_thumb=238e3f842f87eaf9",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "キャッシュカードで コロ助指名手配!?"
   },
   {
     "id": "kiteretsu-130",
