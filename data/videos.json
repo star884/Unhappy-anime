@@ -2614,11 +2614,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 138.",
+    "description": "Kiteretsu Daihyakka - Episode 138 — 子供なら見たい!! パパとママの通信簿.",
     "embed": "https://vidmoly.org/embed-w3vlbiu6z9yd.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/w3vlbiu6z9yd.jpg?gha_thumb=4f6147ba0512259e",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "子供なら見たい!! パパとママの通信簿"
   },
   {
     "id": "kiteretsu-139",
