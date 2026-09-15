@@ -2215,11 +2215,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 117.",
+    "description": "Kiteretsu Daihyakka - Episode 117 — 春や春! 大正ロマンのハナ・ハト・マメ.",
     "embed": "https://vidmoly.org/embed-kx5i4ro0a24s.html",
     "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/kx5i4ro0a24s.jpg?gha_thumb=15d492fd5a5f7d18",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "春や春! 大正ロマンのハナ・ハト・マメ"
   },
   {
     "id": "kiteretsu-118",
