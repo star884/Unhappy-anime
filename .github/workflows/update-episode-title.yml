@@ -143,13 +143,12 @@ jobs:
 
           python scripts/validate_catalogue.py "${args[@]}"
 
-      - name: Validate complete catalogue and repository syntax
+      - name: Validate complete catalogue
         shell: bash
         run: |
           set -euo pipefail
 
           python scripts/validate_catalogue.py --validate-only
-          python -m py_compile scripts/validate_catalogue.py
           python -m json.tool data/videos.json >/dev/null
           python -m json.tool data/series.json >/dev/null
           git diff --check
@@ -216,3 +215,5 @@ jobs:
             git status --short
             exit 1
           fi
+
+          echo "Working tree is clean."
