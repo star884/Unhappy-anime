@@ -2234,11 +2234,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 118.",
+    "description": "Kiteretsu Daihyakka - Episode 118 — 八百八のCMソング! ミカンセイ交響曲.",
     "embed": "https://vidmoly.org/embed-ftfsvfmy3md2.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/ftfsvfmy3md2.jpg?gha_thumb=faf570386a94c126",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "八百八のCMソング! ミカンセイ交響曲"
   },
   {
     "id": "kiteretsu-119",
