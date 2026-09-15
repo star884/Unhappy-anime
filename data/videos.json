@@ -2367,11 +2367,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 125.",
+    "description": "Kiteretsu Daihyakka - Episode 125 — ガーン! ワガハイ、犬になりたいナリ!.",
     "embed": "https://vidmoly.org/embed-7u8hj78z03j5.html",
     "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/7u8hj78z03j5.jpg?gha_thumb=f268ef0138a12bf5",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "ガーン! ワガハイ、犬になりたいナリ!"
   },
   {
     "id": "kiteretsu-126",
