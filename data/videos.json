@@ -2044,11 +2044,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 108.",
+    "description": "Kiteretsu Daihyakka - Episode 108 — ワーオ! はずかしがり屋の石焼〜きイモ.",
     "embed": "https://vidmoly.org/embed-1ewvwygbe507.html",
     "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02917/1ewvwygbe507.jpg?gha_thumb=51b2ce4b1360216e",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "ワーオ! はずかしがり屋の石焼〜きイモ"
   },
   {
     "id": "kiteretsu-109",
