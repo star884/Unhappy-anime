@@ -2766,11 +2766,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 146.",
+    "description": "Kiteretsu Daihyakka - Episode 146 — 涙の交換日記! ブタゴリラはKくんナリ.",
     "embed": "https://vidmoly.org/embed-s6e5fplwwbmg.html",
     "thumbnail": "https://box-1655-r.vmeas.cloud/i/03/02914/s6e5fplwwbmg.jpg?gha_thumb=e2175ed44adab34c",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "涙の交換日記! ブタゴリラはKくんナリ"
   },
   {
     "id": "kiteretsu-147",
