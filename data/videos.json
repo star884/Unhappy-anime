@@ -2500,11 +2500,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 132.",
+    "description": "Kiteretsu Daihyakka - Episode 132 — 大異変! ママとボクにヒゲが生えた!?.",
     "embed": "https://vidmoly.org/embed-3tabpia58mju.html",
     "thumbnail": "https://box-1643-d1.vmeas.cloud/i/02/02914/3tabpia58mju.jpg?gha_thumb=8377417c04ef301f",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "大異変! ママとボクにヒゲが生えた!?"
   },
   {
     "id": "kiteretsu-133",
