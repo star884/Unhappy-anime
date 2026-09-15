@@ -2082,11 +2082,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 110.",
+    "description": "Kiteretsu Daihyakka - Episode 110 — 走れ永遠に! 幻のSL特急アジア号!!.",
     "embed": "https://vidmoly.org/embed-vwfbsdh6373c.html",
     "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/vwfbsdh6373c.jpg?gha_thumb=c3ead6a8c4e42fda",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "走れ永遠に! 幻のSL特急アジア号!!"
   },
   {
     "id": "kiteretsu-111",
