@@ -2139,11 +2139,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 113.",
+    "description": "Kiteretsu Daihyakka - Episode 113 — 地震! カミナリ! 火事! コラー大魔王!?.",
     "embed": "https://vidmoly.org/embed-9i3mjeeyse3s.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/9i3mjeeyse3s.jpg?gha_thumb=39d8834bfdb7a666",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "地震! カミナリ! 火事! コラー大魔王!?"
   },
   {
     "id": "kiteretsu-114",
