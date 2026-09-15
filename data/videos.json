@@ -2690,11 +2690,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 142.",
+    "description": "Kiteretsu Daihyakka - Episode 142 — 謎また謎 氷曜日のカキ水パーティ.",
     "embed": "https://vidmoly.org/embed-252lcy8gwsrv.html",
     "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/252lcy8gwsrv.jpg?gha_thumb=535d7d7bd205e36a",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "謎また謎 氷曜日のカキ水パーティ"
   },
   {
     "id": "kiteretsu-143",
