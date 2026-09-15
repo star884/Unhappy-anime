@@ -2842,11 +2842,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 150.",
+    "description": "Kiteretsu Daihyakka - Episode 150 — 遠足のアイテム! ブタゴリラ七品セット.",
     "embed": "https://vidmoly.org/embed-qaylgml6k2dk.html",
     "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/qaylgml6k2dk.jpg?gha_thumb=6690ea8b07a7cea2",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "遠足のアイテム! ブタゴリラ七品セット"
   },
   {
     "id": "kiteretsu-151",
