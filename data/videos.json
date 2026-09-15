@@ -2177,11 +2177,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 115.",
+    "description": "Kiteretsu Daihyakka - Episode 115 — 花の命は短いぞ! ブタゴリラ最後の日.",
     "embed": "https://vidmoly.org/embed-0723hky1fn4l.html",
     "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02917/0723hky1fn4l.jpg?gha_thumb=8464065b4f9a6a71",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "花の命は短いぞ! ブタゴリラ最後の日"
   },
   {
     "id": "kiteretsu-116",
