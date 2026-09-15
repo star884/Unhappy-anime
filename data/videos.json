@@ -2557,11 +2557,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 135.",
+    "description": "Kiteretsu Daihyakka - Episode 135 — ハダカの思い出! さくら湯ものがたり.",
     "embed": "https://vidmoly.org/embed-w102mn4576w3.html",
     "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/w102mn4576w3.jpg?gha_thumb=b1126cc667da7278",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "ハダカの思い出! さくら湯ものがたり"
   },
   {
     "id": "kiteretsu-136",
