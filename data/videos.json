@@ -2405,11 +2405,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 127.",
+    "description": "Kiteretsu Daihyakka - Episode 127 — 世紀の大失敗作! チュウシングラナリ.",
     "embed": "https://vidmoly.org/embed-rm9cmoipfe2k.html",
     "thumbnail": "https://veros-1479-p2.vmwesa.online/i/01/02914/rm9cmoipfe2k.jpg?gha_thumb=0452a7f02f28ac6f",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "世紀の大失敗作! チュウシングラナリ"
   },
   {
     "id": "kiteretsu-128",
