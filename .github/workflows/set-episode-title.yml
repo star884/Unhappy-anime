@@ -1,0 +1,148 @@
+name: Set Episode Title
+
+on:
+  workflow_dispatch:
+    inputs:
+      series:
+        description: Exact series name from data/series.json
+        required: true
+        type: string
+      season:
+        description: Season number; leave blank for pure episode numbering
+        required: false
+        type: number
+      episode:
+        description: Exact episode number to update
+        required: true
+        type: number
+      episode_title:
+        description: Exact title to assign to the episode
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: set-episode-title
+  cancel-in-progress: false
+
+env:
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  set-episode-title:
+    name: Validate and set episode title
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate workflow inputs
+        env:
+          SERIES: ${{ inputs.series }}
+          SEASON: ${{ inputs.season }}
+          EPISODE: ${{ inputs.episode }}
+          EPISODE_TITLE: ${{ inputs.episode_title }}
+        run: |
+          set -euo pipefail
+
+          [ -n "${SERIES//[[:space:]]/}" ] || {
+            echo "::error::Series is required"
+            exit 1
+          }
+
+          [ -n "${EPISODE//[[:space:]]/}" ] || {
+            echo "::error::Episode is required"
+            exit 1
+          }
+
+          [[ "${EPISODE}" =~ ^[1-9][0-9]*$ ]] || {
+            echo "::error::Episode must be a positive integer"
+            exit 1
+          }
+
+          if [ -n "${SEASON}" ]; then
+            [[ "${SEASON}" =~ ^[1-9][0-9]*$ ]] || {
+              echo "::error::Season must be a positive integer"
+              exit 1
+            }
+          fi
+
+          [ -n "${EPISODE_TITLE//[[:space:]]/}" ] || {
+            echo "::error::Episode title is required"
+            exit 1
+          }
+
+      - name: Update title through catalogue validator
+        env:
+          SERIES: ${{ inputs.series }}
+          SEASON: ${{ inputs.season }}
+          EPISODE: ${{ inputs.episode }}
+          EPISODE_TITLE: ${{ inputs.episode_title }}
+        run: |
+          set -euo pipefail
+
+          args=(
+            --update-episode-title
+            --series "$SERIES"
+            --episode "$EPISODE"
+            --episode-title "$EPISODE_TITLE"
+          )
+
+          if [ -n "$SEASON" ]; then
+            args+=(--season "$SEASON")
+          fi
+
+          python scripts/validate_catalogue.py "${args[@]}"
+
+      - name: Validate complete catalogue and repository files
+        run: |
+          set -euo pipefail
+
+          python scripts/validate_catalogue.py --validate-only
+          python -m py_compile scripts/validate_catalogue.py scripts/generate_thumbnails.py
+          python -m json.tool data/videos.json >/dev/null
+          python -m json.tool data/series.json >/dev/null
+          git diff --check
+          git diff -- data/videos.json
+
+      - name: Commit and push title update
+        env:
+          SERIES: ${{ inputs.series }}
+          SEASON: ${{ inputs.season }}
+          EPISODE: ${{ inputs.episode }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/videos.json
+
+          if git diff --cached --quiet; then
+            echo "::error::No title changes were produced"
+            exit 1
+          fi
+
+          if [ -n "$SEASON" ]; then
+            commit_message="Set episode title: ${SERIES} S${SEASON}E${EPISODE}"
+          else
+            commit_message="Set episode title: ${SERIES} E${EPISODE}"
+          fi
+
+          git commit -m "$commit_message"
+          git push origin HEAD:main
+
+      - name: Confirm clean working tree
+        run: git status --short
