@@ -2120,11 +2120,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 112.",
+    "description": "Kiteretsu Daihyakka - Episode 112 — コロ助のフィアンセ! むらさきしきふ.",
     "embed": "https://vidmoly.org/embed-wr37qi4hfti6.html",
     "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02917/wr37qi4hfti6.jpg?gha_thumb=469da8ea22bc3344",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "コロ助のフィアンセ! むらさきしきふ"
   },
   {
     "id": "kiteretsu-113",
