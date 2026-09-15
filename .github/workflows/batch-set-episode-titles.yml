@@ -79,8 +79,15 @@ jobs:
           def normalise(value):
               return " ".join(str(value or "").split()).casefold()
 
+          def run_command(command):
+              return subprocess.run(
+                  command,
+                  check=False,
+                  text=True,
+              )
+
           # ----------------------------------------------------------
-          # Check required files
+          # Required files
           # ----------------------------------------------------------
 
           if not SERIES:
@@ -99,15 +106,15 @@ jobs:
               error("scripts/validate_catalogue.py was not found")
 
           # ----------------------------------------------------------
-          # Validate the requested series against series.json
+          # Validate series
           # ----------------------------------------------------------
 
           try:
               series_data = json.loads(
                   SERIES_FILE.read_text(encoding="utf-8")
               )
-          except json.JSONDecodeError as exc:
-              error(f"Invalid data/series.json: {exc}")
+          except (OSError, json.JSONDecodeError) as exc:
+              error(f"Unable to read data/series.json: {exc}")
 
           if isinstance(series_data, dict):
               series_list = series_data.get("series", [])
@@ -130,8 +137,11 @@ jobs:
               )
 
           canonical_series = str(
-              matching_series[0].get("name")
+              matching_series[0].get("name") or ""
           ).strip()
+
+          if not canonical_series:
+              error("Matched series has an empty name")
 
           # ----------------------------------------------------------
           # Read CSV
@@ -145,7 +155,7 @@ jobs:
               ) as handle:
                   reader = csv.DictReader(handle)
 
-                  if not reader.fieldnames:
+                  if reader.fieldnames is None:
                       error("CSV has no header")
 
                   headers = [
@@ -167,12 +177,14 @@ jobs:
               error(f"CSV must be UTF-8 encoded: {exc}")
           except csv.Error as exc:
               error(f"CSV parsing failed: {exc}")
+          except OSError as exc:
+              error(f"Unable to read CSV: {exc}")
 
           if not rows:
               error("CSV contains no episode rows")
 
           # ----------------------------------------------------------
-          # Validate every CSV row before modifying videos.json
+          # Validate every CSV row before touching videos.json
           # ----------------------------------------------------------
 
           csv_titles = {}
@@ -226,30 +238,27 @@ jobs:
           # ----------------------------------------------------------
 
           try:
-              videos = json.loads(
+              original_videos = json.loads(
                   VIDEOS_FILE.read_text(encoding="utf-8")
               )
-          except json.JSONDecodeError as exc:
-              error(f"Invalid data/videos.json: {exc}")
+          except (OSError, json.JSONDecodeError) as exc:
+              error(f"Unable to read data/videos.json: {exc}")
 
-          if not isinstance(videos, list):
+          if not isinstance(original_videos, list):
               error("data/videos.json must contain an array")
 
           # ----------------------------------------------------------
-          # Find pure episode records.
+          # Build index of pure/non-seasonal regular episodes.
           #
-          # Missing type = episode, matching the existing validator.
+          # Missing type -> episode.
+          # Missing category -> main.
           #
-          # Missing category = main.
-          #
-          # Seasonal records are deliberately excluded because this
-          # CSV has no season column. This prevents E001 from one
-          # season being confused with E001 from another season.
+          # Specials and seasonal records are deliberately excluded.
           # ----------------------------------------------------------
 
           episode_records = {}
 
-          for index, record in enumerate(videos):
+          for index, record in enumerate(original_videos):
 
               if not isinstance(record, dict):
                   error(
@@ -272,11 +281,9 @@ jobs:
                   record.get("category") or "main"
               ).strip().casefold()
 
-              # Never treat specials as regular episodes.
               if record_category != "main":
                   continue
 
-              # CSV has no season information.
               if record.get("season") not in (None, ""):
                   continue
 
@@ -295,21 +302,21 @@ jobs:
               ).append(index)
 
           # ----------------------------------------------------------
-          # Every CSV episode must map to exactly one existing record.
-          #
-          # Nothing is changed until this entire check passes.
+          # Every CSV row must have exactly one matching episode.
+          # No changes have happened yet.
           # ----------------------------------------------------------
 
           missing = []
           ambiguous = []
 
           for episode in sorted(csv_titles):
+
               matches = episode_records.get(episode, [])
 
               if not matches:
                   missing.append(episode)
 
-              elif len(matches) > 1:
+              elif len(matches) != 1:
                   ambiguous.append(
                       (episode, matches)
                   )
@@ -330,74 +337,93 @@ jobs:
               raise SystemExit(1)
 
           # ----------------------------------------------------------
-          # Update ONLY episode_title.
+          # Preserve the original file for a final safety comparison.
+          # ----------------------------------------------------------
+
+          original_text = VIDEOS_FILE.read_text(
+              encoding="utf-8"
+          )
+
+          # ----------------------------------------------------------
+          # Process every CSV title.
           #
-          # Important:
-          # - ID unchanged
-          # - title unchanged
-          # - description unchanged
-          # - embed unchanged
-          # - thumbnail unchanged
-          # - season unchanged
-          # - type unchanged
-          # - category unchanged
+          # This uses the same existing validator used by
+          # set-episode-title.yml.
+          #
+          # There is still only ONE GitHub Actions run and ONE commit.
           # ----------------------------------------------------------
 
           changed = []
           unchanged = []
 
           for episode in sorted(csv_titles):
-              index = episode_records[episode][0]
-              record = videos[index]
 
-              new_title = csv_titles[episode]
-              old_title = str(
-                  record.get("episode_title") or ""
+              index = episode_records[episode][0]
+              current_catalogue = json.loads(
+                  VIDEOS_FILE.read_text(encoding="utf-8")
+              )
+
+              if not isinstance(current_catalogue, list):
+                  error(
+                      "data/videos.json became invalid during processing"
+                  )
+
+              current_record = current_catalogue[index]
+
+              current_title = str(
+                  current_record.get("episode_title") or ""
               ).strip()
 
-              if old_title == new_title:
+              new_title = csv_titles[episode]
+
+              if current_title == new_title:
                   unchanged.append(episode)
                   continue
 
-              record["episode_title"] = new_title
+              command = [
+                  sys.executable,
+                  str(VALIDATOR),
+                  "--update-episode-title",
+                  "--series",
+                  canonical_series,
+                  "--episode",
+                  str(episode),
+                  "--episode-title",
+                  new_title,
+              ]
+
+              print(
+                  f"Setting E{episode:03d}: {new_title}"
+              )
+
+              result = run_command(command)
+
+              if result.returncode != 0:
+                  error(
+                      "Existing catalogue validator failed while "
+                      f"updating episode {episode}"
+                  )
+
               changed.append(episode)
 
           # ----------------------------------------------------------
-          # Atomically write videos.json.
+          # Make sure the catalogue still exists and is valid JSON.
           # ----------------------------------------------------------
 
-          if changed:
-              directory = VIDEOS_FILE.parent
-
-              with tempfile.NamedTemporaryFile(
-                  mode="w",
-                  encoding="utf-8",
-                  newline="\n",
-                  dir=directory,
-                  prefix=".videos-",
-                  suffix=".json",
-                  delete=False,
-              ) as temporary:
-                  temporary_path = Path(temporary.name)
-
-                  json.dump(
-                      videos,
-                      temporary,
-                      ensure_ascii=False,
-                      indent=2,
-                  )
-
-                  temporary.write("\n")
-                  temporary.flush()
-                  os.fsync(temporary.fileno())
-
-              os.replace(
-                  temporary_path,
-                  VIDEOS_FILE,
+          try:
+              final_videos = json.loads(
+                  VIDEOS_FILE.read_text(encoding="utf-8")
+              )
+          except (OSError, json.JSONDecodeError) as exc:
+              error(
+                  f"data/videos.json is invalid after batch update: {exc}"
               )
 
+          if not isinstance(final_videos, list):
+              error("data/videos.json must remain an array")
+
           # ----------------------------------------------------------
-          # Summary
+          # Report result
           # ----------------------------------------------------------
 
           print("")
@@ -416,31 +442,55 @@ jobs:
               )
 
           # ----------------------------------------------------------
-          # Make sure ONLY videos.json changed.
+          # Safety check:
+          # ONLY data/videos.json is allowed to be modified.
+          #
+          # Do NOT parse `git status --short`; use Git's machine-readable
+          # name lists so whitespace/status columns cannot corrupt paths.
           # ----------------------------------------------------------
 
-          status = subprocess.run(
-              ["git", "status", "--short"],
+          changed_paths_result = subprocess.run(
+              [
+                  "git",
+                  "diff",
+                  "--name-only",
+              ],
               check=True,
               capture_output=True,
               text=True,
-          ).stdout.strip()
+          )
 
-          if status:
-              print("")
-              print("Working tree:")
-              print(status)
+          untracked_paths_result = subprocess.run(
+              [
+                  "git",
+                  "ls-files",
+                  "--others",
+                  "--exclude-standard",
+              ],
+              check=True,
+              capture_output=True,
+              text=True,
+          )
 
-          unexpected = []
+          changed_paths = {
+              line.strip()
+              for line in changed_paths_result.stdout.splitlines()
+              if line.strip()
+          }
 
-          for line in status.splitlines():
-              if not line:
-                  continue
+          untracked_paths = {
+              line.strip()
+              for line in untracked_paths_result.stdout.splitlines()
+              if line.strip()
+          }
 
-              path = line[3:].strip()
+          all_modified_paths = changed_paths | untracked_paths
 
-              if path != "data/videos.json":
-                  unexpected.append(path)
+          unexpected = sorted(
+              path
+              for path in all_modified_paths
+              if path != "data/videos.json"
+          )
 
           if unexpected:
               error(
@@ -449,10 +499,10 @@ jobs:
               )
 
           # ----------------------------------------------------------
-          # Expose whether a commit is required.
+          # Determine whether a commit is actually required.
           # ----------------------------------------------------------
 
-          diff_result = subprocess.run(
+          final_diff = subprocess.run(
               [
                   "git",
                   "diff",
@@ -463,7 +513,7 @@ jobs:
               check=False,
           )
 
-          needs_commit = diff_result.returncode != 0
+          needs_commit = final_diff.returncode != 0
 
           with open(
               os.environ["GITHUB_OUTPUT"],
@@ -475,6 +525,16 @@ jobs:
                   + ("true" if needs_commit else "false")
                   + "\n"
               )
+
+          if not needs_commit:
+              print("No catalogue changes are required.")
+
+          # Make sure the original file was actually read successfully.
+          if not original_text:
+              print(
+                  "::notice::Original data/videos.json was empty "
+                  "before processing"
+              )
           PY
 
       - name: Run existing catalogue validator
@@ -483,7 +543,7 @@ jobs:
 
           python scripts/validate_catalogue.py --validate-only
 
-      - name: Run repository validation
+      - name: Run repository checks
         run: |
           set -euo pipefail
 
@@ -494,7 +554,7 @@ jobs:
 
           git diff --check
 
-      - name: Display changes
+      - name: Show changes
         if: steps.process.outputs.changed == 'true'
         run: |
           set -euo pipefail
@@ -507,7 +567,7 @@ jobs:
           git diff --stat -- data/videos.json
 
           echo
-          echo "Episode-title changes:"
+          echo "Catalogue diff:"
           git diff -- data/videos.json
 
       - name: Commit one batch update
