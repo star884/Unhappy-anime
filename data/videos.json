@@ -2823,11 +2823,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 149.",
+    "description": "Kiteretsu Daihyakka - Episode 149 — ママはいらない!? からくり料理人ナリ.",
     "embed": "https://vidmoly.org/embed-oa6n07lwzlia.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/oa6n07lwzlia.jpg?gha_thumb=6aac06c3feae6433",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "ママはいらない!? からくり料理人ナリ"
   },
   {
     "id": "kiteretsu-150",
