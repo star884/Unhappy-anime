@@ -1968,11 +1968,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 104.",
+    "description": "Kiteretsu Daihyakka - Episode 104 — リーンリーン! こちら鈴虫ロックバンド.",
     "embed": "https://vidmoly.org/embed-gaqfecvi5kfe.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/gaqfecvi5kfe.jpg?gha_thumb=94e15af2217cefd6",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "リーンリーン! こちら鈴虫ロックバンド"
   },
   {
     "id": "kiteretsu-105",
