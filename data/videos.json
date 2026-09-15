@@ -2595,11 +2595,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 137.",
+    "description": "Kiteretsu Daihyakka - Episode 137 — ブタゴリラ主催! 緑幼稚園大同窓会.",
     "embed": "https://vidmoly.org/embed-8dzwa9wqlteh.html",
     "thumbnail": "https://box-1535-p.vmeas.cloud/i/04/02914/8dzwa9wqlteh.jpg?gha_thumb=36d8c5de7fc55c62",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "ブタゴリラ主催! 緑幼稚園大同窓会"
   },
   {
     "id": "kiteretsu-138",
