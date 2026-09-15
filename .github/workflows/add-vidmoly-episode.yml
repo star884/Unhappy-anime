@@ -7,6 +7,14 @@ on:
         description: Exact series name from data/series.json
         required: true
         type: string
+      mode:
+        description: Add a new media record or update one existing episode title
+        required: true
+        default: add
+        type: choice
+        options:
+          - add
+          - update_title
       type:
         description: What the media is
         required: false
@@ -96,16 +104,23 @@ jobs:
 
       - name: Validate workflow inputs
         env:
+          MODE: ${{ inputs.mode }}
           SERIES: ${{ inputs.series }}
           TYPE: ${{ inputs.type }}
           CATEGORY: ${{ inputs.category }}
           SEASON: ${{ inputs.season }}
           EPISODE: ${{ inputs.episode }}
+          EPISODE_TITLE: ${{ inputs.episode_title }}
           SPECIAL_DATE: ${{ inputs.special_date }}
           VIDMOLY_URL: ${{ inputs.vidmoly_url }}
         run: |
           set -euo pipefail
           [ -n "${SERIES//[[:space:]]/}" ] || { echo "::error::Series is required"; exit 1; }
+          if [ "${MODE}" = "update_title" ]; then
+            [ "${EPISODE^^}" != "AUTO" ] && [ -n "${EPISODE}" ] || { echo "::error::A numeric episode is required for title updates"; exit 1; }
+            [ -n "${EPISODE_TITLE//[[:space:]]/}" ] || { echo "::error::Episode title is required for title updates"; exit 1; }
+            exit 0
+          fi
           [ -n "${VIDMOLY_URL//[[:space:]]/}" ] || { echo "::error::VidMoly URL is required"; exit 1; }
           if [ -n "${SPECIAL_DATE}" ] && { [ -n "${SEASON}" ] || [ "${EPISODE^^}" != "AUTO" ] && [ -n "${EPISODE}" ]; }; then
             echo "::error::Date-based specials cannot have season or episode values"
@@ -120,7 +135,42 @@ jobs:
             exit 1
           fi
 
+      - name: Update existing episode title
+        if: inputs.mode == 'update_title'
+        env:
+          SERIES: ${{ inputs.series }}
+          SEASON: ${{ inputs.season }}
+          EPISODE: ${{ inputs.episode }}
+          EPISODE_TITLE: ${{ inputs.episode_title }}
+        run: |
+          set -euo pipefail
+          args=(
+            --update-episode-title
+            --series "$SERIES"
+            --episode "$EPISODE"
+            --episode-title "$EPISODE_TITLE"
+          )
+          if [ -n "$SEASON" ]; then args+=(--season "$SEASON"); fi
+          python scripts/validate_catalogue.py "${args[@]}"
+          python scripts/validate_catalogue.py --validate-only
+
+      - name: Commit title update
+        if: inputs.mode == 'update_title'
+        env:
+          SERIES: ${{ inputs.series }}
+          SEASON: ${{ inputs.season }}
+          EPISODE: ${{ inputs.episode }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/videos.json
+          git diff --cached --quiet && { echo "::error::No title changes were produced"; exit 1; }
+          git commit -m "Add episode title for ${SERIES} S${SEASON}E${EPISODE}"
+          git push origin HEAD:main
+
       - name: Add record and validate complete catalogue
+        if: inputs.mode == 'add'
         env:
           SERIES: ${{ inputs.series }}
           TYPE: ${{ inputs.type }}
@@ -163,6 +213,7 @@ jobs:
           git diff -- data/videos.json
 
       - name: Commit and push to main
+        if: inputs.mode == 'add'
         env:
           SERIES: ${{ inputs.series }}
         run: |
