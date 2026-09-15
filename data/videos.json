@@ -2025,11 +2025,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 107.",
+    "description": "Kiteretsu Daihyakka - Episode 107 — トマトはナス テフテフは一体何ナリ?.",
     "embed": "https://vidmoly.org/embed-glqzec4kye83.html",
     "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02917/glqzec4kye83.jpg?gha_thumb=7ae98feea3b600c7",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "トマトはナス テフテフは一体何ナリ?"
   },
   {
     "id": "kiteretsu-108",
