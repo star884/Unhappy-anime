@@ -2709,11 +2709,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 143.",
+    "description": "Kiteretsu Daihyakka - Episode 143 — 秋がきて… いなかのトンボが東京見物.",
     "embed": "https://vidmoly.org/embed-dbw07mt0rvyw.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02914/dbw07mt0rvyw.jpg?gha_thumb=a55ea20a43f4cae3",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "秋がきて… いなかのトンボが東京見物"
   },
   {
     "id": "kiteretsu-144",
