@@ -2196,11 +2196,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 116.",
+    "description": "Kiteretsu Daihyakka - Episode 116 — たずね人ダマで ホワイトクリスマス.",
     "embed": "https://vidmoly.org/embed-ygzwvbdkhhez.html",
     "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02917/ygzwvbdkhhez.jpg?gha_thumb=330c1751e9a40773",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "たずね人ダマで ホワイトクリスマス"
   },
   {
     "id": "kiteretsu-117",
