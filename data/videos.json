@@ -2291,11 +2291,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 121.",
+    "description": "Kiteretsu Daihyakka - Episode 121 — 参観日、 小鳥がハイクを作ったよ!.",
     "embed": "https://vidmoly.org/embed-lx0e797ybubs.html",
     "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/lx0e797ybubs.jpg?gha_thumb=014d0ada96cb4596",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "参観日、 小鳥がハイクを作ったよ!"
   },
   {
     "id": "kiteretsu-122",
