@@ -2386,11 +2386,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 126.",
+    "description": "Kiteretsu Daihyakka - Episode 126 — 大スクープ! 八百八に双子の赤ちゃん.",
     "embed": "https://vidmoly.org/embed-tf8z2hr89qkz.html",
     "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02914/tf8z2hr89qkz.jpg?gha_thumb=4d877fe27b0523d5",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "大スクープ! 八百八に双子の赤ちゃん"
   },
   {
     "id": "kiteretsu-127",
