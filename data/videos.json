@@ -2861,11 +2861,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 151.",
+    "description": "Kiteretsu Daihyakka - Episode 151 — 教室で指されたくない人へ! 指名扇ナリ.",
     "embed": "https://vidmoly.org/embed-ia0c9twv3t1y.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/02/02914/ia0c9twv3t1y.jpg?gha_thumb=8348f52586175b98",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "教室で指されたくない人へ! 指名扇ナリ"
   },
   {
     "id": "kiteretsu-152",
