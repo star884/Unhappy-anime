@@ -2101,11 +2101,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 111.",
+    "description": "Kiteretsu Daihyakka - Episode 111 — ハコダテ、イグアナ、 イカソーメン.",
     "embed": "https://vidmoly.org/embed-dakn6aowwf43.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02917/dakn6aowwf43.jpg?gha_thumb=9d70e5a6cc2f2ccc",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "ハコダテ、イグアナ、 イカソーメン"
   },
   {
     "id": "kiteretsu-112",
