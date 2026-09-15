@@ -2519,11 +2519,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 133.",
+    "description": "Kiteretsu Daihyakka - Episode 133 — 究極のずる休みグッズ! 仮病マクラ.",
     "embed": "https://vidmoly.org/embed-9kp1wqus849u.html",
     "thumbnail": "https://box-1668-tb.vmeas.cloud/i/03/02914/9kp1wqus849u.jpg?gha_thumb=d0673eedd8061e91",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "究極のずる休みグッズ! 仮病マクラ"
   },
   {
     "id": "kiteretsu-134",
