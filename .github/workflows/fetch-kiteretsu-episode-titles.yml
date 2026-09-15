@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       episodes:
-        description: "Episodes to update, e.g. 1,2,3 or 1-20 or 7,10-15"
+        description: "Episodes to update: 1,2,3 or 1-20 or 7,10-15"
         required: true
         type: string
 
@@ -22,7 +22,7 @@ env:
 
 jobs:
   fetch-titles:
-    name: Fetch, validate and update episode titles
+    name: Fetch and validate Kiteretsu episode titles
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -38,12 +38,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install scraper dependency
+      - name: Install parser
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check --no-input beautifulsoup4
 
-      - name: Fetch and parse Wikipedia episode titles
+      - name: Fetch and extract regular TV episode titles
         env:
           EPISODES: ${{ inputs.episodes }}
         run: |
@@ -55,58 +55,72 @@ jobs:
           import re
           import sys
           import urllib.request
-          from bs4 import BeautifulSoup
 
-          WIKI_URL = os.environ["WIKI_URL"]
-          SERIES_NAME = os.environ["SERIES_NAME"]
-          REQUESTED = os.environ["EPISODES"]
+          from bs4 import BeautifulSoup, Tag
 
-          def fail(message):
+          URL = os.environ["WIKI_URL"]
+          REQUEST = os.environ["EPISODES"]
+
+          def error(message):
               print(f"::error::{message}")
-              raise SystemExit(1)
+              sys.exit(1)
 
-          def parse_episode_selection(value):
-              numbers = set()
+          def parse_selection(value):
+              result = set()
 
-              for part in value.split(","):
-                  part = part.strip()
-                  if not part:
+              for item in value.split(","):
+                  item = item.strip()
+
+                  if not item:
                       continue
 
-                  if re.fullmatch(r"[1-9][0-9]*", part):
-                      numbers.add(int(part))
+                  if re.fullmatch(r"[1-9][0-9]*", item):
+                      result.add(int(item))
                       continue
 
-                  match = re.fullmatch(r"([1-9][0-9]*)-([1-9][0-9]*)", part)
+                  match = re.fullmatch(
+                      r"([1-9][0-9]*)-([1-9][0-9]*)",
+                      item
+                  )
+
                   if match:
                       start = int(match.group(1))
                       end = int(match.group(2))
 
                       if end < start:
-                          fail(f"Invalid episode range: {part}")
+                          error(f"Invalid range: {item}")
 
                       if end - start > 100:
-                          fail(f"Episode range is too large: {part}")
+                          error(f"Range too large: {item}")
 
-                      numbers.update(range(start, end + 1))
+                      result.update(range(start, end + 1))
                       continue
 
-                  fail(f"Invalid episode selection: {part}")
+                  error(f"Invalid episode selection: {item}")
 
-              if not numbers:
-                  fail("No episodes were supplied")
+              if not result:
+                  error("No episodes were supplied.")
 
-              if len(numbers) > 100:
-                  fail("A maximum of 100 episodes can be updated in one run")
+              if len(result) > 100:
+                  error("Maximum 100 episodes per run.")
 
-              return sorted(numbers)
+              invalid = sorted(n for n in result if n > 331)
 
-          requested = parse_episode_selection(REQUESTED)
+              if invalid:
+                  error(
+                      "Regular TV episodes only support 1-331. "
+                      f"Invalid: {invalid}"
+                  )
+
+              return sorted(result)
+
+          requested = parse_selection(REQUEST)
 
           request = urllib.request.Request(
-              WIKI_URL,
+              URL,
               headers={
-                  "User-Agent": "Unhappy-anime episode-title updater/1.0"
+                  "User-Agent":
+                      "Unhappy-anime Kiteretsu title updater/1.0"
               },
           )
 
@@ -114,90 +128,191 @@ jobs:
               with urllib.request.urlopen(request, timeout=30) as response:
                   html = response.read()
           except Exception as exc:
-              fail(f"Could not fetch Wikipedia: {exc}")
+              error(f"Failed to download Wikipedia page: {exc}")
 
           soup = BeautifulSoup(html, "html.parser")
 
+          # -----------------------------------------------------------
+          # Find the regular "テレビシリーズ" section.
+          #
+          # We deliberately DO NOT scan the entire page.
+          #
+          # This prevents:
+          #   - 1987 special program
+          #   - opening/ending-song tables
+          #   - broadcast information
+          #   - staff tables
+          #   - unrelated tables
+          # from being interpreted as regular episodes.
+          # -----------------------------------------------------------
+
+          episode_section = None
+
+          for heading in soup.find_all(["h2", "h3", "h4"]):
+              text = " ".join(heading.stripped_strings)
+
+              if text == "テレビシリーズ":
+                  episode_section = heading
+                  break
+
+          if episode_section is None:
+              error(
+                  "Could not find the regular テレビシリーズ section."
+              )
+
+          # Only inspect tables belonging to this section.
+          candidate_tables = []
+
+          for element in episode_section.find_all_next():
+              if not isinstance(element, Tag):
+                  continue
+
+              # Never cross into another major/subsection.
+              if element.name in {"h2", "h3", "h4"}:
+                  break
+
+              if element.name != "table":
+                  continue
+
+              headers = [
+                  " ".join(cell.stripped_strings)
+                  for cell in element.find_all(
+                      ["th", "td"],
+                      recursive=False
+                  )
+              ]
+
+              header_text = " ".join(headers)
+
+              # The regular episode table must contain both concepts.
+              if "話数" not in header_text:
+                  continue
+
+              if "サブタイトル" not in header_text:
+                  continue
+
+              candidate_tables.append(element)
+
+          if not candidate_tables:
+              error(
+                  "Could not find the regular TV episode table "
+                  "containing 話数 and サブタイトル."
+              )
+
           episode_titles = {}
 
-          for table in soup.find_all("table"):
+          for table_index, table in enumerate(candidate_tables, 1):
               rows = table.find_all("tr")
 
               for row in rows:
-                  cells = row.find_all(["th", "td"])
+                  cells = row.find_all(
+                      ["th", "td"],
+                      recursive=False
+                  )
+
                   if len(cells) < 2:
                       continue
 
-                  values = []
-                  for cell in cells:
-                      text = " ".join(cell.stripped_strings)
-                      values.append(text)
+                  number_text = " ".join(
+                      cells[0].stripped_strings
+                  ).strip()
 
-                  number_match = re.fullmatch(r"\s*(\d{1,3})\s*", values[0])
-                  if not number_match:
-                      continue
-
-                  episode_number = int(number_match.group(1))
-
-                  if not 1 <= episode_number <= 331:
-                      continue
-
-                  title_parts = []
-
-                  # The first cell is the episode number.
-                  # The next cell is the subtitle/title cell.
-                  for value in values[1:]:
-                      if value:
-                          title_parts.append(value)
-
-                  if not title_parts:
-                      continue
-
-                  title = "／".join(
-                      part.strip()
-                      for part in title_parts
-                      if part.strip()
+                  # Ignore table headings such as 話数.
+                  match = re.fullmatch(
+                      r"([1-9][0-9]*)",
+                      number_text
                   )
 
-                  title = re.sub(r"\s+", " ", title).strip()
-
-                  # Ignore obvious table-header or metadata rows.
-                  if title in {"サブタイトル", "タイトル", "話数"}:
+                  if not match:
                       continue
 
-                  if episode_number in episode_titles:
-                      if episode_titles[episode_number] != title:
-                          fail(
-                              f"Conflicting Wikipedia titles for episode "
-                              f"{episode_number}: "
-                              f"{episode_titles[episode_number]!r} vs {title!r}"
-                          )
-                  else:
-                      episode_titles[episode_number] = title
+                  episode = int(match.group(1))
 
-          missing = [n for n in requested if n not in episode_titles]
+                  if not 1 <= episode <= 331:
+                      continue
+
+                  # -------------------------------------------------
+                  # IMPORTANT:
+                  #
+                  # ONLY cells[1] is used.
+                  #
+                  # This is the サブタイトル column.
+                  #
+                  # Script, storyboard, direction, animation
+                  # director and broadcast date are ignored entirely.
+                  # -------------------------------------------------
+
+                  title = " ".join(
+                      cells[1].stripped_strings
+                  )
+
+                  title = re.sub(
+                      r"\s+",
+                      " ",
+                      title
+                  ).strip()
+
+                  if not title:
+                      error(
+                          f"Episode {episode} has an empty title."
+                      )
+
+                  previous = episode_titles.get(episode)
+
+                  if previous is not None and previous != title:
+                      error(
+                          "Conflicting regular-TV titles for "
+                          f"episode {episode}: "
+                          f"{previous!r} vs {title!r}"
+                      )
+
+                  episode_titles[episode] = title
+
+          missing = [
+              episode
+              for episode in requested
+              if episode not in episode_titles
+          ]
 
           if missing:
-              fail(
-                  "Wikipedia titles were not found for episode(s): "
+              error(
+                  "Wikipedia regular-TV titles missing for: "
                   + ", ".join(map(str, missing))
               )
 
           result = {
-              str(number): episode_titles[number]
-              for number in requested
+              str(episode): episode_titles[episode]
+              for episode in requested
           }
 
-          with open("/tmp/kiteretsu_titles.json", "w", encoding="utf-8") as file:
-              json.dump(result, file, ensure_ascii=False, indent=2)
+          with open(
+              "/tmp/kiteretsu_titles.json",
+              "w",
+              encoding="utf-8"
+          ) as file:
+              json.dump(
+                  result,
+                  file,
+                  ensure_ascii=False,
+                  indent=2
+              )
               file.write("\n")
 
-          print("Wikipedia titles found:")
-          for number in requested:
-              print(f"E{number:03d}: {episode_titles[number]}")
+          print()
+          print("=== TITLES FOUND ===")
+
+          for episode in requested:
+              print(
+                  f"E{episode:03d}: "
+                  f"{episode_titles[episode]}"
+              )
+
+          print()
           PY
 
-      - name: Verify requested episodes exist in catalogue
+      - name: Verify catalogue matches
+        env:
+          EPISODES: ${{ inputs.episodes }}
         run: |
           set -euo pipefail
 
@@ -207,38 +322,47 @@ jobs:
           import re
           import sys
 
-          requested_text = os.environ["EPISODES"]
-
           def parse_selection(value):
-              numbers = set()
+              result = set()
 
-              for part in value.split(","):
-                  part = part.strip()
+              for item in value.split(","):
+                  item = item.strip()
 
-                  if re.fullmatch(r"[1-9][0-9]*", part):
-                      numbers.add(int(part))
+                  if re.fullmatch(r"[1-9][0-9]*", item):
+                      result.add(int(item))
                       continue
 
-                  match = re.fullmatch(r"([1-9][0-9]*)-([1-9][0-9]*)", part)
+                  match = re.fullmatch(
+                      r"([1-9][0-9]*)-([1-9][0-9]*)",
+                      item
+                  )
+
                   if match:
-                      numbers.update(
+                      result.update(
                           range(
                               int(match.group(1)),
-                              int(match.group(2)) + 1,
+                              int(match.group(2)) + 1
                           )
                       )
                       continue
 
-                  raise SystemExit(f"Invalid selection: {part}")
+                  raise SystemExit(
+                      f"Invalid episode selection: {item}"
+                  )
 
-              return sorted(numbers)
+              return sorted(result)
 
-          requested = parse_selection(requested_text)
+          requested = parse_selection(
+              os.environ["EPISODES"]
+          )
 
-          with open("data/videos.json", encoding="utf-8") as file:
+          with open(
+              "data/videos.json",
+              encoding="utf-8"
+          ) as file:
               videos = json.load(file)
 
-          matches_by_episode = {}
+          matches = {}
 
           for record in videos:
               if (
@@ -247,52 +371,57 @@ jobs:
                   and record.get("category", "main") == "main"
               ):
                   episode = record.get("episode")
+
                   if isinstance(episode, int):
-                      matches_by_episode.setdefault(episode, []).append(record)
+                      matches.setdefault(
+                          episode,
+                          []
+                      ).append(record)
 
           missing = []
-          duplicates = []
+          duplicate = []
 
           for episode in requested:
-              matches = matches_by_episode.get(episode, [])
+              found = matches.get(episode, [])
 
-              if not matches:
+              if len(found) == 0:
                   missing.append(episode)
-              elif len(matches) != 1:
-                  duplicates.append(episode)
+
+              elif len(found) > 1:
+                  duplicate.append(episode)
 
           if missing:
               print(
-                  "::error::Episodes not found in data/videos.json: "
+                  "::error::Catalogue episodes missing: "
                   + ", ".join(map(str, missing))
               )
               sys.exit(1)
 
-          if duplicates:
+          if duplicate:
               print(
-                  "::error::Episodes have multiple catalogue matches: "
-                  + ", ".join(map(str, duplicates))
+                  "::error::Duplicate catalogue episodes: "
+                  + ", ".join(map(str, duplicate))
               )
               sys.exit(1)
 
           print(
-              f"Verified {len(requested)} catalogue episode(s)."
+              f"Verified {len(requested)} exact catalogue episodes."
           )
           PY
-        env:
-          EPISODES: ${{ inputs.episodes }}
 
-      - name: Apply titles through existing catalogue validator
+      - name: Apply titles using existing Python validator
         run: |
           set -euo pipefail
 
           python - <<'PY'
           import json
-          import os
           import subprocess
           import sys
 
-          with open("/tmp/kiteretsu_titles.json", encoding="utf-8") as file:
+          with open(
+              "/tmp/kiteretsu_titles.json",
+              encoding="utf-8"
+          ) as file:
               titles = json.load(file)
 
           for episode_text, title in titles.items():
@@ -311,60 +440,73 @@ jobs:
               ]
 
               print(
-                  f"Updating E{episode:03d}: {title}"
+                  f"Updating episode {episode}: {title}"
               )
 
-              completed = subprocess.run(command)
+              result = subprocess.run(command)
 
-              if completed.returncode != 0:
+              if result.returncode != 0:
                   print(
-                      f"::error::Catalogue validator failed for "
+                      "::error::Validator failed for "
                       f"episode {episode}"
                   )
-                  sys.exit(completed.returncode)
+                  sys.exit(result.returncode)
 
           PY
 
-      - name: Validate complete catalogue
+      - name: Validate entire repository
         run: |
           set -euo pipefail
 
           python scripts/validate_catalogue.py --validate-only
-          python -m py_compile scripts/validate_catalogue.py scripts/generate_thumbnails.py
+
+          python -m py_compile \
+            scripts/validate_catalogue.py \
+            scripts/generate_thumbnails.py
+
           python -m json.tool data/videos.json >/dev/null
           python -m json.tool data/series.json >/dev/null
+
           git diff --check
 
-      - name: Show exact title changes
+      - name: Show changes
         run: |
           set -euo pipefail
 
           if git diff --quiet -- data/videos.json; then
-            echo "::error::Wikipedia titles produced no catalogue changes."
-            echo "The requested episode title(s) may already be identical."
+            echo "::error::No title changes were produced."
+            echo "The requested titles may already be present."
             exit 1
           fi
 
           git diff -- data/videos.json
 
-      - name: Commit and push
+      - name: Commit changes
         env:
           EPISODES: ${{ inputs.episodes }}
         run: |
           set -euo pipefail
 
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add data/videos.json
 
           if git diff --cached --quiet; then
-            echo "::error::No title changes were produced."
+            echo "::error::Nothing to commit."
             exit 1
           fi
 
-          git commit -m "Update Kiteretsu episode titles (${EPISODES})"
+          git commit \
+            -m "Update Kiteretsu episode titles (${EPISODES})"
+
+      - name: Push to main
+        run: |
+          set -euo pipefail
           git push origin HEAD:main
 
       - name: Confirm clean working tree
-        run: git status --short
+        run: |
+          set -euo pipefail
+          git status --short
