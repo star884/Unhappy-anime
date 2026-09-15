@@ -2310,11 +2310,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 122.",
+    "description": "Kiteretsu Daihyakka - Episode 122 — 何でモテるの!? 勉三さんとブタゴリラ.",
     "embed": "https://vidmoly.org/embed-5j09f2ncxyit.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/5j09f2ncxyit.jpg?gha_thumb=758a382fee44c0e7",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "何でモテるの!? 勉三さんとブタゴリラ"
   },
   {
     "id": "kiteretsu-123",
