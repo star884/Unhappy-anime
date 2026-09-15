@@ -2461,11 +2461,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 130.",
+    "description": "Kiteretsu Daihyakka - Episode 130 — キャッシュカードで コロ助指名手配!?.",
     "embed": "https://vidmoly.org/embed-04au980uqb17.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/03/02914/04au980uqb17.jpg?gha_thumb=91226ef521abecfa",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "キャッシュカードで コロ助指名手配!?"
   },
   {
     "id": "kiteretsu-131",
