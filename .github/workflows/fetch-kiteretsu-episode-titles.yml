@@ -24,7 +24,7 @@ jobs:
   fetch-titles:
     name: Fetch and validate Kiteretsu episode titles
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Check out main
@@ -38,12 +38,18 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install parser
+      - name: Install Playwright
         run: |
           set -euo pipefail
-          python -m pip install --disable-pip-version-check --no-input beautifulsoup4
 
-      - name: Fetch and extract regular TV episode titles
+          python -m pip install \
+            --disable-pip-version-check \
+            --no-input \
+            "playwright==1.57.0"
+
+          python -m playwright install --with-deps chromium
+
+      - name: Open every year and extract its episode table
         env:
           EPISODES: ${{ inputs.episodes }}
         run: |
@@ -54,22 +60,28 @@ jobs:
           import os
           import re
           import sys
-          import urllib.request
+          from pathlib import Path
 
-          from bs4 import BeautifulSoup, Tag
+          from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 
           URL = os.environ["WIKI_URL"]
           REQUEST = os.environ["EPISODES"]
 
-          def error(message):
-              print(f"::error::{message}")
-              sys.exit(1)
+          YEARS = list(range(1988, 1997))
+          MAX_EPISODE = 331
 
-          def parse_selection(value):
+          def error(message: str):
+              print(f"::error::{message}")
+              raise SystemExit(1)
+
+          def normalize_space(value: str) -> str:
+              return re.sub(r"\s+", " ", value or "").strip()
+
+          def parse_selection(value: str) -> list[int]:
               result = set()
 
-              for item in value.split(","):
-                  item = item.strip()
+              for raw in value.split(","):
+                  item = raw.strip()
 
                   if not item:
                       continue
@@ -80,23 +92,25 @@ jobs:
 
                   match = re.fullmatch(
                       r"([1-9][0-9]*)-([1-9][0-9]*)",
-                      item
+                      item,
                   )
 
-                  if match:
-                      start = int(match.group(1))
-                      end = int(match.group(2))
+                  if not match:
+                      error(f"Invalid episode selection: {item!r}")
 
-                      if end < start:
-                          error(f"Invalid range: {item}")
+                  start = int(match.group(1))
+                  end = int(match.group(2))
 
-                      if end - start > 100:
-                          error(f"Range too large: {item}")
+                  if end < start:
+                      error(f"Invalid descending range: {item}")
 
-                      result.update(range(start, end + 1))
-                      continue
+                  if end - start + 1 > 100:
+                      error(
+                          f"Range {item} is too large. "
+                          "Maximum 100 episodes per run."
+                      )
 
-                  error(f"Invalid episode selection: {item}")
+                  result.update(range(start, end + 1))
 
               if not result:
                   error("No episodes were supplied.")
@@ -104,11 +118,15 @@ jobs:
               if len(result) > 100:
                   error("Maximum 100 episodes per run.")
 
-              invalid = sorted(n for n in result if n > 331)
+              invalid = sorted(
+                  episode
+                  for episode in result
+                  if episode < 1 or episode > MAX_EPISODE
+              )
 
               if invalid:
                   error(
-                      "Regular TV episodes only support 1-331. "
+                      "Regular TV episodes are limited to 1-331. "
                       f"Invalid: {invalid}"
                   )
 
@@ -116,201 +134,773 @@ jobs:
 
           requested = parse_selection(REQUEST)
 
-          request = urllib.request.Request(
-              URL,
-              headers={
-                  "User-Agent":
-                      "Unhappy-anime Kiteretsu title updater/1.0"
-              },
-          )
+          print()
+          print("Requested episodes:")
+          print(", ".join(f"{n:03d}" for n in requested))
+          print()
 
-          try:
-              with urllib.request.urlopen(request, timeout=30) as response:
-                  html = response.read()
-          except Exception as exc:
-              error(f"Failed to download Wikipedia page: {exc}")
-
-          soup = BeautifulSoup(html, "html.parser")
-
-          # -----------------------------------------------------------
-          # Find the regular "テレビシリーズ" section.
-          #
-          # We deliberately DO NOT scan the entire page.
-          #
-          # This prevents:
-          #   - 1987 special program
-          #   - opening/ending-song tables
-          #   - broadcast information
-          #   - staff tables
-          #   - unrelated tables
-          # from being interpreted as regular episodes.
-          # -----------------------------------------------------------
-
-          episode_section = None
-
-          for heading in soup.find_all(["h2", "h3", "h4"]):
-              text = " ".join(heading.stripped_strings)
-
-              if text == "テレビシリーズ":
-                  episode_section = heading
-                  break
-
-          if episode_section is None:
-              error(
-                  "Could not find the regular テレビシリーズ section."
+          with sync_playwright() as playwright:
+              browser = playwright.chromium.launch(
+                  headless=True,
+                  args=[
+                      "--no-sandbox",
+                      "--disable-dev-shm-usage",
+                  ],
               )
 
-          # Only inspect tables belonging to this section.
-          candidate_tables = []
-
-          for element in episode_section.find_all_next():
-              if not isinstance(element, Tag):
-                  continue
-
-              # Never cross into another major/subsection.
-              if element.name in {"h2", "h3", "h4"}:
-                  break
-
-              if element.name != "table":
-                  continue
-
-              headers = [
-                  " ".join(cell.stripped_strings)
-                  for cell in element.find_all(
-                      ["th", "td"],
-                      recursive=False
-                  )
-              ]
-
-              header_text = " ".join(headers)
-
-              # The regular episode table must contain both concepts.
-              if "話数" not in header_text:
-                  continue
-
-              if "サブタイトル" not in header_text:
-                  continue
-
-              candidate_tables.append(element)
-
-          if not candidate_tables:
-              error(
-                  "Could not find the regular TV episode table "
-                  "containing 話数 and サブタイトル."
+              page = browser.new_page(
+                  viewport={
+                      "width": 1440,
+                      "height": 1000,
+                  },
+                  locale="ja-JP",
+                  user_agent=(
+                      "Mozilla/5.0 (X11; Linux x86_64) "
+                      "AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/131.0.0.0 Safari/537.36 "
+                      "Unhappy-anime-Kiteretsu-title-updater/2.0"
+                  ),
               )
 
-          episode_titles = {}
+              try:
+                  print(f"Opening: {URL}")
 
-          for table_index, table in enumerate(candidate_tables, 1):
-              rows = table.find_all("tr")
+                  try:
+                      response = page.goto(
+                          URL,
+                          wait_until="domcontentloaded",
+                          timeout=60000,
+                      )
+                  except PlaywrightTimeoutError:
+                      error("Wikipedia page load timed out.")
 
-              for row in rows:
-                  cells = row.find_all(
-                      ["th", "td"],
-                      recursive=False
-                  )
+                  if response is None:
+                      error("Wikipedia returned no response object.")
 
-                  if len(cells) < 2:
-                      continue
-
-                  number_text = " ".join(
-                      cells[0].stripped_strings
-                  ).strip()
-
-                  # Ignore table headings such as 話数.
-                  match = re.fullmatch(
-                      r"([1-9][0-9]*)",
-                      number_text
-                  )
-
-                  if not match:
-                      continue
-
-                  episode = int(match.group(1))
-
-                  if not 1 <= episode <= 331:
-                      continue
-
-                  # -------------------------------------------------
-                  # IMPORTANT:
-                  #
-                  # ONLY cells[1] is used.
-                  #
-                  # This is the サブタイトル column.
-                  #
-                  # Script, storyboard, direction, animation
-                  # director and broadcast date are ignored entirely.
-                  # -------------------------------------------------
-
-                  title = " ".join(
-                      cells[1].stripped_strings
-                  )
-
-                  title = re.sub(
-                      r"\s+",
-                      " ",
-                      title
-                  ).strip()
-
-                  if not title:
+                  if response.status >= 400:
                       error(
-                          f"Episode {episode} has an empty title."
+                          f"Wikipedia returned HTTP {response.status}."
                       )
 
-                  previous = episode_titles.get(episode)
+                  print(f"HTTP status: {response.status}")
 
-                  if previous is not None and previous != title:
+                  page.wait_for_selector(
+                      "#mw-content-text",
+                      timeout=30000,
+                  )
+
+                  # -----------------------------------------------------
+                  # Find the exact テレビシリーズ heading.
+                  # -----------------------------------------------------
+                  heading_data = page.evaluate(
+                      """
+                      () => {
+                        const normalize = value =>
+                          (value || "").replace(/\\s+/g, " ").trim();
+
+                        const headings =
+                          [...document.querySelectorAll("h2, h3, h4")];
+
+                        const index = headings.findIndex(
+                          heading =>
+                            normalize(heading.textContent) ===
+                            "テレビシリーズ"
+                        );
+
+                        if (index === -1) {
+                          return null;
+                        }
+
+                        const heading = headings[index];
+
+                        return {
+                          tag: heading.tagName,
+                          index,
+                          text: normalize(heading.textContent)
+                        };
+                      }
+                      """
+                  )
+
+                  if not heading_data:
                       error(
-                          "Conflicting regular-TV titles for "
-                          f"episode {episode}: "
-                          f"{previous!r} vs {title!r}"
+                          "Could not find the exact テレビシリーズ heading."
                       )
 
-                  episode_titles[episode] = title
+                  print(
+                      "Found section: "
+                      f"{heading_data['text']} "
+                      f"({heading_data['tag']})"
+                  )
 
-          missing = [
-              episode
-              for episode in requested
-              if episode not in episode_titles
-          ]
+                  # -----------------------------------------------------
+                  # Locate each yearly collapsible table.
+                  #
+                  # We only consider year headings that occur inside the
+                  # テレビシリーズ section. The earlier 特番 table is
+                  # therefore excluded before episode parsing even begins.
+                  # -----------------------------------------------------
+                  discovered_years = page.evaluate(
+                      """
+                      () => {
+                        const normalize = value =>
+                          (value || "").replace(/\\s+/g, " ").trim();
 
-          if missing:
-              error(
-                  "Wikipedia regular-TV titles missing for: "
-                  + ", ".join(map(str, missing))
-              )
+                        const headingList =
+                          [...document.querySelectorAll("h2, h3, h4")];
 
-          result = {
-              str(episode): episode_titles[episode]
-              for episode in requested
-          }
+                        const tvIndex = headingList.findIndex(
+                          heading =>
+                            normalize(heading.textContent) ===
+                            "テレビシリーズ"
+                        );
 
-          with open(
-              "/tmp/kiteretsu_titles.json",
-              "w",
-              encoding="utf-8"
-          ) as file:
-              json.dump(
-                  result,
-                  file,
-                  ensure_ascii=False,
-                  indent=2
-              )
-              file.write("\n")
+                        if (tvIndex === -1) {
+                          throw new Error(
+                            "テレビシリーズ heading not found"
+                          );
+                        }
 
-          print()
-          print("=== TITLES FOUND ===")
+                        const tvHeading = headingList[tvIndex];
+                        const tvLevel =
+                          Number(tvHeading.tagName.substring(1));
 
-          for episode in requested:
-              print(
-                  f"E{episode:03d}: "
-                  f"{episode_titles[episode]}"
-              )
+                        const result = [];
 
-          print()
+                        for (
+                          let i = tvIndex + 1;
+                          i < headingList.length;
+                          i++
+                        ) {
+                          const heading = headingList[i];
+                          const level =
+                            Number(heading.tagName.substring(1));
+                          const text = normalize(heading.textContent);
+
+                          // Leave the TV-series section when a heading
+                          // at the same or higher level is reached.
+                          if (level <= tvLevel) {
+                            break;
+                          }
+
+                          const match = text.match(
+                            /^(1988|1989|1990|1991|1992|1993|1994|1995|1996)年?$/
+                          );
+
+                          if (!match) {
+                            continue;
+                          }
+
+                          result.push({
+                            year: Number(match[1]),
+                            tag: heading.tagName,
+                            text
+                          });
+                        }
+
+                        return result;
+                      }
+                      """
+                  )
+
+                  found_years = [
+                      item["year"]
+                      for item in discovered_years
+                  ]
+
+                  missing_years = [
+                      year
+                      for year in YEARS
+                      if year not in found_years
+                  ]
+
+                  if missing_years:
+                      error(
+                          "Missing year headings: "
+                          + ", ".join(map(str, missing_years))
+                      )
+
+                  print(
+                      "Year headings found: "
+                      + ", ".join(map(str, found_years))
+                  )
+
+                  # -----------------------------------------------------
+                  # Give every year's actual collapsible container a
+                  # temporary page-only data attribute.
+                  #
+                  # A table may itself be mw-collapsible, or it may be
+                  # nested inside a collapsible container. Both cases are
+                  # supported.
+                  # -----------------------------------------------------
+                  mapping = page.evaluate(
+                      """
+                      () => {
+                        const normalize = value =>
+                          (value || "").replace(/\\s+/g, " ").trim();
+
+                        const headings =
+                          [...document.querySelectorAll("h2, h3, h4")];
+
+                        const tvIndex = headings.findIndex(
+                          h => normalize(h.textContent) === "テレビシリーズ"
+                        );
+
+                        if (tvIndex === -1) {
+                          throw new Error(
+                            "テレビシリーズ heading not found"
+                          );
+                        }
+
+                        const tvHeading = headings[tvIndex];
+                        const tvLevel =
+                          Number(tvHeading.tagName.substring(1));
+
+                        const years = [];
+
+                        for (
+                          let i = tvIndex + 1;
+                          i < headings.length;
+                          i++
+                        ) {
+                          const heading = headings[i];
+                          const level =
+                            Number(heading.tagName.substring(1));
+                          const text = normalize(heading.textContent);
+
+                          if (level <= tvLevel) {
+                            break;
+                          }
+
+                          const match = text.match(
+                            /^(1988|1989|1990|1991|1992|1993|1994|1995|1996)年?$/
+                          );
+
+                          if (match) {
+                            years.push({
+                              year: Number(match[1]),
+                              headingIndex: i,
+                              heading
+                            });
+                          }
+                        }
+
+                        const tables = [
+                          ...document.querySelectorAll("table")
+                        ];
+
+                        const yearTableMap = {};
+
+                        for (
+                          let yi = 0;
+                          yi < years.length;
+                          yi++
+                        ) {
+                          const current = years[yi];
+                          const next =
+                            years[yi + 1]?.heading || null;
+
+                          const candidates = [];
+
+                          for (const table of tables) {
+                            const afterCurrent =
+                              Boolean(
+                                current.heading.compareDocumentPosition(
+                                  table
+                                ) &
+                                Node.DOCUMENT_POSITION_FOLLOWING
+                              );
+
+                            if (!afterCurrent) {
+                              continue;
+                            }
+
+                            if (next) {
+                              const beforeNext =
+                                Boolean(
+                                  table.compareDocumentPosition(next) &
+                                  Node.DOCUMENT_POSITION_FOLLOWING
+                                );
+
+                              if (!beforeNext) {
+                                continue;
+                              }
+                            }
+
+                            const collapsible =
+                              table.matches(".mw-collapsible")
+                              ? table
+                              : table.closest(".mw-collapsible");
+
+                            if (!collapsible) {
+                              continue;
+                            }
+
+                            const rows = [
+                              ...table.querySelectorAll("tr")
+                            ];
+
+                            let hasEpisodeHeader = false;
+
+                            for (const row of rows) {
+                              const cells = [
+                                ...row.querySelectorAll("th, td")
+                              ];
+
+                              const texts = cells.map(
+                                cell => normalize(cell.textContent)
+                              );
+
+                              if (
+                                texts.some(
+                                  text => text.includes("話数")
+                                ) &&
+                                texts.some(
+                                  text => text.includes("サブタイトル")
+                                )
+                              ) {
+                                hasEpisodeHeader = true;
+                                break;
+                              }
+                            }
+
+                            if (!hasEpisodeHeader) {
+                              continue;
+                            }
+
+                            candidates.push({
+                              table,
+                              collapsible
+                            });
+                          }
+
+                          if (candidates.length !== 1) {
+                            throw new Error(
+                              `Expected exactly one episode table for ` +
+                              `${current.year}, found ` +
+                              `${candidates.length}`
+                            );
+                          }
+
+                          const chosen = candidates[0];
+
+                          chosen.collapsible.dataset.unhappyYearContainer =
+                            String(current.year);
+
+                          chosen.table.dataset.unhappyYearTable =
+                            String(current.year);
+
+                          yearTableMap[String(current.year)] = true;
+                        }
+
+                        return yearTableMap;
+                      }
+                      """
+                  )
+
+                  for year in YEARS:
+                      if not mapping.get(str(year)):
+                          error(
+                              f"No validated collapsible table mapped "
+                              f"to {year}."
+                          )
+
+                  print(
+                      "Mapped all yearly episode displays successfully."
+                  )
+                  print()
+
+                  # -----------------------------------------------------
+                  # Click the year-specific display control and extract.
+                  # -----------------------------------------------------
+                  all_titles = {}
+                  year_counts = {}
+
+                  for year in YEARS:
+                      container = page.locator(
+                          f'[data-unhappy-year-container="{year}"]'
+                      ).first
+
+                      table = page.locator(
+                          f'table[data-unhappy-year-table="{year}"]'
+                      ).first
+
+                      if container.count() != 1:
+                          error(
+                              f"Expected exactly one display container "
+                              f"for {year}."
+                          )
+
+                      if table.count() != 1:
+                          error(
+                              f"Expected exactly one episode table "
+                              f"for {year}."
+                          )
+
+                      toggle = container.locator(
+                          ".mw-collapsible-toggle"
+                      ).first
+
+                      if toggle.count() == 0:
+                          # Fallback for a markup variation where the
+                          # standard class is missing but the visible
+                          # control still says 表示.
+                          toggle = container.get_by_text(
+                              "表示",
+                              exact=True,
+                          ).first
+
+                      if toggle.count() > 0:
+                          try:
+                              toggle_text = normalize_space(
+                                  toggle.inner_text()
+                              )
+                          except Exception:
+                              toggle_text = ""
+
+                          collapsed = "mw-collapsed" in (
+                              container.get_attribute("class") or ""
+                          )
+
+                          should_click = (
+                              collapsed
+                              or "表示" in toggle_text
+                          )
+
+                          if should_click:
+                              print(
+                                  f"{year}: clicking display control..."
+                              )
+
+                              try:
+                                  toggle.click(
+                                      timeout=15000
+                                  )
+                              except Exception as exc:
+                                  error(
+                                      f"Could not click the {year} "
+                                      f"display control: {exc}"
+                                  )
+
+                              try:
+                                  page.wait_for_function(
+                                      """
+                                      (year) => {
+                                        const table =
+                                          document.querySelector(
+                                            `table[data-unhappy-year-table="${year}"]`
+                                          );
+
+                                        if (!table) {
+                                          return false;
+                                        }
+
+                                        const container =
+                                          table.closest(
+                                            ".mw-collapsible"
+                                          ) || table;
+
+                                        const collapsed =
+                                          container.classList.contains(
+                                            "mw-collapsed"
+                                          );
+
+                                        const visible =
+                                          table.getBoundingClientRect()
+                                            .height > 0;
+
+                                        return !collapsed && visible;
+                                      }
+                                      """,
+                                      year,
+                                      timeout=15000,
+                                  )
+                              except PlaywrightTimeoutError:
+                                  error(
+                                      f"The {year} episode table did not "
+                                      "open after clicking display."
+                                  )
+                          else:
+                              print(
+                                  f"{year}: display is already open."
+                              )
+                      else:
+                          # A missing toggle is only accepted if the table
+                          # is genuinely visible. This prevents silently
+                          # scraping a collapsed table because Wikipedia's
+                          # markup changed.
+                          if not table.is_visible():
+                              error(
+                                  f"{year}: no display control found and "
+                                  "the episode table is not visible."
+                              )
+
+                      # -------------------------------------------------
+                      # Parse only 話数 and サブタイトル.
+                      # -------------------------------------------------
+                      extracted = table.evaluate(
+                          """
+                          table => {
+                            const normalize = value =>
+                              (value || "")
+                                .replace(/\\s+/g, " ")
+                                .trim();
+
+                            const rows = [
+                              ...table.querySelectorAll("tr")
+                            ];
+
+                            let headerRow = null;
+                            let episodeColumn = -1;
+                            let titleColumn = -1;
+
+                            for (const row of rows) {
+                              const cells = [
+                                ...row.querySelectorAll("th, td")
+                              ];
+
+                              const texts = cells.map(
+                                cell => normalize(cell.textContent)
+                              );
+
+                              const eIndex = texts.findIndex(
+                                text => text === "話数"
+                              );
+
+                              const tIndex = texts.findIndex(
+                                text => text === "サブタイトル"
+                              );
+
+                              if (eIndex !== -1 && tIndex !== -1) {
+                                headerRow = row;
+                                episodeColumn = eIndex;
+                                titleColumn = tIndex;
+                                break;
+                              }
+                            }
+
+                            if (!headerRow) {
+                              throw new Error(
+                                "Could not identify 話数 / サブタイトル columns."
+                              );
+                            }
+
+                            const headerIndex =
+                              rows.indexOf(headerRow);
+
+                            const result = [];
+
+                            function cleanTitle(cell) {
+                              const clone = cell.cloneNode(true);
+
+                              // Remove citation/reference markers.
+                              for (
+                                const node of clone.querySelectorAll("sup")
+                              ) {
+                                node.remove();
+                              }
+
+                              // Wikipedia frequently stores the second
+                              // half of an episode title after <br>.
+                              for (
+                                const node of clone.querySelectorAll("br")
+                              ) {
+                                node.replaceWith("／");
+                              }
+
+                              let value =
+                                clone.textContent || "";
+
+                              value = value
+                                .replace(/\\s+/g, " ")
+                                .replace(/\\s*／\\s*/g, "／")
+                                .trim();
+
+                              return value;
+                            }
+
+                            for (
+                              let index = headerIndex + 1;
+                              index < rows.length;
+                              index++
+                            ) {
+                              const row = rows[index];
+
+                              const cells = [
+                                ...row.querySelectorAll("th, td")
+                              ];
+
+                              if (
+                                episodeColumn >= cells.length ||
+                                titleColumn >= cells.length
+                              ) {
+                                continue;
+                              }
+
+                              const episodeText = normalize(
+                                cells[episodeColumn].textContent
+                              );
+
+                              const match =
+                                episodeText.match(/^(\\d+)$/);
+
+                              if (!match) {
+                                continue;
+                              }
+
+                              const episode =
+                                Number(match[1]);
+
+                              const title =
+                                cleanTitle(
+                                  cells[titleColumn]
+                                );
+
+                              if (!title) {
+                                throw new Error(
+                                  `Episode ${episode} has an empty title.`
+                                );
+                              }
+
+                              result.push({
+                                episode,
+                                title
+                              });
+                            }
+
+                            return result;
+                          }
+                          """
+                      )
+
+                      if not extracted:
+                          error(
+                              f"{year}: extracted zero episodes."
+                          )
+
+                      seen_in_year = set()
+
+                      for item in extracted:
+                          episode = int(item["episode"])
+                          title = str(item["title"]).strip()
+
+                          if episode in seen_in_year:
+                              error(
+                                  f"{year}: duplicate episode "
+                                  f"{episode} inside yearly table."
+                              )
+
+                          seen_in_year.add(episode)
+
+                          if episode in all_titles:
+                              error(
+                                  f"Episode {episode} appears in multiple "
+                                  "year tables."
+                              )
+
+                          all_titles[episode] = title
+
+                      year_counts[year] = len(extracted)
+
+                      print(
+                          f"{year}: extracted "
+                          f"{len(extracted)} episodes "
+                          f"(E{min(seen_in_year):03d}-"
+                          f"E{max(seen_in_year):03d})"
+                      )
+
+                  print()
+                  print("=== YEAR COUNTS ===")
+
+                  for year in YEARS:
+                      print(
+                          f"{year}: {year_counts[year]}"
+                      )
+
+                  # -----------------------------------------------------
+                  # Strong integrity check: all regular TV episodes must
+                  # be exactly 1..331, with no gap and no duplicate.
+                  # -----------------------------------------------------
+                  expected = set(range(1, MAX_EPISODE + 1))
+                  actual = set(all_titles)
+
+                  missing = sorted(expected - actual)
+                  extra = sorted(actual - expected)
+
+                  if missing:
+                      error(
+                          "Missing regular-TV episodes after opening all "
+                          f"year displays: {missing[:50]}"
+                          + (
+                              " ..."
+                              if len(missing) > 50
+                              else ""
+                          )
+                      )
+
+                  if extra:
+                      error(
+                          "Unexpected episode numbers found: "
+                          f"{extra}"
+                      )
+
+                  if len(all_titles) != MAX_EPISODE:
+                      error(
+                          f"Expected exactly {MAX_EPISODE} regular episodes, "
+                          f"found {len(all_titles)}."
+                      )
+
+                  ordered = sorted(all_titles)
+
+                  if ordered != list(range(1, MAX_EPISODE + 1)):
+                      error(
+                          "Episode numbering is not a perfect "
+                          "1-331 sequence."
+                      )
+
+                  print()
+                  print(
+                      "Verified complete regular-TV sequence: "
+                      "E001-E331."
+                  )
+
+                  # -----------------------------------------------------
+                  # Verify the requested titles exist before touching
+                  # videos.json.
+                  # -----------------------------------------------------
+                  requested_titles = {
+                      str(episode): all_titles[episode]
+                      for episode in requested
+                  }
+
+                  output_path = Path(
+                      "/tmp/kiteretsu_titles.json"
+                  )
+
+                  output_path.write_text(
+                      json.dumps(
+                          requested_titles,
+                          ensure_ascii=False,
+                          indent=2,
+                      )
+                      + "\n",
+                      encoding="utf-8",
+                  )
+
+                  print()
+                  print("=== REQUESTED TITLES ===")
+
+                  for episode in requested:
+                      print(
+                          f"E{episode:03d}: "
+                          f"{all_titles[episode]}"
+                      )
+
+              finally:
+                  browser.close()
           PY
 
-      - name: Verify catalogue matches
+      - name: Verify requested catalogue records
         env:
           EPISODES: ${{ inputs.episodes }}
         run: |
@@ -322,11 +912,22 @@ jobs:
           import re
           import sys
 
+          SERIES = "Kiteretsu Daihyakka"
+
+          def fail(message):
+              print(f"::error::{message}")
+              raise SystemExit(1)
+
+          def key(value):
+              return " ".join(
+                  str(value or "").strip().split()
+              ).casefold()
+
           def parse_selection(value):
               result = set()
 
-              for item in value.split(","):
-                  item = item.strip()
+              for raw in value.split(","):
+                  item = raw.strip()
 
                   if re.fullmatch(r"[1-9][0-9]*", item):
                       result.add(int(item))
@@ -334,20 +935,24 @@ jobs:
 
                   match = re.fullmatch(
                       r"([1-9][0-9]*)-([1-9][0-9]*)",
-                      item
+                      item,
                   )
 
-                  if match:
-                      result.update(
-                          range(
-                              int(match.group(1)),
-                              int(match.group(2)) + 1
-                          )
+                  if not match:
+                      fail(
+                          f"Invalid episode selection: {item}"
                       )
-                      continue
 
-                  raise SystemExit(
-                      f"Invalid episode selection: {item}"
+                  start = int(match.group(1))
+                  end = int(match.group(2))
+
+                  if end < start:
+                      fail(
+                          f"Invalid descending range: {item}"
+                      )
+
+                  result.update(
+                      range(start, end + 1)
                   )
 
               return sorted(result)
@@ -358,28 +963,55 @@ jobs:
 
           with open(
               "data/videos.json",
-              encoding="utf-8"
+              encoding="utf-8",
           ) as file:
               videos = json.load(file)
+
+          if not isinstance(videos, list):
+              fail("data/videos.json must contain an array.")
 
           matches = {}
 
           for record in videos:
-              if (
-                  record.get("series") == "Kiteretsu Daihyakka"
-                  and record.get("type", "episode") == "episode"
-                  and record.get("category", "main") == "main"
-              ):
-                  episode = record.get("episode")
+              if not isinstance(record, dict):
+                  continue
 
-                  if isinstance(episode, int):
-                      matches.setdefault(
-                          episode,
-                          []
-                      ).append(record)
+              if key(record.get("series")) != key(SERIES):
+                  continue
+
+              record_type = (
+                  str(record.get("type") or "episode")
+                  .strip()
+                  .casefold()
+              )
+
+              record_category = (
+                  str(record.get("category") or "")
+                  .strip()
+                  .casefold()
+              )
+
+              if record_type != "episode":
+                  continue
+
+              if not record_category:
+                  record_category = "main"
+
+              if record_category != "main":
+                  continue
+
+              episode = record.get("episode")
+
+              if not isinstance(episode, int):
+                  continue
+
+              matches.setdefault(
+                  episode,
+                  []
+              ).append(record)
 
           missing = []
-          duplicate = []
+          duplicates = []
 
           for episode in requested:
               found = matches.get(episode, [])
@@ -388,73 +1020,214 @@ jobs:
                   missing.append(episode)
 
               elif len(found) > 1:
-                  duplicate.append(episode)
+                  duplicates.append(episode)
 
           if missing:
-              print(
-                  "::error::Catalogue episodes missing: "
+              fail(
+                  "Catalogue episodes missing: "
                   + ", ".join(map(str, missing))
               )
-              sys.exit(1)
 
-          if duplicate:
-              print(
-                  "::error::Duplicate catalogue episodes: "
-                  + ", ".join(map(str, duplicate))
+          if duplicates:
+              fail(
+                  "Duplicate catalogue episode identities: "
+                  + ", ".join(map(str, duplicates))
               )
-              sys.exit(1)
 
           print(
-              f"Verified {len(requested)} exact catalogue episodes."
+              f"Verified {len(requested)} unique catalogue episodes."
           )
           PY
 
-      - name: Apply titles using existing Python validator
+      - name: Apply episode titles with minimal changes
+        env:
+          EPISODES: ${{ inputs.episodes }}
         run: |
           set -euo pipefail
 
           python - <<'PY'
           import json
-          import subprocess
+          import os
+          import re
           import sys
+          from pathlib import Path
 
-          with open(
-              "/tmp/kiteretsu_titles.json",
+          SERIES = "Kiteretsu Daihyakka"
+          CATALOGUE = Path("data/videos.json")
+          TITLES = Path("/tmp/kiteretsu_titles.json")
+
+          def fail(message):
+              print(f"::error::{message}")
+              raise SystemExit(1)
+
+          def key(value):
+              return " ".join(
+                  str(value or "").strip().split()
+              ).casefold()
+
+          def parse_selection(value):
+              result = set()
+
+              for raw in value.split(","):
+                  item = raw.strip()
+
+                  if re.fullmatch(r"[1-9][0-9]*", item):
+                      result.add(int(item))
+                      continue
+
+                  match = re.fullmatch(
+                      r"([1-9][0-9]*)-([1-9][0-9]*)",
+                      item,
+                  )
+
+                  if not match:
+                      fail(
+                          f"Invalid episode selection: {item}"
+                      )
+
+                  start = int(match.group(1))
+                  end = int(match.group(2))
+
+                  if end < start:
+                      fail(
+                          f"Invalid descending range: {item}"
+                      )
+
+                  result.update(
+                      range(start, end + 1)
+                  )
+
+              return sorted(result)
+
+          requested = parse_selection(
+              os.environ["EPISODES"]
+          )
+
+          with TITLES.open(
               encoding="utf-8"
           ) as file:
               titles = json.load(file)
 
-          for episode_text, title in titles.items():
-              episode = int(episode_text)
+          original_text = CATALOGUE.read_text(
+              encoding="utf-8"
+          )
 
-              command = [
-                  "python",
-                  "scripts/validate_catalogue.py",
-                  "--update-episode-title",
-                  "--series",
-                  "Kiteretsu Daihyakka",
-                  "--episode",
-                  str(episode),
-                  "--episode-title",
-                  title,
-              ]
+          videos = json.loads(original_text)
 
-              print(
-                  f"Updating episode {episode}: {title}"
+          changed = []
+
+          for record in videos:
+              if not isinstance(record, dict):
+                  continue
+
+              if key(record.get("series")) != key(SERIES):
+                  continue
+
+              record_type = (
+                  str(record.get("type") or "episode")
+                  .strip()
+                  .casefold()
               )
 
-              result = subprocess.run(command)
+              record_category = (
+                  str(record.get("category") or "")
+                  .strip()
+                  .casefold()
+                  or "main"
+              )
 
-              if result.returncode != 0:
-                  print(
-                      "::error::Validator failed for "
-                      f"episode {episode}"
+              if record_type != "episode":
+                  continue
+
+              if record_category != "main":
+                  continue
+
+              episode = record.get("episode")
+
+              if episode not in requested:
+                  continue
+
+              new_title = str(
+                  titles[str(episode)]
+              ).strip()
+
+              old_title = str(
+                  record.get("episode_title") or ""
+              ).strip()
+
+              if old_title != new_title:
+                  record["episode_title"] = new_title
+                  changed.append(
+                      (
+                          episode,
+                          old_title,
+                          new_title,
+                      )
                   )
-                  sys.exit(result.returncode)
 
+          # Ensure every requested episode was encountered exactly once.
+          if len(
+              {
+                  item[0]
+                  for item in changed
+              }
+              | {
+                  int(episode)
+                  for episode in titles
+                  if any(
+                      record.get("episode") == int(episode)
+                      and key(record.get("series")) == key(SERIES)
+                      and (
+                          str(
+                              record.get("type") or "episode"
+                          )
+                          .strip()
+                          .casefold()
+                          == "episode"
+                      )
+                      for record in videos
+                  )
+              }
+          ) < len(requested):
+              fail(
+                  "Not every requested episode was safely matched."
+              )
+
+          # Write only if something actually changed.
+          if changed:
+              CATALOGUE.write_text(
+                  json.dumps(
+                      videos,
+                      ensure_ascii=False,
+                      indent=2,
+                  )
+                  + "\n",
+                  encoding="utf-8",
+              )
+
+          print()
+          print(
+              f"Changed episode_title fields: {len(changed)}"
+          )
+
+          for episode, old_title, new_title in changed:
+              print(
+                  f"E{episode:03d}:"
+              )
+              print(
+                  f"  OLD: {old_title!r}"
+              )
+              print(
+                  f"  NEW: {new_title!r}"
+              )
+
+          if not changed:
+              print(
+                  "All requested episode titles were already up to date."
+              )
           PY
 
-      - name: Validate entire repository
+      - name: Validate catalogue and repository
         run: |
           set -euo pipefail
 
@@ -464,28 +1237,49 @@ jobs:
             scripts/validate_catalogue.py \
             scripts/generate_thumbnails.py
 
-          python -m json.tool data/videos.json >/dev/null
-          python -m json.tool data/series.json >/dev/null
+          python -m json.tool \
+            data/videos.json \
+            >/dev/null
+
+          python -m json.tool \
+            data/series.json \
+            >/dev/null
 
           git diff --check
 
-      - name: Show changes
+      - name: Verify only episode_title changed
         run: |
           set -euo pipefail
 
-          if git diff --quiet -- data/videos.json; then
-            echo "::error::No title changes were produced."
-            echo "The requested titles may already be present."
+          echo "=== DIFF STATISTICS ==="
+          git diff --stat -- data/videos.json
+
+          echo
+          echo "=== DIFF ==="
+          git diff -- data/videos.json
+
+          # No files other than videos.json may be modified.
+          OTHER_CHANGES="$(
+            git status --short |
+            awk '$2 != "data/videos.json" {print}'
+          )"
+
+          if [ -n "$OTHER_CHANGES" ]; then
+            echo "::error::Unexpected files were modified:"
+            echo "$OTHER_CHANGES"
             exit 1
           fi
-
-          git diff -- data/videos.json
 
       - name: Commit changes
         env:
           EPISODES: ${{ inputs.episodes }}
         run: |
           set -euo pipefail
+
+          if git diff --quiet -- data/videos.json; then
+            echo "No changes required."
+            exit 0
+          fi
 
           git config user.name "github-actions[bot]"
           git config user.email \
@@ -494,8 +1288,8 @@ jobs:
           git add data/videos.json
 
           if git diff --cached --quiet; then
-            echo "::error::Nothing to commit."
-            exit 1
+            echo "Nothing staged."
+            exit 0
           fi
 
           git commit \
@@ -504,9 +1298,23 @@ jobs:
       - name: Push to main
         run: |
           set -euo pipefail
-          git push origin HEAD:main
 
-      - name: Confirm clean working tree
+          if git log -1 --format='%an' | grep -q '^github-actions\[bot\]$'; then
+            git push origin HEAD:main
+          else
+            echo "No new commit was created; nothing to push."
+          fi
+
+      - name: Final repository check
         run: |
           set -euo pipefail
+
           git status --short
+
+          if ! git diff --quiet; then
+            echo "::error::Working tree is not clean."
+            git diff
+            exit 1
+          fi
+
+          echo "Final working tree is clean."
