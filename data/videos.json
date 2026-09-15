@@ -2253,11 +2253,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 119.",
+    "description": "Kiteretsu Daihyakka - Episode 119 — 厳窟王が 八百八の前かけをしていた!.",
     "embed": "https://vidmoly.org/embed-n9gd9ssf5tlc.html",
     "thumbnail": "https://box-1668-tb.vmeas.cloud/i/04/02917/n9gd9ssf5tlc.jpg?gha_thumb=72146c3547d8ac5d",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "厳窟王が 八百八の前かけをしていた!"
   },
   {
     "id": "kiteretsu-120",
