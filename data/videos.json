@@ -2006,11 +2006,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 106.",
+    "description": "Kiteretsu Daihyakka - Episode 106 — コロ助真っ青! チョンマゲを切られる!?.",
     "embed": "https://vidmoly.org/embed-nlehrdco8ybl.html",
     "thumbnail": "https://box-1639-r1.vmeas.cloud/i/04/02917/nlehrdco8ybl.jpg?gha_thumb=0219ae3881ffc6e1",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "コロ助真っ青! チョンマゲを切られる!?"
   },
   {
     "id": "kiteretsu-107",
