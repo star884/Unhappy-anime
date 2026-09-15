@@ -1911,11 +1911,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 101.",
+    "description": "Kiteretsu Daihyakka - Episode 101 — 真夏の花博で大百科外伝をみつけ出せ！.",
     "embed": "https://vidmoly.org/embed-3ao0k2bd769v.html",
     "thumbnail": "https://box-1668-tb.vmeas.cloud/i/02/02917/3ao0k2bd769v.jpg?gha_thumb=2cd6dbb8fee27252",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "真夏の花博で大百科外伝をみつけ出せ！"
   },
   {
     "id": "kiteretsu-102",
