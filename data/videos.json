@@ -2329,11 +2329,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 123.",
+    "description": "Kiteretsu Daihyakka - Episode 123 — ワガハイが チンチン電車だった頃….",
     "embed": "https://vidmoly.org/embed-rbu14541z543.html",
     "thumbnail": "https://box-1535-p.vmeas.cloud/i/03/02914/rbu14541z543.jpg?gha_thumb=1e356cf6f3c85e23",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "ワガハイが チンチン電車だった頃…"
   },
   {
     "id": "kiteretsu-124",
