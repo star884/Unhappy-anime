@@ -2652,11 +2652,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 140.",
+    "description": "Kiteretsu Daihyakka - Episode 140 — むかしの常識!? 堂々封切総天然色三本立.",
     "embed": "https://vidmoly.org/embed-7700o9w32egg.html",
     "thumbnail": "https://box-1655-r.vmeas.cloud/i/04/02914/7700o9w32egg.jpg?gha_thumb=96fe27d62c7b149a",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "むかしの常識!? 堂々封切総天然色三本立"
   },
   {
     "id": "kiteretsu-141",
