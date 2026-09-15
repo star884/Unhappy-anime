@@ -2424,11 +2424,12 @@
       "Family"
     ],
     "quality": "1080p",
-    "description": "Kiteretsu Daihyakka episode 128.",
+    "description": "Kiteretsu Daihyakka - Episode 128 — ひみつのコロッケは セーラー服の味ナリ.",
     "embed": "https://vidmoly.org/embed-1fv4clawbasq.html",
     "thumbnail": "https://box-1655-r.vmeas.cloud/i/02/02914/1fv4clawbasq.jpg?gha_thumb=3490862dd4b5230d",
     "type": "episode",
-    "category": "main"
+    "category": "main",
+    "episode_title": "ひみつのコロッケは セーラー服の味ナリ"
   },
   {
     "id": "kiteretsu-129",
